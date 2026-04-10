@@ -12,6 +12,12 @@ namespace _02.Scripts.UI
             _panel = GetComponent<RectTransform>();
             ApplySafeArea();
         }
+        
+        private void OnRectTransformDimensionsChanged()
+        {
+            if (_panel != null)
+                ApplySafeArea();
+        }
 
         void ApplySafeArea()
         {
@@ -30,5 +36,4 @@ namespace _02.Scripts.UI
 
         }
     }
-
 }
