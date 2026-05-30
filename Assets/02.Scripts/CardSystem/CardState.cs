@@ -1,4 +1,4 @@
-﻿namespace _02.Scripts.Card
+﻿namespace _02.Scripts.CardSystem
 {
     public enum CardState
     {
