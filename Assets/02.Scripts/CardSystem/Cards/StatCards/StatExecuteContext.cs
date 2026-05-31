@@ -5,12 +5,13 @@ namespace _02.Scripts.CardSystem.Cards.StatCards
     public class StatExecuteContext
     {
         public StatCard StatCard;
-        public ActionCard ActionCard;
+        public ActionCard TargetActionCard;
+        
 
-        public StatExecuteContext(StatCard statCard, ActionCard actionCard)
+        public StatExecuteContext(StatCard statCard, ActionCard targetActionCard)
         {
             StatCard = statCard;
-            ActionCard = actionCard;
+            TargetActionCard = targetActionCard;
         }
     }
 }

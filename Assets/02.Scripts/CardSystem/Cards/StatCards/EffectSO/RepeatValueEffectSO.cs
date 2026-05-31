@@ -14,7 +14,7 @@ namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
         public override void Apply(StatExecuteContext context)
         {
             for (int i =  0; i < RepeatCount; i++)
-                context.ActionCard.AddValue(Value);
+                context.TargetActionCard.AddValue(Value);
         }
     }
 }

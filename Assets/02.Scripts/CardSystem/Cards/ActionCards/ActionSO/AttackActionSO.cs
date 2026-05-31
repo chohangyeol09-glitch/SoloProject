@@ -7,9 +7,9 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
     [CreateAssetMenu(fileName = "AttackAction", menuName = "Card/Action/AttackAction")]
     public class AttackActionSO : AbstractActionSO
     {
-        public override void Execute(ActionCard card, List<Slot> targets)
+        public override void Execute(ActionCard card, List<AbstractSlot> targets)
         {
-            foreach (Slot target in targets)
+            foreach (AbstractSlot target in targets)
             {
                 target.CurrentCard?.TakeDamage(card.Value);
             }

@@ -11,7 +11,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.EffectSO
         
         public override bool IsActivate(EffectExecuteContext context) => context.ActionCard.Value == TargetValue;
 
-        public override void Apply(EffectExecuteContext context, List<Slot> targets)
+        public override void Apply(EffectExecuteContext context, List<AbstractSlot> targets)
         {
             context.ActionCard.ActionCadeData.Action.Execute(context.ActionCard, targets);
         }

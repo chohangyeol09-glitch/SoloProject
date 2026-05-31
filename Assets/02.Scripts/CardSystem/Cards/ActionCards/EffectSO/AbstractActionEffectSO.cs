@@ -8,6 +8,6 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.EffectSO
     {
         public abstract bool IsActivate(EffectExecuteContext context);
         
-        public abstract void Apply(EffectExecuteContext context, List<Slot> targets);
+        public abstract void Apply(EffectExecuteContext context, List<AbstractSlot> targets);
     }
 }

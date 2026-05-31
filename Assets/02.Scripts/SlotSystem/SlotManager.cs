@@ -1,48 +1,51 @@
 using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
+using _02.Scripts.SlotSystem.Slots;
 using UnityEngine;
 
 namespace _02.Scripts.SlotSystem
 {
     public class SlotManager : MonoBehaviour
     {
-        [SerializeField] private List<Slot> playerSlots = new();
-        [SerializeField] private List<Slot> enemySlots  = new();
+        [SerializeField] private List<PlayerSlot> playerSlots = new();
+        [SerializeField] private List<EnemySlot> enemySlots  = new();
 
         private void Awake()
         {
-            foreach (Slot slot in playerSlots)
+            foreach (PlayerSlot slot in playerSlots)
                 slot.OnDropCard += UpdateSlot;
 
-            foreach (Slot slot in enemySlots)
-                slot.OnDropCard += UpdateSlot;
+            /*foreach (AbstractSlot slot in enemySlots)
+                slot.OnDropCard += UpdateSlot;*/
         }
 
-        private void UpdateSlot(Slot slot, int slotNumber)
+        private void UpdateSlot(AbstractSlot abstractSlot, int slotNumber)
         {
-            switch (slot.SlotType)
+            switch (abstractSlot.SlotType)
             {
                 case SlotType.Player:
-                    playerSlots[slotNumber] = slot;
+                    playerSlots[slotNumber] = (PlayerSlot)abstractSlot;
                     break;
                 case SlotType.Enemy:
-                    enemySlots[slotNumber] = slot;
+                    enemySlots[slotNumber] = (EnemySlot)abstractSlot;
                     break;
             }
         }
 
         public void ExecuteAllCard()
         {
-            foreach (Slot slot in playerSlots)
+            foreach (PlayerSlot slot in playerSlots)
+                ExecuteCard(slot);
+            
+            foreach (EnemySlot slot in enemySlots)
                 ExecuteCard(slot);
         }
 
-        private void ExecuteCard(Slot slot)
+        private void ExecuteCard(AbstractSlot abstractSlot)
         {
-            if (slot.CurrentCard is not ActionCard card) return;
-            
-            List<Slot> targets = GetTargetSlots(slot, slot.CurrentCard.ActionCadeData.TargetRangeType);
+            ActionCard card = abstractSlot.CurrentCard;
+            List<AbstractSlot> targets = GetTargetSlots(abstractSlot, abstractSlot.CurrentCard.ActionCadeData.TargetRangeType);
             
             card.ActionCadeData.Action.Execute(card, targets);
             EffectExecuteContext context = new EffectExecuteContext(card, targets);
@@ -54,13 +57,16 @@ namespace _02.Scripts.SlotSystem
             
         }
 
-        private List<Slot> GetTargetSlots(Slot curSlot, SlotTargetRangeType targetRangeType)
+        private List<AbstractSlot> GetTargetSlots(AbstractSlot curAbstractSlot, SlotTargetRangeType targetRangeType)
         {
-            bool isPlayer = curSlot.SlotType == SlotType.Player;
-            List<Slot> originSlots = isPlayer ? playerSlots : enemySlots;
-            List<Slot> targetSlots = isPlayer ? enemySlots : playerSlots;
+            bool isPlayer = curAbstractSlot.SlotType == SlotType.Player;
+            List<AbstractSlot> pSlots = new List<AbstractSlot>(playerSlots);
+            List<AbstractSlot> eSlots = new List<AbstractSlot>(enemySlots);
+            
+            List<AbstractSlot> originSlots = isPlayer ? pSlots : eSlots;
+            List<AbstractSlot> targetSlots = isPlayer ? eSlots : pSlots;
 
-            int index = curSlot.SlotNumber;
+            int index = curAbstractSlot.SlotNumber;
             switch (targetRangeType)
             {
                 //상대 타겟
@@ -84,9 +90,9 @@ namespace _02.Scripts.SlotSystem
             return null;
         }
 
-        private List<Slot> GetSlot(List<Slot> slots, params int[] targets)
+        private List<AbstractSlot> GetSlot(List<AbstractSlot> slots, params int[] targets)
         {
-            var result = new List<Slot>();
+            var result = new List<AbstractSlot>();
             foreach (int i in targets)
                 if (i >= 0 && i < slots.Count)
                     result.Add(slots[i]);
@@ -98,7 +104,7 @@ namespace _02.Scripts.SlotSystem
         [ContextMenu("Test Attack")]
         private void TestAttack()
         {
-            foreach (Slot slot in playerSlots)
+            foreach (AbstractSlot slot in playerSlots)
             {
                 
             }

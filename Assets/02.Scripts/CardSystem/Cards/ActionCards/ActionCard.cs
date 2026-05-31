@@ -1,5 +1,6 @@
 ﻿using _02.Scripts.CardSystem.Cards.StatCards;
-using _02.Scripts.DragSystem;
+using _02.Scripts.InteractionSystemSystem;
+using _02.Scripts.InteractionSystemSystem.Interactions;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.ActionCards
@@ -7,7 +8,20 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
     public class ActionCard : AbstractCard, IDropTarget
     {
         public int Value { get; private set; }
+        public DropInteraction DropInteraction { get; private set; }
         [field: SerializeField] public ActionCadeDataSO ActionCadeData { get; private set; }
+
+        protected override void InitializeModules()
+        {
+            base.InitializeModules();
+            DropInteraction = GetModule<DropInteraction>();
+        }
+
+        protected override void AfterInitializeModules()
+        {
+            base.AfterInitializeModules();
+            DropInteraction.OnDropped += OnDrop;
+        }
 
         public void AddValue(int value)
         {
@@ -25,13 +39,12 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         public void OnDrop(Transform dropTrm)
         {
             if (!dropTrm.TryGetComponent<StatCard>(out StatCard statCard)) return;
-            if (PlayerManager.Instance.CurrentCost >= statCard.NeedCost) return;
 
-            var context = new StatExecuteContext
-            {
-                StatCard = statCard,
-                ActionCard = this
-            };
+            bool isUse = PlayerManager.Instance.ChangeCost(statCard.NeedCost);
+            if (!isUse) return;
+
+            AddValue(statCard.StatData.Value);
+            statCard.OnUsed(); 
         }
     }
 }
