@@ -29,6 +29,10 @@ namespace _02.Scripts.SlotSystem
         public void SetCurrentCard(ActionCard card)
         {
             CurrentCard = card;
+            Vector3 pos = transform.position;
+            pos.y += 0.1f;
+            card.transform.position = pos;
+            
         }
 
 

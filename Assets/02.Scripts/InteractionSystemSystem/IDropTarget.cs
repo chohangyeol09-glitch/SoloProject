@@ -4,6 +4,6 @@ namespace _02.Scripts.InteractionSystemSystem
 {
     public interface IDropTarget
     {
-        public void OnDrop(Transform dropTrm);
+        public void HandleDrop(Transform dropTrm);
     }
 }

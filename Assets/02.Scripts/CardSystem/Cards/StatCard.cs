@@ -19,14 +19,26 @@ namespace _02.Scripts.CardSystem.Cards
             }
         }
 
-        private void Start()
+
+        protected override void InitializeModules()
         {
+            base.InitializeModules();
+            CardInteraction.DropLayer = dropLayer;
+        }
+
+        protected override void AfterInitializeModules()
+        {
+            base.AfterInitializeModules();
+        }
+
+        public void SetStatData(StatCardDataSO statData)
+        {
+            StatData = statData;
             NeedCost = StatData.Cost;
         }
 
         public void OnUsed()
         {
-
             Destroy(gameObject);
         }
     }

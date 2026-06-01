@@ -6,8 +6,9 @@ using UnityEngine;
 namespace _02.Scripts.CardSystem.Cards.ActionCards
 {
     [CreateAssetMenu(fileName = "ActionCadeData", menuName = "Card/ActionCardData", order = 0)]
-    public class ActionCadeDataSO : ScriptableObject
+    public class ActionCardDataSO : ScriptableObject
     {
+        [field: SerializeField] public  ActionCardType ActionCardType { get; private set; }
         [field: SerializeField] public SlotTargetRangeType TargetRangeType {get; private set;}
         [field: SerializeField] public AbstractActionSO Action {get; private set;}  
         [field: SerializeField] public List<AbstractActionEffectSO> Effects { get; private set; } = new();

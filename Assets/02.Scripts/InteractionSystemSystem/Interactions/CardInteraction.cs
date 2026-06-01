@@ -7,6 +7,7 @@ namespace _02.Scripts.InteractionSystemSystem.Interactions
     public class CardInteraction : MonoBehaviour, IModule, IDraggable, IHoverable
     {
         public Transform Transform => _owner.transform;
+        public LayerMask DropLayer { get; set; }
         private ModuleOwner _owner;
 
         public event Action OnDragStarted;

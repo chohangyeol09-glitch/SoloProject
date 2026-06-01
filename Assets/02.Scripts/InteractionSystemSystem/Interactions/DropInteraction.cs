@@ -11,14 +11,16 @@ namespace _02.Scripts.InteractionSystemSystem.Interactions
         public event Action OnHoverExited;
         
         private ModuleOwner _owner;
+        private Type _isCanDropType;
         
         public void Initialize(ModuleOwner owner)
         {
             _owner = owner;
         }
 
-        public void OnDrop(Transform dropTrm)
+        public void HandleDrop(Transform dropTrm)
         {
+            if (_isCanDropType != null && !dropTrm.TryGetComponent(_isCanDropType, out _)) return;
             OnDropped?.Invoke(dropTrm);
         }
 
@@ -30,6 +32,11 @@ namespace _02.Scripts.InteractionSystemSystem.Interactions
         public void OnHoverExit()
         {
             OnHoverExited?.Invoke();
+        }
+        
+        public void SetCanDropType(Type type)
+        {
+            _isCanDropType = type;
         }
     }
 }

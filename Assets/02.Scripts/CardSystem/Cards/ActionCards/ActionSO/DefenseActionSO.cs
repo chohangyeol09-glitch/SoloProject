@@ -11,7 +11,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
         {
             foreach (AbstractSlot target in targets)
             {
-                target.CurrentCard?.AddValue(card.Value);
+                target.CurrentCard?.ChangeValue(card.DefenseValue);
             }
         }
     }

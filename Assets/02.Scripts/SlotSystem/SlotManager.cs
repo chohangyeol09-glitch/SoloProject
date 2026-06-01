@@ -36,20 +36,24 @@ namespace _02.Scripts.SlotSystem
         public void ExecuteAllCard()
         {
             foreach (PlayerSlot slot in playerSlots)
-                ExecuteCard(slot);
+                if (slot.CurrentCard != null)
+                    ExecuteCard(slot);
             
             foreach (EnemySlot slot in enemySlots)
-                ExecuteCard(slot);
+                if (slot.CurrentCard != null)
+                    ExecuteCard(slot);
         }
 
         private void ExecuteCard(AbstractSlot abstractSlot)
         {
             ActionCard card = abstractSlot.CurrentCard;
-            List<AbstractSlot> targets = GetTargetSlots(abstractSlot, abstractSlot.CurrentCard.ActionCadeData.TargetRangeType);
+            Debug.Assert(abstractSlot != null, "abstractSlot != null");
+            //Debug.Assert(abstractSlot.CurrentCard.ActionCardData.TargetRangeType);
+            List<AbstractSlot> targets = GetTargetSlots(abstractSlot, abstractSlot.CurrentCard.ActionCardData.TargetRangeType);
             
-            card.ActionCadeData.Action.Execute(card, targets);
+            card.ActionCardData.Action.Execute(card, targets);
             EffectExecuteContext context = new EffectExecuteContext(card, targets);
-            foreach (AbstractActionEffectSO effect in card.ActionCadeData.Effects)
+            foreach (AbstractActionEffectSO effect in card.ActionCardData.Effects)
             {
                 if (effect.IsActivate(context))
                     effect.Apply(context, targets);
@@ -101,13 +105,26 @@ namespace _02.Scripts.SlotSystem
 
 #if UNITY_EDITOR
 
+        [Header("Test")] 
+        [SerializeField] private GameObject enemyActionCardPrefab;
+        
+        
+        [ContextMenu("TestCreateEnemy")]
+        private void TestCreateEnemy()
+        {
+
+            for (int i = 0; i < 4; ++i)
+            {
+                GameObject card = Instantiate(enemyActionCardPrefab);
+                ActionCard action = card.GetComponent<ActionCard>();
+                enemySlots[i].SetCurrentCard(action);
+            }
+        }
+        
         [ContextMenu("Test Attack")]
         private void TestAttack()
         {
-            foreach (AbstractSlot slot in playerSlots)
-            {
-                
-            }
+            ExecuteAllCard();
         }
         
         #endif

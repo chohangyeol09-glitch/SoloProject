@@ -15,26 +15,24 @@ namespace _02.Scripts.SlotSystem.Slots
             base.InitializeModules();
             DropInteraction = GetModule<DropInteraction>();
             Debug.Assert(DropInteraction != null, "DropInteraction is null: " + gameObject.name);
+            
+            DropInteraction.SetCanDropType(typeof(ActionCard));
         }
 
         protected override void AfterInitializeModules()
         {
-            DropInteraction.OnDropped += OnDrop;
+            DropInteraction.OnDropped += HandleDrop;
         }
         
         private void OnDestroy()
         {
-            DropInteraction.OnDropped -= OnDrop;
+            DropInteraction.OnDropped -= HandleDrop;
         }
         
-        public void OnDrop(Transform dropTrm)
+        public void HandleDrop(Transform dropTrm)
         {
             if (!dropTrm.TryGetComponent<ActionCard>(out ActionCard card)) return;
             
-            Vector3 pos = transform.position;
-            pos.y += 0.1f;
-            dropTrm.transform.position = pos;
-
             SetCurrentCard(card);
             OnDropCard?.Invoke(this, SlotNumber);
         }
