@@ -32,11 +32,9 @@ namespace _02.Scripts.CoreSystem
             {
                 _instance = this as T;
                 if (isDonDestroy)
-                {
                     DontDestroyOnLoad(this.gameObject);
-                }
             }
-            else
+            else if (_instance != this)
             {
                 Destroy(this.gameObject);
             }

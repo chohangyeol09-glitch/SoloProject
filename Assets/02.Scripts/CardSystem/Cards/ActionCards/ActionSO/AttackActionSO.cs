@@ -11,12 +11,9 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
         {
             foreach (AbstractSlot target in targets)
             {
-                string log = "Attack, Damage: " + card.AttackValue + " Targets: ";
-                foreach (AbstractSlot slot in targets)
-                {
-                    log += slot.SlotNumber + ", ";
-                }
-                Debug.Log(log); //공격 되는지 보기
+                if (target == null)
+                    continue;
+                Debug.Log("Attack, Damage: " + card.AttackValue + " Targets: " + target.SlotNumber); 
                 target.CurrentCard?.TakeDamage(card.AttackValue);
             }
         }

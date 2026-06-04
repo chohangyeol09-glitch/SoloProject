@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa103d36116049bbbed386139b7bb0a4, type: 3}
   m_Name: AC_Self_Defense
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.ActionCards.ActionCadeDataSO
+  <Name>k__BackingField: "\uC790\uAE30 \uBC29\uC5B4"
+  <Icon>k__BackingField: {fileID: 21300000, guid: a17fcaf696b4acd43b1764f51d75afb0, type: 3}
   <ActionCardType>k__BackingField: 1
   <TargetRangeType>k__BackingField: 2
   <Action>k__BackingField: {fileID: 11400000, guid: 0fa38d9de245b644f9e8a140162cf000, type: 2}
-  <Effects>k__BackingField: []
+  <BeforeEffects>k__BackingField: []
+  <AfterEffects>k__BackingField: []

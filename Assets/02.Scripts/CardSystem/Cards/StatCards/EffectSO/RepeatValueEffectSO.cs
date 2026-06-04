@@ -13,7 +13,6 @@ namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
 
         public override void Apply(StatExecuteContext context)
         {
-            Debug.Log("StatCardEffectApply");
             for (int i =  0; i < RepeatCount; i++)
                 context.TargetActionCard.ChangeValue(Value);
         }

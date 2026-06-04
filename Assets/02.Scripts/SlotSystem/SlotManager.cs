@@ -51,13 +51,17 @@ namespace _02.Scripts.SlotSystem
             //Debug.Assert(abstractSlot.CurrentCard.ActionCardData.TargetRangeType);
             List<AbstractSlot> targets = GetTargetSlots(abstractSlot, abstractSlot.CurrentCard.ActionCardData.TargetRangeType);
             
-            card.ActionCardData.Action.Execute(card, targets);
             EffectExecuteContext context = new EffectExecuteContext(card, targets);
-            foreach (AbstractActionEffectSO effect in card.ActionCardData.Effects)
-            {
+            
+            foreach (AbstractActionEffectSO effect in card.ActionCardData.BeforeEffects)
                 if (effect.IsActivate(context))
                     effect.Apply(context, targets);
-            }
+            
+            card.ActionCardData.Action.Execute(card, targets);
+            
+            foreach (AbstractActionEffectSO effect in card.ActionCardData.AfterEffects)
+                if (effect.IsActivate(context))
+                    effect.Apply(context, targets);
             
         }
 
@@ -74,11 +78,12 @@ namespace _02.Scripts.SlotSystem
             switch (targetRangeType)
             {
                 //상대 타겟
-                case SlotTargetRangeType.FRONT:
+                case SlotTargetRangeType.FRONT_F:
                     return GetSlot(targetSlots, index);
                 
                 case SlotTargetRangeType.FRONT_LR:
                     return GetSlot(targetSlots, index - 1, index + 1);
+                
                 
                 //우리쪽 타겟
                 case SlotTargetRangeType.SELF:
@@ -116,6 +121,7 @@ namespace _02.Scripts.SlotSystem
             for (int i = 0; i < 4; ++i)
             {
                 GameObject card = Instantiate(enemyActionCardPrefab);
+                card.gameObject.name = i.ToString();
                 ActionCard action = card.GetComponent<ActionCard>();
                 enemySlots[i].SetCurrentCard(action);
             }

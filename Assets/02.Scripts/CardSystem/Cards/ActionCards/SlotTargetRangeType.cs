@@ -2,7 +2,7 @@
 {
     public enum SlotTargetRangeType
     {
-        FRONT,
+        FRONT_F,
         FRONT_LR,
         SELF,
         LEFT,

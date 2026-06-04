@@ -7,8 +7,6 @@ namespace _02.Scripts.InteractionSystemSystem.Interactions
     public class DropInteraction : MonoBehaviour, IModule, IDropTarget, IHoverable
     {
         public event Action<Transform> OnDropped;
-        public event Action OnHoverEntered;
-        public event Action OnHoverExited;
         
         private ModuleOwner _owner;
         private Type _isCanDropType;
@@ -26,12 +24,10 @@ namespace _02.Scripts.InteractionSystemSystem.Interactions
 
         public void OnHoverEnter()
         {
-            OnHoverEntered?.Invoke();
         }
 
         public void OnHoverExit()
         {
-            OnHoverExited?.Invoke();
         }
         
         public void SetCanDropType(Type type)

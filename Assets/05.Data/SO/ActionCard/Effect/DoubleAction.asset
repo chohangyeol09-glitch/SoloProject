@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d55bdbffd1b437fb595f1076f1751d3, type: 3}
   m_Name: DoubleAction
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.ActionCards.SpecialEffectSO.DoubleActionEffectSO
-  targetValue: 3
+  <TargetValue>k__BackingField: 3
