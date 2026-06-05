@@ -10,10 +10,10 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.EffectSO
     {
         [SerializeField] private int targetHealth;
         
-        public override bool IsActivate(EffectExecuteContext context) => PlayerDataManager.Instance.MaxHealth <= targetHealth;
+        public override bool IsActivate(EffectExecuteContext context) => PlayerDataManager.Instance.CurrentHealth <= targetHealth;
         public override void Apply(EffectExecuteContext context, List<AbstractSlot> targets)
         {
-            context.ActionCard.ChangeValue(5);
+            context.ActionCard.AddAttackValue(5);
         }
     }
 }

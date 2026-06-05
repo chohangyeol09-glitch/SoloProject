@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CoreSystem.EventChannel;
-using _02.Scripts.CoreSystem.EventChannel.GameEvents.StatCardEvent;
+using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
+using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using _02.Scripts.Player;
 using UnityEditor;

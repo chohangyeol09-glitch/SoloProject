@@ -122,7 +122,7 @@ namespace _02.Scripts.SlotSystem
             {
                 GameObject card = Instantiate(enemyActionCardPrefab);
                 card.gameObject.name = i.ToString();
-                ActionCard action = card.GetComponent<ActionCard>();
+                EnemyActionCard action = card.GetComponent<EnemyActionCard>();
                 enemySlots[i].SetCurrentCard(action);
             }
         }

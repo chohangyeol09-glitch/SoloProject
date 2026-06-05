@@ -1,7 +1,7 @@
 ﻿using _02.Scripts.CardSystem;
 using _02.Scripts.CardSystem.Cards.ActionCards;
-using _02.Scripts.InteractionSystemSystem;
-using _02.Scripts.InteractionSystemSystem.Interactions;
+using _02.Scripts.InteractionSystem;
+using _02.Scripts.InteractionSystem.Interactions;
 using _02.Scripts.SlotSystem.Slots;
 using UnityEngine;
 
@@ -13,16 +13,18 @@ namespace _02.Scripts.Player
         [SerializeField] private LayerMask cardLayer;
         [SerializeField] private LayerMask tableLayer;
         [SerializeField] private LayerMask draggingLayer;
-        [SerializeField] private float yOffset = 2f;
+        [SerializeField] private LayerMask propLayer;
+        [SerializeField] private float dragUpOffset = 1.5f;
         [SerializeField] private float dragSensitivity = 0.01f;
-        
+
         private IHoverable _hoveredObject;
         private IHoverable _hoveredSlotHoverable;
         private IDropTarget _hoveredSlot;
         private IDraggable _draggable;
+        private IHoverable _hoveredProp;
+        private IClickable _clickedProp;
         private int _dragObjOriginLayer;
 
-        private Vector3 _tableRayPos;
         private Vector2 _mousePos;
         private Transform _lastDropHit;
         private Ray _ray;
@@ -49,58 +51,67 @@ namespace _02.Scripts.Player
         {
             _ray = Camera.main.ScreenPointToRay(_mousePos);
 
-            if (Physics.Raycast(_ray, out RaycastHit tableHit, Mathf.Infinity, tableLayer))
-            {
-                _tableRayPos = tableHit.point;
-                _tableRayPos.y += yOffset;
-            }
-
             if (!_isDragging)
             {
                 if (Physics.Raycast(_ray, out RaycastHit cardHit, Mathf.Infinity, cardLayer))
                 {
-                    CardInteraction cardInteraction = cardHit.transform.GetComponent<AbstractCard>().CardInteraction;
+                    CardInteraction cardInteraction = null;
+                    if (cardHit.transform.TryGetComponent<AbstractCard>(out var card))
+                        cardInteraction = card.CardInteraction;
                     if (cardInteraction == null) return;
 
                     if (_hoveredObject != cardInteraction)
                     {
-                        _hoveredObject?.OnHoverExit();
+                        _hoveredObject?.HandleHoverExit();
                         _hoveredObject = cardInteraction;
-                        _hoveredObject.OnHoverEnter();
+                        _hoveredObject.HandleHoverEnter();
                     }
                 }
                 else
                 {
-                    _hoveredObject?.OnHoverExit();
+                    _hoveredObject?.HandleHoverExit();
                     _hoveredObject = null;
+                }
+                
+                if (Physics.Raycast(_ray, out RaycastHit propHit, Mathf.Infinity, propLayer))
+                {
+                    var propInteraction = propHit.transform.GetComponentInChildren<PropInteraction>();
+                    if (_hoveredProp != propInteraction)
+                    {
+                        _hoveredProp?.HandleHoverExit();
+                        _hoveredProp = propInteraction;
+                        _hoveredProp?.HandleHoverEnter();
+                    }
+                }
+                else
+                {
+                    _hoveredProp?.HandleHoverExit();
+                    _hoveredProp = null;
                 }
             }
             else
             {
-                //_draggable.OnDragging(_tableRayPos);
-
                 if (Physics.Raycast(_ray, out RaycastHit dropHit, Mathf.Infinity, _draggable.DropLayer))
                 {
-                    if (_lastDropHit == dropHit.transform) return;
-                    
-                    _hoveredSlotHoverable?.OnHoverExit();
-                    _lastDropHit = dropHit.transform;
+                    if (_lastDropHit != dropHit.transform)
+                    {
+                        _hoveredSlotHoverable?.HandleHoverExit();
+                        _lastDropHit = dropHit.transform;
 
-                    DropInteraction interaction = null;
+                        DropInteraction interaction = null;
+                        if (dropHit.transform.TryGetComponent<PlayerSlot>(out var slot))
+                            interaction = slot.DropInteraction;
+                        else if (dropHit.transform.TryGetComponent<PlayerActionCard>(out var card))
+                            interaction = card.DropInteraction;
 
-                    //임시
-                    if (dropHit.transform.TryGetComponent<PlayerSlot>(out var slot))
-                        interaction = slot.DropInteraction;
-                    else if (dropHit.transform.TryGetComponent<ActionCard>(out var card))
-                        interaction = card.DropInteraction;
-
-                    _hoveredSlot = interaction;
-                    _hoveredSlotHoverable = interaction;
-                    _hoveredSlotHoverable?.OnHoverEnter();
+                        _hoveredSlot = interaction;
+                        _hoveredSlotHoverable = interaction;
+                        _hoveredSlotHoverable?.HandleHoverEnter();
+                    }
                 }
                 else
                 {
-                    _hoveredSlotHoverable?.OnHoverExit();
+                    _hoveredSlotHoverable?.HandleHoverExit();
                     _hoveredSlot = null;
                     _hoveredSlotHoverable = null;
                     _lastDropHit = null;
@@ -112,16 +123,29 @@ namespace _02.Scripts.Player
         {
             if (_isDragging) return;
             Ray clickRay = Camera.main.ScreenPointToRay(_mousePos);
-
-            if (!Physics.Raycast(clickRay, out RaycastHit cardHit, Mathf.Infinity, cardLayer)) return;
             
-            _draggable = cardHit.transform.GetComponent<AbstractCard>().CardInteraction;
-            _draggable?.OnDragStart();
-            _hoveredObject?.OnHoverExit();
-            _hoveredObject = null;
-                
-            _dragObjOriginLayer = _draggable.Transform.gameObject.layer;
-            _draggable.Transform.gameObject.layer = draggingLayer;
+            if (Physics.Raycast(clickRay, out RaycastHit cardHit, Mathf.Infinity, cardLayer))
+            {
+                AbstractCard card = cardHit.transform.GetComponent<AbstractCard>();
+                if (card.IsUpDownMoving) return;
+
+                _draggable = card.CardInteraction;
+                float targetY = _draggable.Transform.position.y + dragUpOffset;
+                Vector3 mouseWorldPos = GetCardTargetPos(targetY);
+
+                _draggable.HandleDragStart(mouseWorldPos);
+                _hoveredObject?.HandleHoverExit();
+                _hoveredObject = null;
+
+                _dragObjOriginLayer = _draggable.Transform.gameObject.layer;
+                _draggable.Transform.gameObject.layer = draggingLayer;
+                return;
+            }
+
+            if (Physics.Raycast(clickRay, out RaycastHit propHit, Mathf.Infinity, propLayer))
+            {
+                propHit.transform.GetComponentInChildren<PropInteraction>()?.HandleClick();
+            }
         }
 
         private void ClickUp()
@@ -132,38 +156,43 @@ namespace _02.Scripts.Player
             if (Physics.Raycast(clickRay, out RaycastHit dropHit, Mathf.Infinity, _draggable.DropLayer))
             {
                 DropInteraction interaction = null;
-
                 if (dropHit.transform.TryGetComponent<PlayerSlot>(out var slot))
                     interaction = slot.DropInteraction;
-                else if (dropHit.transform.TryGetComponent<ActionCard>(out var card))
-                {
+                else if (dropHit.transform.TryGetComponent<PlayerActionCard>(out var card))
                     interaction = card.DropInteraction;
-                }
+
                 interaction?.HandleDrop(_draggable.Transform);
-                _hoveredSlotHoverable?.OnHoverExit();
+                _hoveredSlotHoverable?.HandleHoverExit();
                 _hoveredSlot = null;
                 _hoveredSlotHoverable = null;
                 _lastDropHit = null;
             }
             else
             {
-                _draggable.OnDragEnd();
+                _draggable.HandleDragEnd();
             }
 
             _draggable.Transform.gameObject.layer = _dragObjOriginLayer;
-            
             _draggable = null;
         }
 
         private void MoveMousePosition(Vector2 pos) => _mousePos = pos;
+
         private void MoveDraggable(Vector2 delta)
         {
             if (!_isDragging) return;
+            float cardY = _draggable.Transform.position.y;
+            Vector3 targetPos = GetCardTargetPos(cardY);
+            _draggable.HandleDragging(targetPos);
+        }
 
-            Vector3 worldDelta = Camera.main.transform.right * delta.x * dragSensitivity
-                                 + Camera.main.transform.up * delta.y * dragSensitivity;
-
-            _draggable.OnDragging(_draggable.Transform.position + worldDelta);
+        private Vector3 GetCardTargetPos(float cardY)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(_mousePos);
+            Plane plane = new Plane(Vector3.up, new Vector3(0, cardY, 0));
+            if (plane.Raycast(ray, out float distance))
+                return ray.GetPoint(distance);
+            return _draggable.Transform.position;
         }
     }
 }

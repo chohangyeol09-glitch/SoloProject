@@ -4,7 +4,7 @@ using System.Diagnostics.Tracing;
 using _02.Scripts.CardSystem.Cards;
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CoreSystem.EventChannel;
-using _02.Scripts.CoreSystem.EventChannel.GameEvents.StatCardEvent;
+using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using DG.Tweening;
 using UnityEngine;
@@ -22,8 +22,8 @@ namespace _02.Scripts.DeckSystem
         [SerializeField] private float dragYOffset = 1.5f; // 드래그 시 Y
         [SerializeField] private float fanAngle = 30f; // 부채꼴 각도
         [SerializeField] private float centerZOffset = 0.1f;
+        [SerializeField] private Vector3 cardDefaultRotation = new Vector3(-90, 0, 0);
         [SerializeField] private float arrangeDuration = 0.3f;
-
         public int DefaultDrawCount { get; set; } = 3;
 
         private DeckLogic _deckLogic;
@@ -113,7 +113,7 @@ namespace _02.Scripts.DeckSystem
             float rad = angle * Mathf.Deg2Rad;
 
             float centerDist = Mathf.Abs(index - (total - 1) * 0.5f);
-            float zValue = -centerDist * centerZOffset; // ← centerZOffset 사용
+            float zValue = -centerDist * centerZOffset; 
 
             return handCenter.position + new Vector3(
                 Mathf.Sin(rad) * cardSpacing * total * 0.5f,
@@ -126,7 +126,8 @@ namespace _02.Scripts.DeckSystem
         {
             float t = total == 1 ? 0.5f : (float)index / (total - 1);
             float angle = Mathf.Lerp(-fanAngle / 2f, fanAngle / 2f, t);
-            return Quaternion.Euler(0, angle, 0); // ← Z → Y로 변경
+
+            return Quaternion.Euler(0, angle, 0) * Quaternion.Euler(cardDefaultRotation);
         }
         
         public float GetYPerIndex() => yPerIndex;

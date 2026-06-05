@@ -97,3 +97,5 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+Assets/05.Data/Prefab/Action Card.prefab
+Assets/05.Data/Prefab/Action Card.prefab.meta

@@ -1,5 +1,5 @@
 ﻿using _02.Scripts.CoreSystem.EventChannel;
-using _02.Scripts.CoreSystem.EventChannel.GameEvents.StatCardEvent;
+using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO

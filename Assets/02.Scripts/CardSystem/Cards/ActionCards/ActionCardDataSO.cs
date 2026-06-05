@@ -10,7 +10,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
     {
         [field: SerializeField] public string Name { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
-        [field: SerializeField] public  ActionSO.ActionCardType ActionCardType { get; private set; }
+        [field: SerializeField] public  ActionCardType ActionCardType { get; private set; }
         [field: SerializeField] public SlotTargetRangeType TargetRangeType {get; private set;}
         [field: SerializeField] public AbstractActionSO Action {get; private set;}  
         [field: SerializeField] public List<AbstractActionEffectSO> BeforeEffects { get; private set; } = new();
