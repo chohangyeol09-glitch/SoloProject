@@ -5,6 +5,7 @@ using _02.Scripts.CardSystem.Cards;
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
+using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using DG.Tweening;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace _02.Scripts.DeckSystem
     public class HandLogic : MonoBehaviour, IModule
     {
         [SerializeField] private EventChannelSO cardEventChannel;
+        [SerializeField] private EventChannelSO turnEventChannel;
         [SerializeField] private GameObject statCardPrefab;
         [SerializeField] private Transform handCenter;
         [SerializeField] private int maxHandSize = 10;
@@ -33,7 +35,11 @@ namespace _02.Scripts.DeckSystem
         {
             _deckLogic = owner.GetModule<DeckLogic>();
             cardEventChannel.AddListener<DrawCardEvent>(HandleDrawHand);
+            turnEventChannel.AddListener<TurnStartEvent>(HandleTurnStart);
+            turnEventChannel.AddListener<TurnEndEvent>(HandleTurnEnd);
         }
+
+        
 
         private void OnDestroy()
         {
@@ -44,7 +50,18 @@ namespace _02.Scripts.DeckSystem
         {
             DrawHand(evt.Count);
         }
-
+        
+        private void HandleTurnStart(TurnStartEvent evt)
+        {
+            DrawHand(DefaultDrawCount);
+        }
+        
+        private void HandleTurnEnd(TurnEndEvent evt)
+        {
+            ClearHand();
+            
+        }
+        
         public void DrawHand(int count)
         {
             int canDraw = Mathf.Min(count, maxHandSize - _handCards.Count);

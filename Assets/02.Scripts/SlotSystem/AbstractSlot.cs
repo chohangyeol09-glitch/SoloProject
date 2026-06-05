@@ -1,5 +1,6 @@
 ﻿using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.CoreSystem.ModuleSystem;
+using _02.Scripts.SlotSystem.Slots;
 using TMPro;
 using UnityEngine;
 
@@ -29,6 +30,10 @@ namespace _02.Scripts.SlotSystem
                 RemoveCurrentCard();
 
             CurrentCard = card;
+
+            if (card is PlayerActionCard playerCard)
+                playerCard.SetOriginalSlot(this as PlayerSlot);
+
             Vector3 pos = transform.position;
             pos.y += 0.1f;
             card.transform.position = pos;
@@ -38,5 +43,6 @@ namespace _02.Scripts.SlotSystem
         {
             CurrentCard = null;
         }
+        
     }
 }

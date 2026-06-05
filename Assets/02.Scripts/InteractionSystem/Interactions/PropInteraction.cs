@@ -17,7 +17,6 @@ namespace _02.Scripts.InteractionSystem.Interactions
         {
             _owner = owner;
             _outline = _owner.transform.GetComponent<Outlinable>();
-            Debug.Log($"{_outline.transform.name}, outline: {_outline == null}");
         }
 
         public void HandleClick()

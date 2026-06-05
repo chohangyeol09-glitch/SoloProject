@@ -10,7 +10,8 @@ namespace _02.Scripts.Player
     public class PlayerDataManager : MonoSingleton<PlayerDataManager>
     {
         [SerializeField] private EventChannelSO playerEventChannel;
-
+        [SerializeField] private EventChannelSO turnEventChannel;
+        [SerializeField] private StartStatCardListSO startStatCardListSO;
         [field: SerializeField] public int MaxCost { get; private set; } = 3;
         [field: SerializeField] public int MaxHealth { get; private set; } = 10;
 
@@ -37,7 +38,6 @@ namespace _02.Scripts.Player
             }
         }
 
-        [SerializeField] private StartStatCardListSO startStatCardListSO;
         public PlayerRuntimeDeck RuntimeDeck { get; private set; } = new();
 
         protected override void Awake()
@@ -45,8 +45,13 @@ namespace _02.Scripts.Player
             base.Awake();
             DontDestroyOnLoad(gameObject);
             RuntimeDeck.Initialize(startStatCardListSO);
-            CurrentCost = MaxCost;
+            turnEventChannel.AddListener<TurnStartEvent>(HandleTurnStart);
             CurrentHealth = MaxHealth;
+        }
+
+        private void HandleTurnStart(TurnStartEvent evt)
+        {
+            CurrentCost = MaxCost;
         }
     }
 }

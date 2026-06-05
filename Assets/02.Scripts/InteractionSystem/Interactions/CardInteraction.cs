@@ -30,11 +30,18 @@ namespace _02.Scripts.InteractionSystem.Interactions
 
         public void HandleDragEnd()
         {
-            _isDragging = false;
             OnDragEnd?.Invoke();
         }
 
-        public void HandleHoverEnter() => OnHoverEnter?.Invoke();
+        public void HandleDropSuccess()
+        {
+            _isDragging = false;
+        }
+
+        public void HandleHoverEnter()
+        {
+            OnHoverEnter?.Invoke();
+        }
 
         public void HandleHoverExit()
         {

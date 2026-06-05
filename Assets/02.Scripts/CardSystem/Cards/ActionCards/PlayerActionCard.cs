@@ -2,11 +2,11 @@
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CardSystem.Cards.StatCards.EffectSO;
 using _02.Scripts.CoreSystem.EventChannel;
-using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.InteractionSystem;
 using _02.Scripts.InteractionSystem.Interactions;
+using _02.Scripts.SlotSystem.Slots;
 using EPOOutline;
 using UnityEngine;
 
@@ -16,6 +16,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
     {
         public DropInteraction DropInteraction { get; private set; }
         public ActionCardUIChanger UIChanger { get; private set; }
+        public PlayerSlot OriginalSlot { get; private set; }
         public event Action<bool> OnDropSuccess;
 
         [SerializeField] private EventChannelSO slotChannel;
@@ -31,17 +32,23 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             Debug.Assert(DropInteraction != null, $"DropInteraction is null: {gameObject.name}");
             Debug.Assert(UIChanger != null, $"UIChanger is null: {gameObject.name}");
 
+            _outline.enabled = false;
             DropInteraction.OnDrop -= HandleDrop;
             DropInteraction.OnDrop += HandleDrop;
+            DropInteraction.OnHoverEnter += HandleDropHoverEnter;
+            DropInteraction.OnHoverExit += HandleDropHoverExit;
             DropInteraction.SetCanDropType(typeof(StatCard));
-
             if (ActionCardData != null) SetData();
         }
 
         private void OnDestroy()
         {
             if (DropInteraction != null)
+            {
                 DropInteraction.OnDrop -= HandleDrop;
+                DropInteraction.OnHoverEnter -= HandleDropHoverEnter; 
+                DropInteraction.OnHoverExit -= HandleDropHoverExit;
+            }
         }
 
         public void SetData() { }
@@ -89,13 +96,29 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         protected override void HandleHoverEnter()
         {
             base.HandleHoverEnter();
+            _outline.enabled = true;
             _outline.OutlineParameters.Color = Color.white;
         }
 
         protected override void HandleHoverExit()
         {
             base.HandleHoverExit();
+            _outline.enabled = false;
             _outline.OutlineParameters.Color = Color.clear;
         }
+        private void HandleDropHoverEnter()
+        {
+            _outline.enabled = true;
+            _outline.OutlineParameters.Color = Color.white; 
+        }
+
+        private void HandleDropHoverExit()
+        {
+            _outline.enabled = false;
+            _outline.OutlineParameters.Color = Color.clear;
+        }
+        public void SetOriginalSlot(PlayerSlot slot) => OriginalSlot = slot;
+        public void ForceReturn() => HandleDragEnd();
+
     }
 }

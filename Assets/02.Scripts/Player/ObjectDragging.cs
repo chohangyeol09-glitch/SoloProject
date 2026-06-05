@@ -1,4 +1,5 @@
 ﻿using _02.Scripts.CardSystem;
+using _02.Scripts.CardSystem.Cards;
 using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.InteractionSystem;
 using _02.Scripts.InteractionSystem.Interactions;
@@ -53,18 +54,22 @@ namespace _02.Scripts.Player
 
             if (!_isDragging)
             {
+                // 카드 호버 감지
                 if (Physics.Raycast(_ray, out RaycastHit cardHit, Mathf.Infinity, cardLayer))
                 {
                     CardInteraction cardInteraction = null;
-                    if (cardHit.transform.TryGetComponent<AbstractCard>(out var card))
-                        cardInteraction = card.CardInteraction;
-                    if (cardInteraction == null) return;
+                    if (cardHit.transform.TryGetComponent<PlayerActionCard>(out var playerCard))
+                    {
+                        cardInteraction = playerCard.CardInteraction;
+                    }
+                    else if (cardHit.transform.TryGetComponent<StatCard>(out var statCard))
+                        cardInteraction = statCard.CardInteraction;
 
                     if (_hoveredObject != cardInteraction)
                     {
                         _hoveredObject?.HandleHoverExit();
                         _hoveredObject = cardInteraction;
-                        _hoveredObject.HandleHoverEnter();
+                        _hoveredObject?.HandleHoverEnter();
                     }
                 }
                 else
@@ -72,7 +77,8 @@ namespace _02.Scripts.Player
                     _hoveredObject?.HandleHoverExit();
                     _hoveredObject = null;
                 }
-                
+
+                // Prop 호버 감지
                 if (Physics.Raycast(_ray, out RaycastHit propHit, Mathf.Infinity, propLayer))
                 {
                     var propInteraction = propHit.transform.GetComponentInChildren<PropInteraction>();
@@ -91,30 +97,54 @@ namespace _02.Scripts.Player
             }
             else
             {
-                if (Physics.Raycast(_ray, out RaycastHit dropHit, Mathf.Infinity, _draggable.DropLayer))
+                // 드래그 중
+                bool isStatCard = _draggable.Transform.TryGetComponent<StatCard>(out _);
+
+                if (isStatCard)
                 {
-                    if (_lastDropHit != dropHit.transform)
+                    // StatCard 드래그 중 → ActionCard 호버 감지
+                    if (Physics.Raycast(_ray, out RaycastHit cardHit, Mathf.Infinity, _draggable.DropLayer))
+                    {
+                        var interaction = GetDropInteraction(cardHit.transform);
+                        if (_lastDropHit != cardHit.transform)
+                        {
+                            _hoveredSlotHoverable?.HandleHoverExit();
+                            _lastDropHit = cardHit.transform;
+                            _hoveredSlot = interaction;
+                            _hoveredSlotHoverable = interaction;
+                            _hoveredSlotHoverable?.HandleHoverEnter();
+                        }
+                    }
+                    else
                     {
                         _hoveredSlotHoverable?.HandleHoverExit();
-                        _lastDropHit = dropHit.transform;
-
-                        DropInteraction interaction = null;
-                        if (dropHit.transform.TryGetComponent<PlayerSlot>(out var slot))
-                            interaction = slot.DropInteraction;
-                        else if (dropHit.transform.TryGetComponent<PlayerActionCard>(out var card))
-                            interaction = card.DropInteraction;
-
-                        _hoveredSlot = interaction;
-                        _hoveredSlotHoverable = interaction;
-                        _hoveredSlotHoverable?.HandleHoverEnter();
+                        _hoveredSlot = null;
+                        _hoveredSlotHoverable = null;
+                        _lastDropHit = null;
                     }
                 }
                 else
                 {
-                    _hoveredSlotHoverable?.HandleHoverExit();
-                    _hoveredSlot = null;
-                    _hoveredSlotHoverable = null;
-                    _lastDropHit = null;
+                    // ActionCard 드래그 중 → Slot만 호버 감지
+                    if (Physics.Raycast(_ray, out RaycastHit dropHit, Mathf.Infinity, _draggable.DropLayer))
+                    {
+                        var interaction = GetDropInteraction(dropHit.transform);
+                        if (_lastDropHit != dropHit.transform)
+                        {
+                            _hoveredSlotHoverable?.HandleHoverExit();
+                            _lastDropHit = dropHit.transform;
+                            _hoveredSlot = interaction;
+                            _hoveredSlotHoverable = interaction;
+                            _hoveredSlotHoverable?.HandleHoverEnter();
+                        }
+                    }
+                    else
+                    {
+                        _hoveredSlotHoverable?.HandleHoverExit();
+                        _hoveredSlot = null;
+                        _hoveredSlotHoverable = null;
+                        _lastDropHit = null;
+                    }
                 }
             }
         }
@@ -123,19 +153,21 @@ namespace _02.Scripts.Player
         {
             if (_isDragging) return;
             Ray clickRay = Camera.main.ScreenPointToRay(_mousePos);
-            
+
             if (Physics.Raycast(clickRay, out RaycastHit cardHit, Mathf.Infinity, cardLayer))
             {
                 AbstractCard card = cardHit.transform.GetComponent<AbstractCard>();
+                if (card.CardInteraction == null) return;
                 if (card.IsUpDownMoving) return;
+
+                _hoveredObject?.HandleHoverExit();
+                _hoveredObject = null;
 
                 _draggable = card.CardInteraction;
                 float targetY = _draggable.Transform.position.y + dragUpOffset;
                 Vector3 mouseWorldPos = GetCardTargetPos(targetY);
 
                 _draggable.HandleDragStart(mouseWorldPos);
-                _hoveredObject?.HandleHoverExit();
-                _hoveredObject = null;
 
                 _dragObjOriginLayer = _draggable.Transform.gameObject.layer;
                 _draggable.Transform.gameObject.layer = draggingLayer;
@@ -155,6 +187,8 @@ namespace _02.Scripts.Player
             Ray clickRay = Camera.main.ScreenPointToRay(_mousePos);
             if (Physics.Raycast(clickRay, out RaycastHit dropHit, Mathf.Infinity, _draggable.DropLayer))
             {
+                _draggable.HandleDropSuccess();
+    
                 DropInteraction interaction = null;
                 if (dropHit.transform.TryGetComponent<PlayerSlot>(out var slot))
                     interaction = slot.DropInteraction;
@@ -166,6 +200,9 @@ namespace _02.Scripts.Player
                 _hoveredSlot = null;
                 _hoveredSlotHoverable = null;
                 _lastDropHit = null;
+
+                _hoveredObject?.HandleHoverExit();
+                _hoveredObject = null;
             }
             else
             {
@@ -193,6 +230,15 @@ namespace _02.Scripts.Player
             if (plane.Raycast(ray, out float distance))
                 return ray.GetPoint(distance);
             return _draggable.Transform.position;
+        }
+        
+        private DropInteraction GetDropInteraction(Transform target)
+        {
+            if (target.TryGetComponent<PlayerSlot>(out var slot))
+                return slot.DropInteraction;
+            if (target.TryGetComponent<PlayerActionCard>(out var card))
+                return card.DropInteraction;
+            return null;
         }
     }
 }

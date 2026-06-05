@@ -58,11 +58,37 @@ namespace _02.Scripts.SlotSystem.Slots
 
         private void HandleDrop(Transform dropTrm)
         {
-            if (!dropTrm.TryGetComponent<PlayerActionCard>(out PlayerActionCard card)) return;
-            if (CurrentCard != null) return; 
+            if (!dropTrm.TryGetComponent<PlayerActionCard>(out PlayerActionCard incomingCard)) return;
 
-            SetCurrentCard(card);
+            if (CurrentCard != null)
+            {
+                // 스왑 - 드래그한 카드의 원래 슬롯 찾기
+                SwapCards(incomingCard);
+                return;
+            }
+
+            SetCurrentCard(incomingCard);
             OnDropCard?.Invoke(this, SlotNumber);
+        }
+        
+        private void SwapCards(PlayerActionCard incomingCard)
+        {
+            PlayerActionCard existingCard = CurrentCard as PlayerActionCard;
+            PlayerSlot incomingOriginalSlot = incomingCard.OriginalSlot; // ← 먼저 저장
+
+            SetCurrentCard(incomingCard); // ← 이제 덮어씌워져도 상관없음
+            OnDropCard?.Invoke(this, SlotNumber);
+
+            if (incomingOriginalSlot != null)
+            {
+                Debug.Log($"OriginalSlot: {incomingOriginalSlot}");
+                incomingOriginalSlot.SetCurrentCard(existingCard);
+                incomingOriginalSlot.OnDropCard?.Invoke(incomingOriginalSlot, incomingOriginalSlot.SlotNumber);
+            }
+            else
+            {
+                existingCard?.ForceReturn();
+            }
         }
     }
 }

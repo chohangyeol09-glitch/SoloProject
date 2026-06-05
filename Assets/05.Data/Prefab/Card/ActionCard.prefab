@@ -1189,7 +1189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.ActionCards.PlayerActionCard
   dropLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   dragUpOffset: 1.5
   dragUpDuration: 0.15
   <ActionCardData>k__BackingField: {fileID: 0}

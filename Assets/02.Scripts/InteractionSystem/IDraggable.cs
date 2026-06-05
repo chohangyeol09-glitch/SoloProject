@@ -10,5 +10,6 @@ namespace _02.Scripts.InteractionSystem
         void HandleDragStart(Vector3 mouseWorldPos);
         void HandleDragging(Vector3 pos);
         void HandleDragEnd();
+        void HandleDropSuccess();
     }
 }

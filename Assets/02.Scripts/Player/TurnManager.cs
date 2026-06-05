@@ -8,17 +8,14 @@ namespace _02.Scripts.Player
     {
         public int TurnCount { get; private set; }
 
-        [SerializeField] private EventChannelSO gameChannel;
+        [SerializeField] private EventChannelSO turnEventChannel;
 
-        public void TurnEnd()
-        {
-            gameChannel.RaiseEvent(new TurnEndEvent());
-        }
-
+        [ContextMenu("TurnStart")]
         public void TurnStart()
         {
             TurnCount = 1;
-            gameChannel.RaiseEvent(new TurnStartEvent().Init(TurnCount));
+            Debug.Log("Turn Start");
+            turnEventChannel.RaiseEvent(new TurnStartEvent().Init(TurnCount));
         }
     }
 }

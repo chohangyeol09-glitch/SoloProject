@@ -9,6 +9,7 @@ namespace _02.Scripts.UI
     public class PlayerUIChanger : MonoBehaviour
     {
         [SerializeField] private EventChannelSO playerEventChannel;
+        [SerializeField] private EventChannelSO turnEventChannel;
         [SerializeField] private TextMeshProUGUI costText;
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI turnText;
@@ -18,13 +19,14 @@ namespace _02.Scripts.UI
         {
             playerEventChannel.AddListener<CostChangedEvent>(HandleChangeCost);
             playerEventChannel.AddListener<HealthChangedEvent>(HandleChangeHealth);
-            playerEventChannel.AddListener<TurnStartEvent>(HandleChangeTurn);
+            turnEventChannel.AddListener<TurnStartEvent>(HandleChangeTurn);
         }
 
         private void OnDestroy()
         {
             playerEventChannel.RemoveListener<CostChangedEvent>(HandleChangeCost);
             playerEventChannel.RemoveListener<HealthChangedEvent>(HandleChangeHealth);
+            turnEventChannel.RemoveListener<TurnStartEvent>(HandleChangeTurn);
         }
 
         private void HandleChangeCost(CostChangedEvent evt)
