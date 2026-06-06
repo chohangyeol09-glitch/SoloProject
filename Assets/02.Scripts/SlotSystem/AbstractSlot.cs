@@ -16,7 +16,7 @@ namespace _02.Scripts.SlotSystem
         protected override void InitializeModules()
         {
             base.InitializeModules();
-            SlotText.text = SlotNumber.ToString();
+            SlotText.text = (SlotNumber+1).ToString();
         }
 
         protected override void AfterInitializeModules()

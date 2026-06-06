@@ -5,9 +5,9 @@ namespace _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents
 {
     public class CardPickUpEvent : GameEvent
     {
-        public PlayerActionCard Card { get; private set; }
+        public ActionCard Card {get; private set;}
         
-        public CardPickUpEvent Init(PlayerActionCard card)
+        public CardPickUpEvent Init(ActionCard card)
         {
             Card = card;
             return this;

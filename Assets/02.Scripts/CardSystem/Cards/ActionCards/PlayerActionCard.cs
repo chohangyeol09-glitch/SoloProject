@@ -20,6 +20,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         public event Action<bool> OnDropSuccess;
 
         [SerializeField] private EventChannelSO slotChannel;
+        [SerializeField] private EventChannelSO turnEventChannel;
         private Outlinable _outline;
 
         protected override void InitializeModules()
@@ -41,6 +42,12 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             if (ActionCardData != null) SetData();
         }
 
+        protected override void AfterInitializeModules()
+        {
+            base.AfterInitializeModules();
+            turnEventChannel.AddListener<TurnEndEvent>(HandleTurnEnd);
+        }
+        
         private void OnDestroy()
         {
             if (DropInteraction != null)
@@ -49,6 +56,8 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
                 DropInteraction.OnHoverEnter -= HandleDropHoverEnter; 
                 DropInteraction.OnHoverExit -= HandleDropHoverExit;
             }
+            
+            turnEventChannel.RemoveListener<TurnEndEvent>(HandleTurnEnd);
         }
 
         public void SetData() { }
@@ -90,6 +99,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         protected override void HandleDragStart(Vector3 mouseWorldPos)
         {
             slotChannel?.RaiseEvent(new CardPickUpEvent().Init(this));
+            _outline.enabled = false; 
             base.HandleDragStart(mouseWorldPos);
         }
 
@@ -111,7 +121,10 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             _outline.enabled = true;
             _outline.OutlineParameters.Color = Color.white; 
         }
-
+        private void HandleTurnEnd(TurnEndEvent evt)
+        {
+            ResetValues();
+        }
         private void HandleDropHoverExit()
         {
             _outline.enabled = false;

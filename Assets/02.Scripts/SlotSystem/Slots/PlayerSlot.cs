@@ -40,7 +40,7 @@ namespace _02.Scripts.SlotSystem.Slots
             slotEventChannel.RemoveListener<CardPickUpEvent>(HandleCardPickedUp);
         }
 
-        private void HandleCardPickedUp(CardPickUpEvent evt)    
+        private void HandleCardPickedUp(CardPickUpEvent evt)
         {
             if (CurrentCard != evt.Card) return;
             RemoveCurrentCard();
@@ -62,8 +62,16 @@ namespace _02.Scripts.SlotSystem.Slots
 
             if (CurrentCard != null)
             {
-                // 스왑 - 드래그한 카드의 원래 슬롯 찾기
-                SwapCards(incomingCard);
+                if (incomingCard.OriginalSlot != null)
+                {
+                    // 슬롯에서 온 카드 → 스왑
+                    SwapCards(incomingCard);
+                }
+                else
+                {
+                    // 슬롯 없는 카드 → 둘 다 원래 위치로 복귀
+                    incomingCard.ForceReturn();
+                }
                 return;
             }
 
@@ -81,7 +89,6 @@ namespace _02.Scripts.SlotSystem.Slots
 
             if (incomingOriginalSlot != null)
             {
-                Debug.Log($"OriginalSlot: {incomingOriginalSlot}");
                 incomingOriginalSlot.SetCurrentCard(existingCard);
                 incomingOriginalSlot.OnDropCard?.Invoke(incomingOriginalSlot, incomingOriginalSlot.SlotNumber);
             }

@@ -10,14 +10,14 @@ namespace _02.Scripts
     {
         public DeckLogic DeckLogic { get; private set; }
         public CostLogic CostLogic { get; private set; }
-        public HealthLogic HealthLogic { get; private set; }
+        public PlayerHealthLogic PlayerHealthLogic { get; private set; }
         
         protected override void InitializeModules()
         {
             base.InitializeModules();
             DeckLogic = GetModule<DeckLogic>();
             CostLogic = GetModule<CostLogic>();
-            HealthLogic = GetModule<HealthLogic>();
+            PlayerHealthLogic = GetModule<PlayerHealthLogic>();
         }
 
         protected override void AfterInitializeModules()

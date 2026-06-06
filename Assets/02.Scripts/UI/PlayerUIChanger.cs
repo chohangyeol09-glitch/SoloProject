@@ -41,7 +41,7 @@ namespace _02.Scripts.UI
         
         private void HandleChangeTurn(TurnStartEvent evt)
         {
-            turnText.text = evt.CurrentTurn.ToString() +"번째 턴";
+            turnText.text = evt.CurrentTurn +"번째 턴";
         }
     }
 }

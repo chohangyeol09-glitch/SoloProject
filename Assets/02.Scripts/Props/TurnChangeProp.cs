@@ -21,6 +21,7 @@ namespace _02.Scripts.Props
 
         private void HandleClick()
         {
+            Debug.Log("TurnEnd");
             turnEventChannel.RaiseEvent(new TurnEndEvent());
         }
     }

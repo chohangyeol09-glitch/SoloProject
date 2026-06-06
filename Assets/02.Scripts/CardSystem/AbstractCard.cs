@@ -41,7 +41,7 @@ namespace _02.Scripts.CardSystem
             CardInteraction.OnHoverExit += HandleHoverExit;
         }
 
-        protected void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (CardInteraction == null) return;
             

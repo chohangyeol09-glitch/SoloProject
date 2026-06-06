@@ -2,22 +2,15 @@
 using _02.Scripts.CoreSystem;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
+using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.DackSystem;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace _02.Scripts.Player
 {
     public class PlayerDataManager : MonoSingleton<PlayerDataManager>
     {
-        [SerializeField] private EventChannelSO playerEventChannel;
-        [SerializeField] private EventChannelSO turnEventChannel;
-        [SerializeField] private StartStatCardListSO startStatCardListSO;
-        [field: SerializeField] public int MaxCost { get; private set; } = 3;
-        [field: SerializeField] public int MaxHealth { get; private set; } = 10;
-
-        private int _currentCost;
-        private int _currentHealth;
-
         public int CurrentCost
         {
             get => _currentCost;
@@ -40,18 +33,45 @@ namespace _02.Scripts.Player
 
         public PlayerRuntimeDeck RuntimeDeck { get; private set; } = new();
 
+        [SerializeField] private EventChannelSO playerEventChannel;
+        [SerializeField] private EventChannelSO turnEventChannel;
+        [SerializeField] private EventChannelSO gameEventChannel;
+        [SerializeField] private StartStatCardListSO startStatCardListSO;
+        [field: SerializeField] public int MaxCost { get; private set; } = 3;
+        [field: SerializeField] public int MaxHealth { get; private set; } = 10;
+
+        
+        private int _currentCost;
+        private int _currentHealth;
+
         protected override void Awake()
         {
             base.Awake();
             DontDestroyOnLoad(gameObject);
             RuntimeDeck.Initialize(startStatCardListSO);
             turnEventChannel.AddListener<TurnStartEvent>(HandleTurnStart);
+            gameEventChannel.AddListener<StageStartEvent>(HandleStageStart);
+        }
+
+        private void Start()
+        {
             CurrentHealth = MaxHealth;
+        }
+
+        private void OnDestroy()
+        {
+            turnEventChannel.RemoveListener<TurnStartEvent>(HandleTurnStart);
+            gameEventChannel.RemoveListener<StageStartEvent>(HandleStageStart);
+        }
+
+        private void HandleStageStart(StageStartEvent evt)
+        {
+            CurrentHealth = Mathf.Min(CurrentHealth + MaxHealth / 10, MaxHealth);
         }
 
         private void HandleTurnStart(TurnStartEvent evt)
         {
-            CurrentCost = MaxCost;
+            playerEventChannel.RaiseEvent(new RecoverCostEvent().Init());
         }
     }
 }

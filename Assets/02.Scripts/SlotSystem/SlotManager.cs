@@ -1,6 +1,13 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
+using _02.Scripts.CoreSystem.EventChannel;
+using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
+using _02.Scripts.CoreSystem.EventChannel.EnemyEvent;
+using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
+using _02.Scripts.Enemy;
 using _02.Scripts.SlotSystem.Slots;
 using UnityEngine;
 
@@ -9,15 +16,65 @@ namespace _02.Scripts.SlotSystem
     public class SlotManager : MonoBehaviour
     {
         [SerializeField] private List<PlayerSlot> playerSlots = new();
-        [SerializeField] private List<EnemySlot> enemySlots  = new();
+        [SerializeField] private List<EnemySlot> enemySlots = new();
+        [SerializeField] private EventChannelSO turnEventChannel;
+        [SerializeField] private EventChannelSO stageEventChannel;
+        [SerializeField] private GameObject enemyActionCardPrefab;
+
+        private List<GameObject> _spawnedCards = new();
 
         private void Awake()
         {
             foreach (PlayerSlot slot in playerSlots)
                 slot.OnDropCard += UpdateSlot;
 
-            /*foreach (AbstractSlot slot in enemySlots)
-                slot.OnDropCard += UpdateSlot;*/
+            turnEventChannel.AddListener<ExecuteCardsEvent>(HandleExecuteCards);
+            stageEventChannel.AddListener<StageStartEvent>(HandleStageStart);
+            stageEventChannel.AddListener<StageClearEvent>(HandleStageClear);
+        }
+
+        private void OnDestroy()
+        {
+            turnEventChannel.RemoveListener<ExecuteCardsEvent>(HandleExecuteCards);
+            stageEventChannel.RemoveListener<StageStartEvent>(HandleStageStart);
+            stageEventChannel.RemoveListener<StageClearEvent>(HandleStageClear);
+        }
+
+        private void HandleStageStart(StageStartEvent evt)
+        {
+            ClearEnemyCards();
+            foreach (EnemyCardPlacement placement in evt.EnemyData.CardPlacements)
+            {
+                if (placement.SlotIndex < 0 || placement.SlotIndex >= enemySlots.Count) continue;
+                if (placement.CardData == null) continue;
+
+                GameObject obj = Instantiate(enemyActionCardPrefab);
+                EnemyActionCard card = obj.GetComponent<EnemyActionCard>();
+                card.SetActionCardData(placement.CardData);
+                enemySlots[placement.SlotIndex].SetCurrentCard(card);
+                _spawnedCards.Add(obj);
+            }
+        }
+
+        private void HandleStageClear(StageClearEvent evt) => ClearEnemyCards();
+
+        private void ClearEnemyCards()
+        {
+            foreach (GameObject card in _spawnedCards)
+                if (card != null) Destroy(card);
+            _spawnedCards.Clear();
+
+            foreach (EnemySlot slot in enemySlots)
+                slot.RemoveCurrentCard();
+        }
+
+        private void HandleExecuteCards(ExecuteCardsEvent evt)
+            => StartCoroutine(ExecuteAndNotify(evt.OnComplete));
+
+        private IEnumerator ExecuteAndNotify(Action onComplete)
+        {
+            yield return StartCoroutine(ExecuteCardsInOrder());
+            onComplete?.Invoke();
         }
 
         private void UpdateSlot(AbstractSlot abstractSlot, int slotNumber)
@@ -33,36 +90,41 @@ namespace _02.Scripts.SlotSystem
             }
         }
 
-        public void ExecuteAllCard()
+        private IEnumerator ExecuteCardsInOrder()
         {
             foreach (PlayerSlot slot in playerSlots)
-                if (slot.CurrentCard != null)
-                    ExecuteCard(slot);
-            
+            {
+                if (slot.CurrentCard == null) continue;
+                bool done = false;
+                ExecuteCard(slot, () => done = true);
+                yield return new WaitUntil(() => done);
+            }
+
             foreach (EnemySlot slot in enemySlots)
-                if (slot.CurrentCard != null)
-                    ExecuteCard(slot);
+            {
+                if (slot.CurrentCard == null) continue;
+                bool done = false;
+                ExecuteCard(slot, () => done = true);
+                yield return new WaitUntil(() => done);
+            }
         }
 
-        private void ExecuteCard(AbstractSlot abstractSlot)
+        private void ExecuteCard(AbstractSlot slot, Action onComplete)
         {
-            ActionCard card = abstractSlot.CurrentCard;
-            Debug.Assert(abstractSlot != null, "abstractSlot != null");
-            //Debug.Assert(abstractSlot.CurrentCard.ActionCardData.TargetRangeType);
-            List<AbstractSlot> targets = GetTargetSlots(abstractSlot, abstractSlot.CurrentCard.ActionCardData.TargetRangeType);
-            
+            ActionCard card = slot.CurrentCard;
+            List<AbstractSlot> targets = GetTargetSlots(slot, card.ActionCardData.TargetRangeType);
+
             EffectExecuteContext context = new EffectExecuteContext(card, targets);
-            
+
             foreach (AbstractActionEffectSO effect in card.ActionCardData.BeforeEffects)
                 if (effect.IsActivate(context))
                     effect.Apply(context, targets);
-            
-            card.ActionCardData.Action.Execute(card, targets);
-            
+
+            card.ActionCardData.Action.Execute(card, targets, onComplete);
+
             foreach (AbstractActionEffectSO effect in card.ActionCardData.AfterEffects)
                 if (effect.IsActivate(context))
                     effect.Apply(context, targets);
-            
         }
 
         private List<AbstractSlot> GetTargetSlots(AbstractSlot curAbstractSlot, SlotTargetRangeType targetRangeType)
@@ -70,32 +132,24 @@ namespace _02.Scripts.SlotSystem
             bool isPlayer = curAbstractSlot.SlotType == SlotType.Player;
             List<AbstractSlot> pSlots = new List<AbstractSlot>(playerSlots);
             List<AbstractSlot> eSlots = new List<AbstractSlot>(enemySlots);
-            
+
             List<AbstractSlot> originSlots = isPlayer ? pSlots : eSlots;
             List<AbstractSlot> targetSlots = isPlayer ? eSlots : pSlots;
 
             int index = curAbstractSlot.SlotNumber;
             switch (targetRangeType)
             {
-                //상대 타겟
                 case SlotTargetRangeType.FRONT_F:
                     return GetSlot(targetSlots, index);
-                
                 case SlotTargetRangeType.FRONT_LR:
                     return GetSlot(targetSlots, index - 1, index + 1);
-                
-                
-                //우리쪽 타겟
                 case SlotTargetRangeType.SELF:
                     return GetSlot(originSlots, index);
-                
                 case SlotTargetRangeType.LEFT:
                     return GetSlot(originSlots, index - 1);
-                
                 case SlotTargetRangeType.RIGHT:
                     return GetSlot(originSlots, index + 1);
             }
-
             return null;
         }
 
@@ -108,32 +162,9 @@ namespace _02.Scripts.SlotSystem
             return result;
         }
 
-#if UNITY_EDITOR
-
-        [Header("Test")] 
-        [SerializeField] private GameObject enemyActionCardPrefab;
-        
-        
-        [ContextMenu("TestCreateEnemy")]
-        private void TestCreateEnemy()
-        {
-
-            for (int i = 0; i < 4; ++i)
-            {
-                GameObject card = Instantiate(enemyActionCardPrefab);
-                card.gameObject.name = i.ToString();
-                EnemyActionCard action = card.GetComponent<EnemyActionCard>();
-                enemySlots[i].SetCurrentCard(action);
-            }
-        }
-        
+    #if UNITY_EDITOR
         [ContextMenu("Test Attack")]
-        private void TestAttack()
-        {
-            ExecuteAllCard();
-        }
-        
-        #endif
-        
+        private void TestAttack() => StartCoroutine(ExecuteCardsInOrder());
+    #endif
     }
 }

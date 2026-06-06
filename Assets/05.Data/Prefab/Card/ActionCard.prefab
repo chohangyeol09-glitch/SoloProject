@@ -612,8 +612,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4b8b8dd14d5f1ea408bc582f2c168410, type: 2}
-  m_sharedMaterial: {fileID: -1525195366328746195, guid: 4b8b8dd14d5f1ea408bc582f2c168410, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6325838498d97a14a9e2bae0f77c25c7, type: 2}
+  m_sharedMaterial: {fileID: 3033369648847102980, guid: 6325838498d97a14a9e2bae0f77c25c7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -811,8 +811,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4b8b8dd14d5f1ea408bc582f2c168410, type: 2}
-  m_sharedMaterial: {fileID: -1525195366328746195, guid: 4b8b8dd14d5f1ea408bc582f2c168410, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6325838498d97a14a9e2bae0f77c25c7, type: 2}
+  m_sharedMaterial: {fileID: 3033369648847102980, guid: 6325838498d97a14a9e2bae0f77c25c7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1195,7 +1195,10 @@ MonoBehaviour:
   <ActionCardData>k__BackingField: {fileID: 0}
   playerChannel: {fileID: 11400000, guid: ed887ac60d5a392478f736897c6cc121, type: 2}
   enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
+  shakeStrength: 0.5
+  shakeDuration: 0.3
   slotChannel: {fileID: 11400000, guid: b338fdca25869a347962851446a993e6, type: 2}
+  turnEventChannel: {fileID: 11400000, guid: 328dcb965d24cc141b9d9e2c233abb1a, type: 2}
 --- !u!1 &5859989165158829880
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,8 +1416,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC77C\uBC18\uACF5\uACA9"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4f5786b848cc097489f4027c96aa0bcd, type: 2}
-  m_sharedMaterial: {fileID: 7064525962357869078, guid: 4f5786b848cc097489f4027c96aa0bcd, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6325838498d97a14a9e2bae0f77c25c7, type: 2}
+  m_sharedMaterial: {fileID: 3033369648847102980, guid: 6325838498d97a14a9e2bae0f77c25c7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

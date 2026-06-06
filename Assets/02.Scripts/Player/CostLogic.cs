@@ -6,12 +6,13 @@ using UnityEngine;
 
 namespace _02.Scripts.Player
 {
-    public class CostLogic : MonoBehaviour, IModule 
+    public class CostLogic : MonoBehaviour, IModule
     {
         [SerializeField] private EventChannelSO playerChannel;
         public event Action<int> OnCostChanged;
 
         private ModuleOwner _owner;
+
         public void Initialize(ModuleOwner owner)
         {
             _owner = owner;
@@ -41,9 +42,8 @@ namespace _02.Scripts.Player
 
         private void HandleGainCost(GainCostEvent evt)
         {
-            PlayerDataManager.Instance.CurrentCost += evt.Amount;
             PlayerDataManager.Instance.CurrentCost = Mathf.Min(
-                PlayerDataManager.Instance.CurrentCost,
+                PlayerDataManager.Instance.CurrentCost + evt.Amount,
                 PlayerDataManager.Instance.MaxCost
             );
             OnCostChanged?.Invoke(PlayerDataManager.Instance.CurrentCost);
@@ -51,10 +51,9 @@ namespace _02.Scripts.Player
 
         private void HandleRecover(RecoverCostEvent evt)
         {
-            PlayerDataManager.Instance.CurrentCost = PlayerDataManager.Instance.MaxCost;
+            PlayerDataManager.Instance.CurrentCost =
+                evt.OverrideAmount ?? PlayerDataManager.Instance.MaxCost;
             OnCostChanged?.Invoke(PlayerDataManager.Instance.CurrentCost);
         }
-
-        
     }
 }

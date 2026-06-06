@@ -1,6 +1,8 @@
 ﻿using _02.Scripts.CardSystem;
 using _02.Scripts.CardSystem.Cards;
 using _02.Scripts.CardSystem.Cards.ActionCards;
+using _02.Scripts.CoreSystem.EventChannel;
+using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.InteractionSystem;
 using _02.Scripts.InteractionSystem.Interactions;
 using _02.Scripts.SlotSystem.Slots;
@@ -10,6 +12,7 @@ namespace _02.Scripts.Player
 {
     public class ObjectDragging : MonoBehaviour
     {
+        [SerializeField] private EventChannelSO turnEventChannel;
         [SerializeField] private PlayerInputSO playerInputSO;
         [SerializeField] private LayerMask cardLayer;
         [SerializeField] private LayerMask tableLayer;
@@ -24,12 +27,14 @@ namespace _02.Scripts.Player
         private IDraggable _draggable;
         private IHoverable _hoveredProp;
         private IClickable _clickedProp;
-        private int _dragObjOriginLayer;
 
+        private int _dragObjOriginLayer;
         private Vector2 _mousePos;
         private Transform _lastDropHit;
         private Ray _ray;
-
+        private bool _interactionEnabled = true;
+        
+        
         private bool _isDragging => _draggable != null;
 
         private void Awake()
@@ -38,6 +43,9 @@ namespace _02.Scripts.Player
             playerInputSO.OnPointerDelta += MoveDraggable;
             playerInputSO.OnClickDown += ClickDown;
             playerInputSO.OnClickUp += ClickUp;
+            
+            turnEventChannel.AddListener<InteractionDisableEvent>(HandleDisableInteraction);
+            turnEventChannel.AddListener<TurnStartEvent>(HandleEnableInteraction);
         }
 
         private void OnDestroy()
@@ -50,6 +58,8 @@ namespace _02.Scripts.Player
 
         private void Update()
         {
+            if (!_interactionEnabled) return;
+            
             _ray = Camera.main.ScreenPointToRay(_mousePos);
 
             if (!_isDragging)
@@ -152,6 +162,7 @@ namespace _02.Scripts.Player
         private void ClickDown()
         {
             if (_isDragging) return;
+            if (!_interactionEnabled) return;
             Ray clickRay = Camera.main.ScreenPointToRay(_mousePos);
 
             if (Physics.Raycast(clickRay, out RaycastHit cardHit, Mathf.Infinity, cardLayer))
@@ -183,6 +194,7 @@ namespace _02.Scripts.Player
         private void ClickUp()
         {
             if (!_isDragging) return;
+            if (!_interactionEnabled) return;
 
             Ray clickRay = Camera.main.ScreenPointToRay(_mousePos);
             if (Physics.Raycast(clickRay, out RaycastHit dropHit, Mathf.Infinity, _draggable.DropLayer))
@@ -240,5 +252,11 @@ namespace _02.Scripts.Player
                 return card.DropInteraction;
             return null;
         }
+        
+        private void HandleDisableInteraction(InteractionDisableEvent evt)
+            => _interactionEnabled = false;
+
+        private void HandleEnableInteraction(TurnStartEvent evt)
+            => _interactionEnabled = true;
     }
 }

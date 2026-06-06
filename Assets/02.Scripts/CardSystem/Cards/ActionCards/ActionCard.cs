@@ -2,12 +2,14 @@
 using _02.Scripts.CardSystem.Cards.ActionCards.ActionSO;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
+using DG.Tweening;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.ActionCards
 {
     public abstract class ActionCard : AbstractCard
     {
+        
         public int AttackValue
         {
             get => _attackValue;
@@ -33,6 +35,9 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
 
         [SerializeField] protected EventChannelSO playerChannel;
         [SerializeField] protected EventChannelSO enemyChannel;
+        
+        [SerializeField] private float shakeStrength = 0.5f;
+        [SerializeField] private float shakeDuration = 0.3f;
 
         private int _attackValue = 0;
         private int _defenseValue = 0;
@@ -44,6 +49,13 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             OnDefenseValueChanged?.Invoke(_defenseValue);
         }
 
+        public void SetActionCardData(ActionCardDataSO data)
+        {
+            ActionCardData = data;
+            OnDataSet();
+        }
+
+        
         public void ChangeValue(int value)
         {
             if (ActionCardData.ActionCardType == ActionCardType.Attack)
@@ -55,21 +67,68 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         public void AddAttackValue(int value) => AttackValue += value;
         public void AddDefenseValue(int value) => DefenseValue += value;
 
-        public void TakeDamage(int value)
+        public void ResetValues()
+        {
+            Debug.Log(gameObject.name + ": ResetValues");
+            AttackValue = 0;
+            DefenseValue = 0;
+        }
+        
+        public void TakeDamage(int value, bool shake = true)
         {
             int overflow = value - DefenseValue;
             DefenseValue = Mathf.Max(DefenseValue - value, 0);
+
             if (overflow > 0)
             {
                 if (this is PlayerActionCard)
-                {
                     playerChannel.RaiseEvent(new TakeDamageEvent().Init(overflow));
-                }
                 else if (this is EnemyActionCard)
-                {
                     enemyChannel.RaiseEvent(new TakeDamageEvent().Init(overflow));
-                }
             }
+
+            if (shake) PlayHitShake(value);
+
+            if (this is EnemyActionCard && DefenseValue <= 0)
+                OnDefenseZero();
         }
+
+        protected virtual void OnDefenseZero() { }
+
+        public void PlayHitShake(int value)
+        {
+            float strength = Mathf.Clamp(value * 0.05f, 0.1f, 0.5f);
+            float duration = Mathf.Clamp(value * 0.03f, 0.2f, 0.5f);
+
+            Vector3 originPos = transform.position;
+            Vector3 shakeDir = transform.right * strength;
+
+            Sequence seq = DOTween.Sequence();
+            seq.Append(transform.DOMove(originPos + shakeDir, duration / 4));
+            seq.Append(transform.DOMove(originPos - shakeDir, duration / 2));
+            seq.Append(transform.DOMove(originPos + shakeDir * 0.5f, duration / 4));
+            seq.Append(transform.DOMove(originPos, duration / 4));
+        }
+        public void RaisePlayerDamage(int value)
+        {
+            playerChannel.RaiseEvent(new TakeDamageEvent().Init(value));
+        }
+
+        public void RaiseEnemyDamage(int value)
+        {
+            enemyChannel.RaiseEvent(new TakeDamageEvent().Init(value));
+        }
+        
+        protected virtual void OnDataSet()
+        {
+            OnAttackValueChanged?.Invoke(0);
+            OnDefenseValueChanged?.Invoke(0);
+        }
+        
+        
+        [ContextMenu("Add AttackValue")]
+        private void TestAddAttackValue() => AddAttackValue(10);
+        [ContextMenu("Add DefenseValue")]
+        private void TestAddDefenseValue() => AddDefenseValue(10);
     }
 }

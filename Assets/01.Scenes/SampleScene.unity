@@ -119,6 +119,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &34411297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 34411298}
+  - component: {fileID: 34411299}
+  m_Layer: 0
+  m_Name: StageManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &34411298
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34411297}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 448350554}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &34411299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34411297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e1b3f887cafcfb40a7701e06c39396d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.StageManager
+  stageList: {fileID: 11400000, guid: e9799a6a03dd89a48a5a4211abeafbac, type: 2}
+  gameEventChannel: {fileID: 11400000, guid: 775ccbd246e45e647bac3e2d30aad937, type: 2}
+  enemyEventChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
+  turnEventChannel: {fileID: 11400000, guid: 328dcb965d24cc141b9d9e2c233abb1a, type: 2}
 --- !u!1 &34885310
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,7 +496,8 @@ MonoBehaviour:
   - {fileID: 2934048861563352091}
   - {fileID: 1334776395}
   - {fileID: 2090190620}
-  enemyActionCardPrefab: {fileID: 930615160337973046, guid: 420dac6ad2dd5004b8f67cc46918d5c0, type: 3}
+  turnEventChannel: {fileID: 11400000, guid: 328dcb965d24cc141b9d9e2c233abb1a, type: 2}
+  gameEventChannel: {fileID: 11400000, guid: 775ccbd246e45e647bac3e2d30aad937, type: 2}
 --- !u!4 &260114992
 Transform:
   m_ObjectHideFlags: 0
@@ -1051,6 +1100,7 @@ Transform:
   - {fileID: 749517330}
   - {fileID: 1732881470}
   - {fileID: 2081146003}
+  - {fileID: 34411298}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &529264146
@@ -1643,6 +1693,7 @@ MonoBehaviour:
   isDonDestroy: 0
   playerEventChannel: {fileID: 11400000, guid: ed887ac60d5a392478f736897c6cc121, type: 2}
   turnEventChannel: {fileID: 11400000, guid: 328dcb965d24cc141b9d9e2c233abb1a, type: 2}
+  gameEventChannel: {fileID: 11400000, guid: 775ccbd246e45e647bac3e2d30aad937, type: 2}
   startStatCardListSO: {fileID: 11400000, guid: 3ae3002a80d29f444b6a8bc42785955b, type: 2}
   <MaxCost>k__BackingField: 3
   <MaxHealth>k__BackingField: 10
@@ -1657,18 +1708,6 @@ PrefabInstance:
     - target: {fileID: 3830500128093824641, guid: 6d13d3d6c256303469639ffc66fd6d25, type: 3}
       propertyPath: m_Name
       value: 'PropInteraction '
-      objectReference: {fileID: 0}
-    - target: {fileID: 8914384146480583529, guid: 6d13d3d6c256303469639ffc66fd6d25, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.9407732
-      objectReference: {fileID: 0}
-    - target: {fileID: 8914384146480583529, guid: 6d13d3d6c256303469639ffc66fd6d25, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.9407734
-      objectReference: {fileID: 0}
-    - target: {fileID: 8914384146480583529, guid: 6d13d3d6c256303469639ffc66fd6d25, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.9407732
       objectReference: {fileID: 0}
     - target: {fileID: 8914384146480583529, guid: 6d13d3d6c256303469639ffc66fd6d25, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3796,6 +3835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c67afee3102d4db6a7f38e66c561f1ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.ObjectDragging
+  turnEventChannel: {fileID: 11400000, guid: 328dcb965d24cc141b9d9e2c233abb1a, type: 2}
   playerInputSO: {fileID: 11400000, guid: 3d24261d6765895458f5e68ee0f791a6, type: 2}
   cardLayer:
     serializedVersion: 2

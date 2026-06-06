@@ -5,6 +5,7 @@ using _02.Scripts.CardSystem.Cards;
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
+using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using DG.Tweening;
@@ -36,15 +37,17 @@ namespace _02.Scripts.DeckSystem
             _deckLogic = owner.GetModule<DeckLogic>();
             cardEventChannel.AddListener<DrawCardEvent>(HandleDrawHand);
             turnEventChannel.AddListener<TurnStartEvent>(HandleTurnStart);
-            turnEventChannel.AddListener<TurnEndEvent>(HandleTurnEnd);
+            turnEventChannel.AddListener<ClearHandEvent>(HandleClearHand); 
         }
-
-        
 
         private void OnDestroy()
         {
             cardEventChannel.RemoveListener<DrawCardEvent>(HandleDrawHand);
+            turnEventChannel.RemoveListener<TurnStartEvent>(HandleTurnStart);
+            turnEventChannel.RemoveListener<ClearHandEvent>(HandleClearHand);
         }
+
+        
 
         private void HandleDrawHand(DrawCardEvent evt)
         {
@@ -58,9 +61,14 @@ namespace _02.Scripts.DeckSystem
         
         private void HandleTurnEnd(TurnEndEvent evt)
         {
-            ClearHand();
-            
+            ClearHand(); 
         }
+        
+        private void HandleClearHand(ClearHandEvent evt)
+        {
+            ClearHand(evt.OnComplete);
+        }
+
         
         public void DrawHand(int count)
         {
@@ -72,21 +80,42 @@ namespace _02.Scripts.DeckSystem
                 AddCard(data);
         }
 
-        public void ClearHand()
+        public void ClearHand(Action onComplete = null)
         {
-            foreach (StatCard card in _handCards)
-                card.OnUsed();
-            _handCards.Clear();
+            if (_handCards.Count == 0)
+            {
+                onComplete?.Invoke();
+                return;
+            }
+
+            int remaining = _handCards.Count;
+            List<StatCard> cardsToRemove = new List<StatCard>(_handCards);
+
+            foreach (StatCard card in cardsToRemove)
+            {
+                if (card == null)
+                {
+                    remaining--;
+                    if (remaining <= 0) 
+                        onComplete?.Invoke();
+                    continue;
+                }
+                card.OnUsed(() =>
+                {
+                    remaining--;
+                    if (remaining <= 0)
+                        onComplete?.Invoke();
+                });
+            }
         }
 
         public void RemoveCard(StatCard card)
         {
             if (!_handCards.Contains(card)) return;
             _handCards.Remove(card);
-            ArrangeCards(); // 카드 사용 시 재정렬
+            ArrangeCards(); 
         }
 
-        // 카드가 드래그 실패 시 원래 인덱스 위치로 복귀
         public void ReturnCard(StatCard card)
         {
             int index = _handCards.IndexOf(card);
@@ -118,7 +147,7 @@ namespace _02.Scripts.DeckSystem
             int count = _handCards.Count;
             for (int i = 0; i < count; i++)
             {
-                _handCards[i].transform.DOMove(GetCardPosition(i, count), arrangeDuration);
+                _handCards[i].transform.DOMove(GetCardPosition(i, count), arrangeDuration); 
                 _handCards[i].transform.DORotateQuaternion(GetCardRotation(i, count), arrangeDuration);
             }
         }

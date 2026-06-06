@@ -36,7 +36,17 @@ namespace _02.Scripts.CardSystem.Cards
             CardInteraction.OnHoverEnter += HandleHoverEnter;
             CardInteraction.OnHoverExit += HandleHoverExit;
         }
-        
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            CardInteraction.OnDragStart -= HandleDragStart;
+            CardInteraction.OnDragUpdate -= HandleDragUpdate;
+            CardInteraction.OnDragEnd -= HandleDragEnd;
+            CardInteraction.OnHoverEnter -= HandleHoverEnter;
+            CardInteraction.OnHoverExit -= HandleHoverExit;
+        }
+
         #region Handles
 
         // StatCard.cs
@@ -85,16 +95,18 @@ namespace _02.Scripts.CardSystem.Cards
 
         public void SetStatData(StatCardDataSO statData)
         {
-            Debug.Log("Data set");
             StatData = statData;
             NeedCost = StatData.Cost;
             UIChanger.SetUI(StatData);
         }
 
-        public void OnUsed()
+        public void OnUsed(Action onComplete = null)
         {
             _handLogic?.RemoveCard(this);
-            cardEventChannel.RaiseEvent(new DiscardCardEvent().Init(StatData));
+            cardEventChannel.RaiseEvent(new DiscardCardEvent().Init(StatData)); 
+
+            transform.DOKill();
+            onComplete?.Invoke();
             Destroy(gameObject);
         }
     }
