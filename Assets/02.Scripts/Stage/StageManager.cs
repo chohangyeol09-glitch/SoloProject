@@ -34,7 +34,7 @@ namespace _02.Scripts.Stage
         {
             _currentStageIndex++;
 
-            if (_currentStageIndex >= stageList.Stages.Count)
+            if (_currentStageIndex >= stageList.Stages.Count-1)
             {
                 Debug.Log("모든 스테이지 클리어!");
                 return;
@@ -42,11 +42,9 @@ namespace _02.Scripts.Stage
 
             EnemyDataSO stageData = stageList.Stages[_currentStageIndex];
 
-            EnemyDataManager.Instance.SetMaxHealth(stageData.MaxHealth);
-
             gameEventChannel.RaiseEvent(new StageStartEvent().Init(_currentStageIndex, stageData));
 
-            turnEventChannel.RaiseEvent(new TurnStartEvent().Init(1));
+            turnEventChannel.RaiseEvent(new TurnChangeEvent().Init(1));
         }
 
         private void HandleEnemyDead(EnemyDeadEvent evt)

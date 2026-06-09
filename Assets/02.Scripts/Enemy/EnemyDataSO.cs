@@ -11,7 +11,7 @@ namespace _02.Scripts.Enemy
         [field: SerializeField] public string EnemyName { get; private set; }
         [field: SerializeField] public int MaxHealth { get; private set; } = 10;
         [field: SerializeField] public bool IsBoss { get; private set; }
-
+        [field: SerializeField] public GameObject ModelPrefab { get; private set; }
         [field: SerializeField] public List<EnemyCardPlacement> CardPlacements { get; private set; } = new();
 
         [field: SerializeField] public List<BossGimmick> BossGimmicks { get; private set; } = new();
@@ -21,7 +21,9 @@ namespace _02.Scripts.Enemy
     public class EnemyCardPlacement
     {
         public int SlotIndex;
-        public ActionCardDataSO CardData; // ← CardPrefab 제거, 데이터만
+        public ActionCardDataSO CardData;
+        [field: SerializeField] public int AttackValue { get; private set; }
+        [field: SerializeField] public int DefenseValue { get; private set; }
     }
 
     [Serializable]

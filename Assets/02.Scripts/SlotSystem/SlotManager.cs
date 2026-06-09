@@ -18,7 +18,7 @@ namespace _02.Scripts.SlotSystem
         [SerializeField] private List<PlayerSlot> playerSlots = new();
         [SerializeField] private List<EnemySlot> enemySlots = new();
         [SerializeField] private EventChannelSO turnEventChannel;
-        [SerializeField] private EventChannelSO stageEventChannel;
+        [SerializeField] private EventChannelSO gameEventChannel;
         [SerializeField] private GameObject enemyActionCardPrefab;
 
         private List<GameObject> _spawnedCards = new();
@@ -29,28 +29,34 @@ namespace _02.Scripts.SlotSystem
                 slot.OnDropCard += UpdateSlot;
 
             turnEventChannel.AddListener<ExecuteCardsEvent>(HandleExecuteCards);
-            stageEventChannel.AddListener<StageStartEvent>(HandleStageStart);
-            stageEventChannel.AddListener<StageClearEvent>(HandleStageClear);
+            gameEventChannel.AddListener<StageStartEvent>(HandleStageStart);
+            gameEventChannel.AddListener<StageClearEvent>(HandleStageClear);
         }
 
         private void OnDestroy()
         {
             turnEventChannel.RemoveListener<ExecuteCardsEvent>(HandleExecuteCards);
-            stageEventChannel.RemoveListener<StageStartEvent>(HandleStageStart);
-            stageEventChannel.RemoveListener<StageClearEvent>(HandleStageClear);
+            gameEventChannel.RemoveListener<StageStartEvent>(HandleStageStart);
+            gameEventChannel.RemoveListener<StageClearEvent>(HandleStageClear);
         }
 
         private void HandleStageStart(StageStartEvent evt)
         {
             ClearEnemyCards();
+            Debug.Log(evt.EnemyData.EnemyName);
             foreach (EnemyCardPlacement placement in evt.EnemyData.CardPlacements)
             {
                 if (placement.SlotIndex < 0 || placement.SlotIndex >= enemySlots.Count) continue;
                 if (placement.CardData == null) continue;
+                Debug.Log("ccc");
 
                 GameObject obj = Instantiate(enemyActionCardPrefab);
+                
                 EnemyActionCard card = obj.GetComponent<EnemyActionCard>();
                 card.SetActionCardData(placement.CardData);
+                card.AddAttackValue(placement.AttackValue);
+                card.AddDefenseValue(placement.DefenseValue);
+                
                 enemySlots[placement.SlotIndex].SetCurrentCard(card);
                 _spawnedCards.Add(obj);
             }
@@ -112,6 +118,8 @@ namespace _02.Scripts.SlotSystem
         private void ExecuteCard(AbstractSlot slot, Action onComplete)
         {
             ActionCard card = slot.CurrentCard;
+            Debug.Log(card == null);
+            
             List<AbstractSlot> targets = GetTargetSlots(slot, card.ActionCardData.TargetRangeType);
 
             EffectExecuteContext context = new EffectExecuteContext(card, targets);

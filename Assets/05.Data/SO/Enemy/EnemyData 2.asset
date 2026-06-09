@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b638f90235354bc3adbfa6081d1eae6e, type: 3}
+  m_Name: EnemyData 2
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemy.EnemyDataSO
+  <EnemyName>k__BackingField: "\uB098\uC05C \uC560 2"
+  <MaxHealth>k__BackingField: 30
+  <IsBoss>k__BackingField: 0
+  <CardPlacements>k__BackingField:
+  - SlotIndex: 0
+    CardData: {fileID: 11400000, guid: 6c4e49d6eb4ab2e4e930d71ae822df2b, type: 2}
+    <AttackValue>k__BackingField: 2
+    <DefenseValue>k__BackingField: 7
+  - SlotIndex: 3
+    CardData: {fileID: 11400000, guid: ab82724685498ce43810001e908e43fd, type: 2}
+    <AttackValue>k__BackingField: 5
+    <DefenseValue>k__BackingField: 4
+  <BossGimmicks>k__BackingField: []

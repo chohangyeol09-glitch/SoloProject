@@ -3,6 +3,7 @@ using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
+using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using _02.Scripts.Player;
 using UnityEditor;
@@ -13,6 +14,7 @@ namespace _02.Scripts.DeckSystem
     public class DeckLogic : MonoBehaviour, IModule
     {
         [SerializeField] private EventChannelSO cardChannel;
+        [SerializeField] private EventChannelSO gameEvent;
 
         private List<StatCardDataSO> _deckPile    = new();
         private List<StatCardDataSO> _discardPile = new();
@@ -20,14 +22,10 @@ namespace _02.Scripts.DeckSystem
         public void Initialize(ModuleOwner owner)
         {
             cardChannel.AddListener<DiscardCardEvent>(HandleDiscard);
+            gameEvent.AddListener<StageStartEvent>(HandleStartStage);
         }
-        
-        private void OnDestroy()
-        {
-            cardChannel.RemoveListener<DiscardCardEvent>(HandleDiscard);
-        }
-        
-        public void InitializeStage()
+
+        private void HandleStartStage(StageStartEvent obj)
         {
             _deckPile.Clear();
             _discardPile.Clear();
@@ -36,6 +34,11 @@ namespace _02.Scripts.DeckSystem
                 _deckPile.Add(data);
 
             Shuffle(_deckPile);
+        }
+
+        private void OnDestroy()
+        {
+            cardChannel.RemoveListener<DiscardCardEvent>(HandleDiscard);
         }
 
         public List<StatCardDataSO> DrawCards(int count)
@@ -75,8 +78,8 @@ namespace _02.Scripts.DeckSystem
             }
         }
 #if UNITY_EDITOR
-        [ContextMenu("TestInitStage")]
-        private void TestInitStage() => InitializeStage();
+        /*[ContextMenu("TestInitStage")]
+        private void TestInitStage() => InitializeStage();*/
 
         [Header("Test")] [SerializeField] private StatCardDataSO data;
         [ContextMenu("AddDeck")]

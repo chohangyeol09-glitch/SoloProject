@@ -36,14 +36,14 @@ namespace _02.Scripts.DeckSystem
         {
             _deckLogic = owner.GetModule<DeckLogic>();
             cardEventChannel.AddListener<DrawCardEvent>(HandleDrawHand);
-            turnEventChannel.AddListener<TurnStartEvent>(HandleTurnStart);
+            turnEventChannel.AddListener<TurnChangeEvent>(HandleTurnStart);
             turnEventChannel.AddListener<ClearHandEvent>(HandleClearHand); 
         }
 
         private void OnDestroy()
         {
             cardEventChannel.RemoveListener<DrawCardEvent>(HandleDrawHand);
-            turnEventChannel.RemoveListener<TurnStartEvent>(HandleTurnStart);
+            turnEventChannel.RemoveListener<TurnChangeEvent>(HandleTurnStart);
             turnEventChannel.RemoveListener<ClearHandEvent>(HandleClearHand);
         }
 
@@ -54,7 +54,7 @@ namespace _02.Scripts.DeckSystem
             DrawHand(evt.Count);
         }
         
-        private void HandleTurnStart(TurnStartEvent evt)
+        private void HandleTurnStart(TurnChangeEvent evt)
         {
             DrawHand(DefaultDrawCount);
         }

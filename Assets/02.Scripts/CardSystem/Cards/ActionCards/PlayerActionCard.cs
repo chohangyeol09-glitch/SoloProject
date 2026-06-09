@@ -7,6 +7,7 @@ using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.InteractionSystem;
 using _02.Scripts.InteractionSystem.Interactions;
 using _02.Scripts.SlotSystem.Slots;
+using _02.Scripts.UI;
 using EPOOutline;
 using UnityEngine;
 
@@ -45,9 +46,11 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         protected override void AfterInitializeModules()
         {
             base.AfterInitializeModules();
-            turnEventChannel.AddListener<TurnEndEvent>(HandleTurnEnd);
+            turnEventChannel.AddListener<TurnChangeEvent>(HandleTurnStart);
         }
+
         
+
         private void OnDestroy()
         {
             if (DropInteraction != null)
@@ -57,7 +60,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
                 DropInteraction.OnHoverExit -= HandleDropHoverExit;
             }
             
-            turnEventChannel.RemoveListener<TurnEndEvent>(HandleTurnEnd);
+            turnEventChannel.RemoveListener<TurnChangeEvent>(HandleTurnStart);
         }
 
         public void SetData() { }
@@ -121,15 +124,18 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             _outline.enabled = true;
             _outline.OutlineParameters.Color = Color.white; 
         }
-        private void HandleTurnEnd(TurnEndEvent evt)
-        {
-            ResetValues();
-        }
+        
         private void HandleDropHoverExit()
         {
             _outline.enabled = false;
             _outline.OutlineParameters.Color = Color.clear;
         }
+        
+        private void HandleTurnStart(TurnChangeEvent obj)
+        {
+            ResetValues();
+        }
+        
         public void SetOriginalSlot(PlayerSlot slot) => OriginalSlot = slot;
         public void ForceReturn() => HandleDragEnd();
 

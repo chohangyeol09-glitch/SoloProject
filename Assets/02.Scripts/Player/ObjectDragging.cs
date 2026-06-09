@@ -45,7 +45,7 @@ namespace _02.Scripts.Player
             playerInputSO.OnClickUp += ClickUp;
             
             turnEventChannel.AddListener<InteractionDisableEvent>(HandleDisableInteraction);
-            turnEventChannel.AddListener<TurnStartEvent>(HandleEnableInteraction);
+            turnEventChannel.AddListener<TurnChangeEvent>(HandleEnableInteraction);
         }
 
         private void OnDestroy()
@@ -256,7 +256,7 @@ namespace _02.Scripts.Player
         private void HandleDisableInteraction(InteractionDisableEvent evt)
             => _interactionEnabled = false;
 
-        private void HandleEnableInteraction(TurnStartEvent evt)
+        private void HandleEnableInteraction(TurnChangeEvent evt)
             => _interactionEnabled = true;
     }
 }

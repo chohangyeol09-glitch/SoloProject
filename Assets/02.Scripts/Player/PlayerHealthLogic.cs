@@ -2,6 +2,7 @@
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace _02.Scripts.Player
@@ -9,7 +10,7 @@ namespace _02.Scripts.Player
     public class PlayerHealthLogic : MonoBehaviour, IModule
     {
         [SerializeField] private EventChannelSO playerChannel;
-
+        
         public event Action<int> OnHealthChanged;
         public event Action OnDead;
         
@@ -29,10 +30,13 @@ namespace _02.Scripts.Player
 
         private void HandleTakeDamage(TakeDamageEvent evt)
         {
-            PlayerDataManager.Instance.CurrentHealth -= evt.Amount;
+            PlayerDataManager.Instance.CurrentHealth -= evt.Value;
             PlayerDataManager.Instance.CurrentHealth = Mathf.Max(
                 PlayerDataManager.Instance.CurrentHealth, 0
             );
+
+            
+            
             OnHealthChanged?.Invoke(PlayerDataManager.Instance.CurrentHealth);
 
             bool isDead = PlayerDataManager.Instance.CurrentHealth <= 0;

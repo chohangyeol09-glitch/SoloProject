@@ -49,7 +49,7 @@ namespace _02.Scripts.Player
             base.Awake();
             DontDestroyOnLoad(gameObject);
             RuntimeDeck.Initialize(startStatCardListSO);
-            turnEventChannel.AddListener<TurnStartEvent>(HandleTurnStart);
+            turnEventChannel.AddListener<TurnChangeEvent>(HandleTurnStart);
             gameEventChannel.AddListener<StageStartEvent>(HandleStageStart);
         }
 
@@ -60,7 +60,7 @@ namespace _02.Scripts.Player
 
         private void OnDestroy()
         {
-            turnEventChannel.RemoveListener<TurnStartEvent>(HandleTurnStart);
+            turnEventChannel.RemoveListener<TurnChangeEvent>(HandleTurnStart);
             gameEventChannel.RemoveListener<StageStartEvent>(HandleStageStart);
         }
 
@@ -69,7 +69,7 @@ namespace _02.Scripts.Player
             CurrentHealth = Mathf.Min(CurrentHealth + MaxHealth / 10, MaxHealth);
         }
 
-        private void HandleTurnStart(TurnStartEvent evt)
+        private void HandleTurnStart(TurnChangeEvent evt)
         {
             playerEventChannel.RaiseEvent(new RecoverCostEvent().Init());
         }

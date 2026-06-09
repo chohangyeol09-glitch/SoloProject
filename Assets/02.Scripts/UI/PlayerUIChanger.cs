@@ -9,24 +9,20 @@ namespace _02.Scripts.UI
     public class PlayerUIChanger : MonoBehaviour
     {
         [SerializeField] private EventChannelSO playerEventChannel;
-        [SerializeField] private EventChannelSO turnEventChannel;
         [SerializeField] private TextMeshProUGUI costText;
         [SerializeField] private TextMeshProUGUI healthText;
-        [SerializeField] private TextMeshProUGUI turnText;
         
 
         private void Awake()
         {
             playerEventChannel.AddListener<CostChangedEvent>(HandleChangeCost);
             playerEventChannel.AddListener<HealthChangedEvent>(HandleChangeHealth);
-            turnEventChannel.AddListener<TurnStartEvent>(HandleChangeTurn);
         }
 
         private void OnDestroy()
         {
             playerEventChannel.RemoveListener<CostChangedEvent>(HandleChangeCost);
             playerEventChannel.RemoveListener<HealthChangedEvent>(HandleChangeHealth);
-            turnEventChannel.RemoveListener<TurnStartEvent>(HandleChangeTurn);
         }
 
         private void HandleChangeCost(CostChangedEvent evt)
@@ -39,9 +35,5 @@ namespace _02.Scripts.UI
             healthText.text = evt.CurrentHealth.ToString();
         }
         
-        private void HandleChangeTurn(TurnStartEvent evt)
-        {
-            turnText.text = evt.CurrentTurn +"번째 턴";
-        }
     }
 }

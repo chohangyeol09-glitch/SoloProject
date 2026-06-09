@@ -143,6 +143,7 @@ MonoBehaviour:
   <SlotType>k__BackingField: 1
   <SlotNumber>k__BackingField: 0
   <SlotText>k__BackingField: {fileID: 7623068890414358655}
+  slotChannel: {fileID: 11400000, guid: b338fdca25869a347962851446a993e6, type: 2}
 --- !u!1 &5259391478964497849
 GameObject:
   m_ObjectHideFlags: 0

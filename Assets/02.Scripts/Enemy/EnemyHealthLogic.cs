@@ -31,7 +31,7 @@ namespace _02.Scripts.Enemy
 
         private void HandleTakeDamage(TakeDamageEvent evt)
         {
-            EnemyDataManager.Instance.CurrentHealth -= evt.Amount;
+            EnemyDataManager.Instance.CurrentHealth -= evt.Value;
             EnemyDataManager.Instance.CurrentHealth = Mathf.Max(
                 EnemyDataManager.Instance.CurrentHealth, 0
             );

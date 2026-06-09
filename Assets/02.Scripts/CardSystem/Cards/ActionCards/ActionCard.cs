@@ -69,7 +69,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
 
         public void ResetValues()
         {
-            Debug.Log(gameObject.name + ": ResetValues");
+            Debug.Log("Reset values");
             AttackValue = 0;
             DefenseValue = 0;
         }
