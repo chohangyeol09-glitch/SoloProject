@@ -43,12 +43,10 @@ namespace _02.Scripts.SlotSystem
         private void HandleStageStart(StageStartEvent evt)
         {
             ClearEnemyCards();
-            Debug.Log(evt.EnemyData.EnemyName);
             foreach (EnemyCardPlacement placement in evt.EnemyData.CardPlacements)
             {
                 if (placement.SlotIndex < 0 || placement.SlotIndex >= enemySlots.Count) continue;
                 if (placement.CardData == null) continue;
-                Debug.Log("ccc");
 
                 GameObject obj = Instantiate(enemyActionCardPrefab);
                 
@@ -118,7 +116,6 @@ namespace _02.Scripts.SlotSystem
         private void ExecuteCard(AbstractSlot slot, Action onComplete)
         {
             ActionCard card = slot.CurrentCard;
-            Debug.Log(card == null);
             
             List<AbstractSlot> targets = GetTargetSlots(slot, card.ActionCardData.TargetRangeType);
 

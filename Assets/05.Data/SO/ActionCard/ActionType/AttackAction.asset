@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a7d9a1d6634549a0c1016f0c33beca, type: 3}
   m_Name: AttackAction
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.ActionCards.ActionSO.AttackActionSO
+  enemyEventChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.ActionCards.ActionSO;
+using _02.Scripts.CardSystem.Cards.ActionCards.ActionWeapon;
 using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
 using UnityEngine;
 
@@ -15,5 +16,6 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         [field: SerializeField] public AbstractActionSO Action {get; private set;}  
         [field: SerializeField] public List<AbstractActionEffectSO> BeforeEffects { get; private set; } = new();
         [field: SerializeField] public List<AbstractActionEffectSO> AfterEffects { get; private set; } = new();
+        [field: SerializeField] public AbstractWeaponSO AbstractWeapon { get; private set; }
     }
 }

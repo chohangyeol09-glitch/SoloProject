@@ -1,4 +1,4 @@
-﻿using _02.Scripts.CardSystem.Cards;
+﻿using _02.Scripts.CardSystem;
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using TMPro;
@@ -11,8 +11,12 @@ namespace _02.Scripts.UI
     {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private Image mainIcon;
+        [SerializeField] private Image gradeOutline;
         [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private TextMeshProUGUI costText;
+        
+        [Header("Sprite")]
+        [SerializeField] public GradeSprite gradeSprite;
 
         private ModuleOwner _owner;
         public void Initialize(ModuleOwner owner)
@@ -26,6 +30,13 @@ namespace _02.Scripts.UI
             descriptionText.text = data.Description;
             mainIcon.sprite = data.Icon;
             costText.text = data.Cost.ToString();
+            gradeOutline.sprite = data.Grade switch
+            {
+                CardGrade.BRONZE => gradeSprite.bronze,
+                CardGrade.SILVER => gradeSprite.silver,
+                CardGrade.GOLD => gradeSprite.gold,
+                _ => null
+            };
         }
     }
 }

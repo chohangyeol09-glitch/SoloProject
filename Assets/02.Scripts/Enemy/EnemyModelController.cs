@@ -21,6 +21,7 @@ namespace _02.Scripts.Enemy
             gameEventChannel.AddListener<StageClearEvent>(HandleStageClear);
             enemyEventChannel.AddListener<TakeDamageEvent>(HandleTakeDamage);
             enemyEventChannel.AddListener<EnemyDieEndEvent>(HandleDieEnd);
+            enemyEventChannel.AddListener<EnemyAttackStartEvent>(HandleAttackStart); 
         }
 
         private void OnDestroy()
@@ -29,7 +30,9 @@ namespace _02.Scripts.Enemy
             gameEventChannel.RemoveListener<StageClearEvent>(HandleStageClear);
             enemyEventChannel.RemoveListener<TakeDamageEvent>(HandleTakeDamage);
             enemyEventChannel.RemoveListener<EnemyDieEndEvent>(HandleDieEnd);
+            enemyEventChannel.RemoveListener<EnemyAttackStartEvent>(HandleAttackStart);
         }
+
 
         private void HandleStageStart(StageStartEvent evt)
         {
@@ -64,6 +67,12 @@ namespace _02.Scripts.Enemy
             _currentModel = null;
             _animator = null;
         }
+        
+        private void HandleAttackStart(EnemyAttackStartEvent evt)
+        {
+            if (_animator == null) return;
 
+            _animator.SetTrigger("ATTACK");
+        }
     }
 }
