@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.StatCards;
 
-namespace _02.Scripts.DackSystem
+namespace _02.Scripts.DeckSystem
 {
     public class PlayerRuntimeDeck
     {

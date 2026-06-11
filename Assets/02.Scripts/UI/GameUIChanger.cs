@@ -2,6 +2,7 @@
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
+using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using TMPro;
 using UnityEngine;
 

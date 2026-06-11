@@ -20,3 +20,4 @@ MonoBehaviour:
   <BeforeEffects>k__BackingField:
   - {fileID: 11400000, guid: 0d5b48c928d9cb34994e55d928ac9601, type: 2}
   <AfterEffects>k__BackingField: []
+  <AbstractWeapon>k__BackingField: {fileID: 11400000, guid: bb83e2608dbab7b4ca389690f3703b08, type: 2}

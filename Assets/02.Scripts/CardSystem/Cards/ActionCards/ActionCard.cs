@@ -2,6 +2,7 @@
 using _02.Scripts.CardSystem.Cards.ActionCards.ActionSO;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
+using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using DG.Tweening;
 using UnityEngine;
 
@@ -69,7 +70,6 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
 
         public void ResetValues()
         {
-            Debug.Log("Reset values");
             AttackValue = 0;
             DefenseValue = 0;
         }
@@ -79,6 +79,8 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             int overflow = value - DefenseValue;
             DefenseValue = Mathf.Max(DefenseValue - value, 0);
 
+            if (shake) PlayHitShake(value);
+
             if (overflow > 0)
             {
                 if (this is PlayerActionCard)
@@ -86,11 +88,14 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
                 else if (this is EnemyActionCard)
                     enemyChannel.RaiseEvent(new TakeDamageEvent().Init(overflow));
             }
-
-            if (shake) PlayHitShake(value);
-
-            if (this is EnemyActionCard && DefenseValue <= 0)
-                OnDefenseZero();
+        }
+        
+        public int GetOverflowDamage(int value)
+        {
+            int overflow = value - DefenseValue;
+            DefenseValue = Mathf.Max(DefenseValue - value, 0);
+            PlayHitShake(value);
+            return Mathf.Max(overflow, 0);
         }
 
         protected virtual void OnDefenseZero() { }

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.CoreSystem.EventChannel;
-using _02.Scripts.CoreSystem.EventChannel.EnemyEvent;
+using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
-using _02.Scripts.Enemy;
+using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
+using _02.Scripts.Enemys;
 using _02.Scripts.SlotSystem;
 using _02.Scripts.SlotSystem.Slots;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace _02.Scripts.Stage
         {
             _currentStageIndex++;
 
-            if (_currentStageIndex >= stageList.Stages.Count-1)
+            if (_currentStageIndex >= stageList.Stages.Count)
             {
                 Debug.Log("모든 스테이지 클리어!");
                 return;

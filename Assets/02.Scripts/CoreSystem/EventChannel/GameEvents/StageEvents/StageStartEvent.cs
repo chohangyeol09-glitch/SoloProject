@@ -1,4 +1,4 @@
-﻿using _02.Scripts.Enemy;
+﻿using _02.Scripts.Enemys;
 
 namespace _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents
 {

@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using _02.Scripts.CoreSystem.EventChannel;
+using _02.Scripts.CoreSystem.EventChannel.CardEvent.ActionCardEvents;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
-using _02.Scripts.Enemy;
+using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
+using _02.Scripts.Enemys;
 using UnityEngine;
 
 namespace _02.Scripts.TurnSystem
@@ -54,11 +56,11 @@ namespace _02.Scripts.TurnSystem
             turnEventChannel.RaiseEvent(new ExecuteCardsEvent().Init(() => cardsExecuted = true));
             yield return new WaitUntil(() => cardsExecuted);
             
-            if (EnemyDataManager.Instance.IsDead)
+            if (Enemy.Instance.IsDead)
             {
                 gameEventChannel.RaiseEvent(new StageClearEvent());
                 Debug.Log("Stage Clear");
-                yield break; // 턴 시작 안함
+                yield break; 
             }
 
             TurnStart();

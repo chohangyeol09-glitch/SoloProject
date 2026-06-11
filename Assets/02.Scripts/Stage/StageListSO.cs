@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using _02.Scripts.Enemy;
+using _02.Scripts.Enemys;
 using UnityEngine;
 
 namespace _02.Scripts.Stage

@@ -1,36 +1,43 @@
 using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CoreSystem.EventChannel;
-using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
-using _02.Scripts.Player;
-using UnityEditor;
+using _02.Scripts.Players;
 using UnityEngine;
 
 namespace _02.Scripts.DeckSystem
 {
-    public class DeckLogic : MonoBehaviour, IModule
+    public class DeckLogic : MonoBehaviour, IModule, IAfterInitializeModule
     {
         [SerializeField] private EventChannelSO cardChannel;
         [SerializeField] private EventChannelSO gameEvent;
 
         private List<StatCardDataSO> _deckPile    = new();
         private List<StatCardDataSO> _discardPile = new();
+        
+        public HandLogic HandLogic { get; private set; }
 
+        private ModuleOwner _owner;
         public void Initialize(ModuleOwner owner)
         {
+            _owner = owner;
             cardChannel.AddListener<DiscardCardEvent>(HandleDiscard);
             gameEvent.AddListener<StageStartEvent>(HandleStartStage);
         }
+        
+        public void AfterInitialize()
+        {
+            HandLogic = _owner.transform.GetComponent<GameManager>().HandLogic;
+               
+        }
 
-        private void HandleStartStage(StageStartEvent obj)
+        private void HandleStartStage(StageStartEvent evt)
         {
             _deckPile.Clear();
             _discardPile.Clear();
-
-            foreach (StatCardDataSO data in PlayerDataManager.Instance.RuntimeDeck.Cards)
+            foreach (StatCardDataSO data in Player.Instance.RuntimeDeck.Cards)
                 _deckPile.Add(data);
 
             Shuffle(_deckPile);
@@ -85,9 +92,11 @@ namespace _02.Scripts.DeckSystem
         [ContextMenu("AddDeck")]
         private void TestAddDeck()
         {
-            PlayerDataManager.Instance.RuntimeDeck.AddCard(data);
+            Player.Instance.RuntimeDeck.AddCard(data);
         }
 #endif
+
+        
     }
 }
     

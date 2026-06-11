@@ -4,6 +4,7 @@ using _02.Scripts.CardSystem.Cards.StatCards.EffectSO;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
+using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using _02.Scripts.InteractionSystem;
 using _02.Scripts.InteractionSystem.Interactions;
 using _02.Scripts.SlotSystem.Slots;

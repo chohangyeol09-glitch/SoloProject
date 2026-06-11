@@ -7,13 +7,14 @@ using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
+using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using DG.Tweening;
 using UnityEngine;
 
 namespace _02.Scripts.DeckSystem
 {
-    public class HandLogic : MonoBehaviour, IModule
+    public class HandLogic : MonoBehaviour, IModule , IAfterInitializeModule
     {
         [SerializeField] private EventChannelSO cardEventChannel;
         [SerializeField] private EventChannelSO turnEventChannel;
@@ -32,22 +33,26 @@ namespace _02.Scripts.DeckSystem
         private DeckLogic _deckLogic;
         private List<StatCard> _handCards = new();
 
+        private ModuleOwner _owner;
         public void Initialize(ModuleOwner owner)
         {
-            _deckLogic = owner.GetModule<DeckLogic>();
+            _owner = owner;
             cardEventChannel.AddListener<DrawCardEvent>(HandleDrawHand);
             turnEventChannel.AddListener<TurnChangeEvent>(HandleTurnStart);
             turnEventChannel.AddListener<ClearHandEvent>(HandleClearHand); 
         }
-
+        
+        public void AfterInitialize()
+        {
+            _deckLogic = _owner.GetComponent<GameManager>().DeckLogic;
+        }
+        
         private void OnDestroy()
         {
             cardEventChannel.RemoveListener<DrawCardEvent>(HandleDrawHand);
             turnEventChannel.RemoveListener<TurnChangeEvent>(HandleTurnStart);
             turnEventChannel.RemoveListener<ClearHandEvent>(HandleClearHand);
         }
-
-        
 
         private void HandleDrawHand(DrawCardEvent evt)
         {
@@ -187,5 +192,7 @@ namespace _02.Scripts.DeckSystem
         [ContextMenu("TestClearHand")]
         public void TestClearHand() => ClearHand();
 #endif
+
+
     }
 }
