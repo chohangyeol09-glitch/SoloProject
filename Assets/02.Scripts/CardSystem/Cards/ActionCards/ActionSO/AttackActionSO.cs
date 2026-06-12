@@ -17,6 +17,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
         [SerializeField] private float riseDuration = 0.2f;
         [SerializeField] private float moveDuration = 0.3f;
         [SerializeField] private float returnDuration = 0.2f;
+        [SerializeField] private GameObject hitParticlePrefab;
 
         public override void Execute(ActionCard card, List<AbstractSlot> targets, Action onComplete = null, Action<int> onPlayerDamage = null)
         {
@@ -57,6 +58,8 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
                 {
                     if (capturedTarget == null) return;
 
+                    SpawnHitParticle(capturedTarget.transform.position);
+
                     if (capturedTarget.CurrentCard != null)
                     {
                         
@@ -93,6 +96,14 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
                 onPlayerDamage?.Invoke(totalPlayerOverflow); 
                 onComplete?.Invoke();
             });
+        }
+        private void SpawnHitParticle(Vector3 position)
+        {
+            if (hitParticlePrefab == null) return;
+            GameObject ps = Instantiate(hitParticlePrefab, position, Quaternion.identity);
+            ParticleSystem particle = ps.GetComponent<ParticleSystem>();
+            float lifetime = particle.main.duration + particle.main.startLifetime.constantMax; 
+            Destroy(ps, lifetime);
         }
     }
 }

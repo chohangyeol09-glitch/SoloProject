@@ -17,6 +17,7 @@ namespace _02.Scripts.UI
         {
             playerEventChannel.AddListener<CostChangedEvent>(HandleChangeCost);
             playerEventChannel.AddListener<HealthChangedEvent>(HandleChangeHealth);
+            
         }
 
         private void OnDestroy()

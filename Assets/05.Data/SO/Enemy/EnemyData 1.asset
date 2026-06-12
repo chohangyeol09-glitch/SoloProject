@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b638f90235354bc3adbfa6081d1eae6e, type: 3}
   m_Name: EnemyData 1
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemy.EnemyDataSO
-  <EnemyName>k__BackingField: "\uB098\uC05C \uC560 1"
+  <EnemyName>k__BackingField: enemy1
   <MaxHealth>k__BackingField: 20
-  <IsBoss>k__BackingField: 0
+  <IsBoss>k__BackingField: 1
   <ModelPrefab>k__BackingField: {fileID: 6222674203747453527, guid: ebb840a8846696e42a556fe78fa45c28, type: 3}
   <CardPlacements>k__BackingField:
   - SlotIndex: 0
@@ -29,4 +29,10 @@ MonoBehaviour:
     CardData: {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
     <AttackValue>k__BackingField: 2
     <DefenseValue>k__BackingField: 4
-  <BossGimmicks>k__BackingField: []
+  <BossGimmicks>k__BackingField:
+  - Timing: 0
+    Condition: {fileID: 11400000, guid: 1abcad51e9182324e9cc1e86ccc09f3c, type: 2}
+    Pattern: {fileID: 11400000, guid: 0a5d176c057c3b04891ae072f7463ddf, type: 2}
+  - Timing: 2
+    Condition: {fileID: 11400000, guid: f232485fbc168b340a2800403d8a2442, type: 2}
+    Pattern: {fileID: 11400000, guid: 49dfaa61f96b35740b874477a891cc9f, type: 2}

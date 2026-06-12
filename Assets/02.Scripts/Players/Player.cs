@@ -33,7 +33,8 @@ namespace _02.Scripts.Players
             playerChannel.AddListener<SpendCostEvent>(HandleSpendCost);
             playerChannel.AddListener<GainCostEvent>(HandleGainCost);
             playerChannel.AddListener<RecoverCostEvent>(HandleRecoverCost);
-            turnChannel.AddListener<TurnStartEvent>(HandleTurnStart);
+            turnChannel.AddListener<TurnChangeEvent>(HandleTurnChange);
+            
         }
 
         private void OnDestroy()
@@ -43,7 +44,7 @@ namespace _02.Scripts.Players
             playerChannel.RemoveListener<SpendCostEvent>(HandleSpendCost);
             playerChannel.RemoveListener<GainCostEvent>(HandleGainCost);
             playerChannel.RemoveListener<RecoverCostEvent>(HandleRecoverCost);
-            turnChannel.RemoveListener<TurnStartEvent>(HandleTurnStart);
+            turnChannel.RemoveListener<TurnChangeEvent>(HandleTurnChange);
         }
 
         private void HandleTakeDamage(TakeDamageEvent evt) => TakeDamage(evt.Value);
@@ -52,6 +53,7 @@ namespace _02.Scripts.Players
         private void HandleSpendCost(SpendCostEvent evt)
         {
             if (CurrentCost < evt.Amount) { evt.OnResult?.Invoke(false); return; }
+            Debug.Log($"HandleSpendCost {evt.Amount}");
             CurrentCost -= evt.Amount;
             playerChannel.RaiseEvent(new CostChangedEvent().Init(CurrentCost));
             evt.OnResult?.Invoke(true);
@@ -59,7 +61,7 @@ namespace _02.Scripts.Players
 
         private void HandleGainCost(GainCostEvent evt)
         {
-            
+            Debug.Log($"HandleGainCost {evt.Amount}");
             CurrentCost = Mathf.Min(CurrentCost + evt.Amount, MaxCost);
             playerChannel.RaiseEvent(new CostChangedEvent().Init(CurrentCost));
         }
@@ -67,10 +69,11 @@ namespace _02.Scripts.Players
         private void HandleRecoverCost(RecoverCostEvent evt)
         {
             CurrentCost = evt.OverrideAmount ?? MaxCost;
+            Debug.Log($"HandleRecoverCost {evt.OverrideAmount}");
             playerChannel.RaiseEvent(new CostChangedEvent().Init(CurrentCost));
         }
 
-        private void HandleTurnStart(TurnStartEvent evt)
+        private void HandleTurnChange(TurnChangeEvent evt)
         {
             playerChannel.RaiseEvent(new RecoverCostEvent().Init());
         }

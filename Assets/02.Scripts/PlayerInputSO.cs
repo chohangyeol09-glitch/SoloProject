@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace _02.Scripts
 {
-    [CreateAssetMenu(fileName = "PlayerInput", menuName = "SO", order = 0)]
+    [CreateAssetMenu(fileName = "PlayerInput", menuName = "PlayerInput", order = 0)]
     public class PlayerInputSO : ScriptableObject, Control.IPlayerActions
     {
         public event Action<Vector2> OnMovePointer;

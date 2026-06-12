@@ -15,5 +15,5 @@ MonoBehaviour:
   <WeaponPrefab>k__BackingField: {fileID: 4473346500509629090, guid: 31fded2849a032d47910cdfc92b0dce7, type: 3}
   <AttackTrigger>k__BackingField: ATTACK
   <AttackDuration>k__BackingField: 1
-  <SpawnOffset>k__BackingField: {x: 0, y: 0, z: 0}
+  <SpawnOffset>k__BackingField: {x: 0, y: 0.3, z: 0}
   <AttackClip>k__BackingField: {fileID: 7400000, guid: cac72eb55232d7140854e59bef69c440, type: 2}

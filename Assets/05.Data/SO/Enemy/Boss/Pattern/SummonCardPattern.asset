@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e3b2eaba984acbbdcd57a9b06c058d, type: 3}
+  m_Name: SummonCardPattern
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemys.Boss.BossPatterns.SummonCardPatternSO
+  <PatternClip>k__BackingField: {fileID: 7400000, guid: c0f1268306526274887a0016b8552fc8, type: 2}
+  <PatternTrigger>k__BackingField: SUMMON
+  _enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
+  <CardData>k__BackingField: {fileID: 11400000, guid: 6c4e49d6eb4ab2e4e930d71ae822df2b, type: 2}
+  <AttackValue>k__BackingField: 5
+  <DefenseValue>k__BackingField: 25

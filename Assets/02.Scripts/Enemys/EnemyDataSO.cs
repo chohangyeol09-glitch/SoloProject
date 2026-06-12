@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.ActionCards;
+using _02.Scripts.Enemys.Boss;
 using UnityEngine;
 
 namespace _02.Scripts.Enemys
 {
-    [CreateAssetMenu(fileName = "EnemyData", menuName = "SO/Enemy/EnemyData")]
+    [CreateAssetMenu(fileName = "EnemyData", menuName = "Enemy/EnemyData")]
     public class EnemyDataSO : ScriptableObject
     {
         [field: SerializeField] public string EnemyName { get; private set; }
@@ -29,7 +30,8 @@ namespace _02.Scripts.Enemys
     [Serializable]
     public class BossGimmick
     {
-        public int TriggerTurn;   
-        
+        public BossGimmickTiming Timing;
+        public AbstractBossConditionSO Condition; 
+        public AbstractBossPatternSO Pattern;     
     }
 }

@@ -88,6 +88,34 @@ namespace _02.Scripts.SlotSystem
             }
         }
         
+        public EnemyActionCard SpawnEnemyCardInFirstEmptySlot(ActionCardDataSO cardData, int attackValue, int defenseValue)
+        {
+            for (int i = 0; i < enemySlots.Count; i++)
+            {
+                if (enemySlots[i].CurrentCard != null) continue;
+                return SpawnEnemyCard(cardData, attackValue, defenseValue, i);
+            }
+            return null;
+        }
+        
+        public EnemyActionCard SpawnEnemyCard(ActionCardDataSO cardData, int attackValue, int defenseValue, int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= enemySlots.Count) return null;
+            if (enemySlots[slotIndex].CurrentCard != null) return null;
+
+            GameObject obj = Instantiate(enemyActionCardPrefab);
+            EnemyActionCard card = obj.GetComponent<EnemyActionCard>();
+            card.SetActionCardData(cardData);
+            card.AddAttackValue(attackValue);
+            card.AddDefenseValue(defenseValue);
+
+            enemySlots[slotIndex].SetCurrentCard(card);
+            _spawnedCards.Add(obj);
+            return card;
+        }
+
+        
+        
         public List<AbstractSlot> GetTargetSlots(AbstractSlot curAbstractSlot, SlotTargetRangeType targetRangeType)
         {
             bool isPlayer = curAbstractSlot.SlotType == SlotType.Player;

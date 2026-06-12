@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace _02.Scripts.SlotSystem
 {
-    public class BattleLogic : ModuleOwner, IModule
+    public class BattleLogic : MonoBehaviour, IModule, IAfterInitializeModule
     {
         [SerializeField] private EventChannelSO turnChannel;
         [SerializeField] private EventChannelSO enemyChannel;
@@ -24,8 +24,12 @@ namespace _02.Scripts.SlotSystem
         public void Initialize(ModuleOwner owner)
         {
             _owner = owner;
-            _slotLogic = owner.GetModule<SlotLogic>();
             turnChannel.AddListener<ExecuteCardsEvent>(HandleExecuteCards);
+        }
+        
+        public void AfterInitialize()
+        {
+            _slotLogic = _owner.transform.GetComponent<GameManager>().SlotLogic;
         }
 
         private void OnDestroy()
@@ -44,6 +48,7 @@ namespace _02.Scripts.SlotSystem
 
         private IEnumerator ExecuteCardsInOrder()
         {
+            Debug.Log(_slotLogic );
             foreach (PlayerSlot slot in _slotLogic.PlayerSlots)
             {
                 if (slot.CurrentCard == null) continue;
@@ -51,6 +56,10 @@ namespace _02.Scripts.SlotSystem
                 ExecuteCard(slot, () => done = true);
                 yield return new WaitUntil(() => done);
             }
+
+            bool actionStartDone = false;
+            enemyChannel.RaiseEvent(new EnemyActionStartEvent().Init(() => actionStartDone = true));
+            yield return new WaitUntil(() => actionStartDone);
 
             int totalPlayerDamage = 0;
             foreach (EnemySlot slot in _slotLogic.EnemySlots)
@@ -70,6 +79,10 @@ namespace _02.Scripts.SlotSystem
                 ));
                 yield return new WaitUntil(() => attackDone);
             }
+
+            bool actionEndDone = false;
+            enemyChannel.RaiseEvent(new EnemyActionEndEvent().Init(() => actionEndDone = true));
+            yield return new WaitUntil(() => actionEndDone);
         }
         
         private void ExecuteCard(AbstractSlot slot, Action onComplete, Action<int> onPlayerDamage = null)
@@ -89,5 +102,7 @@ namespace _02.Scripts.SlotSystem
                 if (effect.IsActivate(context))
                     effect.Apply(context, targets);
         }
+
+        
     }
 }

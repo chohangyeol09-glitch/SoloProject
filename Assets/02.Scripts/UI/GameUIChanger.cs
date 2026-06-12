@@ -13,8 +13,8 @@ namespace _02.Scripts.UI
         [SerializeField] private EventChannelSO turnChannel;
         [SerializeField] private EventChannelSO gameChannel;
 
-        [SerializeField] private TextMeshPro turnText;
-        [SerializeField] private TextMeshPro stageText;
+        [SerializeField] private TextMeshProUGUI turnText;
+        [SerializeField] private TextMeshProUGUI stageText;
 
         private void Awake()
         {
@@ -24,12 +24,12 @@ namespace _02.Scripts.UI
 
         private void HandleStageChange(StageStartEvent evt)
         {
-            stageText.text = (evt.StageIndex)+1 + " 스테이지";
+            stageText.text = (evt.StageIndex)+1 + "s";
         }
 
         private void HandleTurnChange(TurnChangeEvent evt)
         {
-            turnText.text = evt.CurrentTurn + "번째 턴";
+            turnText.text = evt.CurrentTurn + "t";
         }
     }
 }

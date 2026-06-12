@@ -15,6 +15,7 @@ MonoBehaviour:
   <EnemyName>k__BackingField: "\uB098\uC05C \uC560 2"
   <MaxHealth>k__BackingField: 30
   <IsBoss>k__BackingField: 0
+  <ModelPrefab>k__BackingField: {fileID: 0}
   <CardPlacements>k__BackingField:
   - SlotIndex: 0
     CardData: {fileID: 11400000, guid: 6c4e49d6eb4ab2e4e930d71ae822df2b, type: 2}

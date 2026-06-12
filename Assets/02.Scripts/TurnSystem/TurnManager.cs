@@ -6,6 +6,7 @@ using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using _02.Scripts.Enemys;
+using _02.Scripts.Enemys.Boss;
 using UnityEngine;
 
 namespace _02.Scripts.TurnSystem
@@ -14,6 +15,7 @@ namespace _02.Scripts.TurnSystem
     {
         [SerializeField] private EventChannelSO turnEventChannel;
         [SerializeField] private EventChannelSO gameEventChannel;
+        [SerializeField] private BossGimmickManager bossGimmickManager;
 
         public int TurnCount { get; private set; }
 
@@ -60,8 +62,12 @@ namespace _02.Scripts.TurnSystem
             {
                 gameEventChannel.RaiseEvent(new StageClearEvent());
                 Debug.Log("Stage Clear");
-                yield break; 
+                yield break;
             }
+
+            bool gimmickDone = false;
+            bossGimmickManager.ExecuteGimmicks(BossGimmickTiming.OnTurnStart, TurnCount, () => gimmickDone = true);
+            yield return new WaitUntil(() => gimmickDone);
 
             TurnStart();
         }

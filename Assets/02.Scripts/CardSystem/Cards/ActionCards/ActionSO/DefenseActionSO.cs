@@ -11,7 +11,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
         public override void Execute(ActionCard card, List<AbstractSlot> targets, Action onComplete = null, Action<int> onPlayerDamage = null)
         {
             foreach (AbstractSlot target in targets)
-                target.CurrentCard?.ChangeValue(card.DefenseValue);
+                target.CurrentCard?.AddDefenseValue(card.DefenseValue);
 
             onComplete?.Invoke();
         }

@@ -23,6 +23,7 @@ namespace _02.Scripts.Props
         {
             Debug.Log("TurnEnd");
             turnEventChannel.RaiseEvent(new TurnEndEvent());
+            
         }
     }
 }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf613959cb9f4863b67c8915c6433ba8, type: 3}
+  m_Name: SlotDamagePattern
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemys.Boss.BossPatterns.SlotDamagePatternSO
+  <PatternTrigger>k__BackingField: SLOTATTACK
+  _enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
+  attackParticle: {fileID: 1887159375177322, guid: 3bc5000d25fb154448f96dd3c713e545, type: 3}
+  yOffset: 0.3
+  damageValue: 3
+  delay: 0.6

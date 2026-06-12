@@ -1654,4 +1654,4 @@ MonoBehaviour:
   enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
   shakeStrength: 0.5
   shakeDuration: 0.3
-  slotChannel: {fileID: 0}
+  slotChannel: {fileID: 11400000, guid: b338fdca25869a347962851446a993e6, type: 2}

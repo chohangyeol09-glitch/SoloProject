@@ -1,13 +1,9 @@
-using System.Collections.Generic;
-using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
-using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using _02.Scripts.Enemys;
-using _02.Scripts.SlotSystem;
-using _02.Scripts.SlotSystem.Slots;
+using _02.Scripts.Players;
 using UnityEngine;
 
 namespace _02.Scripts.Stage
@@ -46,6 +42,7 @@ namespace _02.Scripts.Stage
             gameEventChannel.RaiseEvent(new StageStartEvent().Init(_currentStageIndex, stageData));
 
             turnEventChannel.RaiseEvent(new TurnChangeEvent().Init(1));
+            Player.Instance.Heal(Player.Instance.MaxHealth / 10);
         }
 
         private void HandleEnemyDead(EnemyDeadEvent evt)
