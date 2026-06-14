@@ -22,14 +22,20 @@ namespace _02.Scripts.UI
             gameChannel.AddListener<StageStartEvent>(HandleStageChange);
         }
 
+        private void OnDestroy()
+        {
+            turnChannel.RemoveListener<TurnChangeEvent>(HandleTurnChange);
+            gameChannel.RemoveListener<StageStartEvent>(HandleStageChange);
+        }
+
         private void HandleStageChange(StageStartEvent evt)
         {
-            stageText.text = (evt.StageIndex)+1 + "s";
+            //stageText.text = (evt.StageIndex)+1 + "s";
         }
 
         private void HandleTurnChange(TurnChangeEvent evt)
         {
-            turnText.text = evt.CurrentTurn + "t";
+            turnText.text = evt.CurrentTurn.ToString();
         }
     }
 }

@@ -28,6 +28,7 @@ namespace _02.Scripts.TurnSystem
         private void HandleStageChange(StageStartEvent evt)
         {
             TurnCount = 0; 
+            TurnStart();
         }
 
         private void OnDestroy()
@@ -38,6 +39,7 @@ namespace _02.Scripts.TurnSystem
         public void TurnStart()
         {
             TurnCount++;
+            Debug.Log($"TurnStart| CurrentTurn: {TurnCount}");
             turnEventChannel.RaiseEvent(new TurnChangeEvent().Init(TurnCount));
         }
 

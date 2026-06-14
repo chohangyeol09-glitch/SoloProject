@@ -48,12 +48,12 @@ namespace _02.Scripts.SlotSystem.Slots
         
         private void HandleHoverEnter()
         {
-            _outline.OutlineParameters.Color = Color.white;
+            _outline.FrontParameters.Color = Color.white;
         }
 
         private void HandleHoverExit()
         {
-            _outline.OutlineParameters.Color = Color.clear;
+            _outline.FrontParameters.Color = Color.clear;
         }
 
         private void HandleDrop(Transform dropTrm)

@@ -15,8 +15,7 @@ namespace _02.Scripts.Enemys.Boss.BossPatterns
 
         protected override void ExecutePattern(BossGimmickContext context, Action onComplete)
         {
-            Debug.LogWarning("context is null? : " + context == null);
-            Debug.Log($"context: {context != null}, SlotLogic: {context?.SlotLogic != null}");
+            Debug.Log($"SUMMON| Execute: {context.CurrentTurn}");
             context.SlotLogic.SpawnEnemyCardInFirstEmptySlot(CardData, AttackValue, DefenseValue);
             onComplete?.Invoke();
         }

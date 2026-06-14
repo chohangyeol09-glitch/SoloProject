@@ -13,10 +13,18 @@ namespace _02.Scripts.Enemys.Boss
         
         public void Execute(BossGimmickContext context, Action onComplete = null)
         {
+            bool patternDone = false;
+            bool animDone = false;
+
+            void TryComplete()
+            {
+                if (patternDone && animDone) onComplete?.Invoke();
+            }
+
             _enemyChannel.RaiseEvent(new BossPatternStartEvent().Init(
                 PatternTrigger,
-                () => ExecutePattern(context, null), 
-                onComplete
+                () => ExecutePattern(context, () => { patternDone = true; TryComplete(); }),
+                () => { animDone = true; TryComplete(); }
             ));
         }
 

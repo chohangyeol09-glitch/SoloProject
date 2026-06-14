@@ -49,7 +49,7 @@ MonoBehaviour:
   attackSlotTypeIcon: {fileID: 74856502033459868}
   actionTypeIcon: {fileID: 2045038983639736370}
   effectLayout: {fileID: 2755322613649360404}
-  effectIconPrefab: {fileID: 545254672060827414, guid: 6ff4330bb5604e94988f45b0e821701d, type: 3}
+  effectIconPrefab: {fileID: 2203165635001060789, guid: acdc1a27dbdbe0d4097a6ebff10b6829, type: 3}
   attackValueText: {fileID: 8275373598736802510}
   defenseValueText: {fileID: 2877456430533494011}
   slotTargetRangeSpriteSO: {fileID: 11400000, guid: 8ecce18af5137504a9281a1320a33b84, type: 2}
@@ -196,7 +196,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1008720277243640017}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -204,7 +204,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -3.04, y: -3.12}
+  m_AnchoredPosition: {x: -1.96, y: -3.97}
   m_SizeDelta: {x: -8.764, y: -9.034}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9081633927114448720
@@ -429,7 +429,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3.37, y: -3.12}
+  m_AnchoredPosition: {x: 2.18, y: -4.01}
   m_SizeDelta: {x: -8.764, y: -9.034}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &261355753626190297
@@ -1138,7 +1138,7 @@ MonoBehaviour:
     CullMode: 2
     cutoutTextureName: 
     cutoutTextureIndex: 0
-  renderStyle: 1
+  renderStyle: 2
   outlineParameters:
     enabled: 1
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 0}
@@ -1148,7 +1148,7 @@ MonoBehaviour:
       shader: {fileID: 0}
       serializedProperties: []
   backParameters:
-    enabled: 1
+    enabled: 0
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
     dilateShift: 1
     blurShift: 1
@@ -1157,7 +1157,7 @@ MonoBehaviour:
       serializedProperties: []
   frontParameters:
     enabled: 1
-    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    color: {r: 1, g: 1, b: 1, a: 0}
     dilateShift: 1
     blurShift: 1
     fillPass:

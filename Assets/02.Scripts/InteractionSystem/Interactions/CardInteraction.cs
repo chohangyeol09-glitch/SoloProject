@@ -45,7 +45,6 @@ namespace _02.Scripts.InteractionSystem.Interactions
 
         public void HandleHoverExit()
         {
-            if (_isDragging) return;
             OnHoverExit?.Invoke();
         }
     }

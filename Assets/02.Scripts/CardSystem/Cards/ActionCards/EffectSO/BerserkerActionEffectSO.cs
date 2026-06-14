@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _02.Scripts.SlotSystem;
 using UnityEngine;
 
@@ -10,9 +11,10 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.EffectSO
         [SerializeField] private int targetHealth;
         
         public override bool IsActivate(EffectExecuteContext context) => Players.Player.Instance.CurrentHealth <= targetHealth;
-        public override void Apply(EffectExecuteContext context, List<AbstractSlot> targets)
+        public override void Apply(EffectExecuteContext context, List<AbstractSlot> targets, Action onComplete = null)
         {
             context.ActionCard.AddAttackValue(5);
+            onComplete?.Invoke();
         }
     }
 }

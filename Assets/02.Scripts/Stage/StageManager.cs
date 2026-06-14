@@ -14,20 +14,31 @@ namespace _02.Scripts.Stage
         [SerializeField] private EventChannelSO gameEventChannel;
         [SerializeField] private EventChannelSO enemyEventChannel;
         [SerializeField] private EventChannelSO turnEventChannel;
+        [SerializeField] private StageTransitionAnimator transitionAnimator;
 
         private int _currentStageIndex = -1;
 
         private void Awake()
         {
             enemyEventChannel.AddListener<EnemyDeadEvent>(HandleEnemyDead);
+            enemyEventChannel.AddListener<EnemyDieEndEvent>(HandleEnemyDieEnd);
         }
 
         private void OnDestroy()
         {
             enemyEventChannel.RemoveListener<EnemyDeadEvent>(HandleEnemyDead);
+            enemyEventChannel.RemoveListener<EnemyDieEndEvent>(HandleEnemyDieEnd);
         }
 
         public void StartNextStage()
+        {
+            if (transitionAnimator != null)
+                transitionAnimator.PlayStageStartTransition(ExecuteStageStart);
+            else
+                ExecuteStageStart();
+        }
+
+        private void ExecuteStageStart()
         {
             _currentStageIndex++;
 
@@ -45,9 +56,20 @@ namespace _02.Scripts.Stage
             Player.Instance.Heal(Player.Instance.MaxHealth / 10);
         }
 
+        public void ClearStage()
+        {
+
+        }
+
         private void HandleEnemyDead(EnemyDeadEvent evt)
         {
             gameEventChannel.RaiseEvent(new StageClearEvent());
+        }
+
+        private void HandleEnemyDieEnd(EnemyDieEndEvent evt)
+        {
+            ClearStage();
+            transitionAnimator?.PlayStageEndTransition();
         }
 
 #if UNITY_EDITOR

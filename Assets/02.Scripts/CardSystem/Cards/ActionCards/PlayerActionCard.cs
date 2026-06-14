@@ -35,12 +35,14 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             Debug.Assert(DropInteraction != null, $"DropInteraction is null: {gameObject.name}");
             Debug.Assert(UIChanger != null, $"UIChanger is null: {gameObject.name}");
 
-            _outline.enabled = false;
+            //_outline.enabled = false;
+            _outline.FrontParameters.Color = Color.clear;
             DropInteraction.OnDrop -= HandleDrop;
             DropInteraction.OnDrop += HandleDrop;
             DropInteraction.OnHoverEnter += HandleDropHoverEnter;
             DropInteraction.OnHoverExit += HandleDropHoverExit;
             DropInteraction.SetCanDropType(typeof(StatCard));
+            DropInteraction.AddCanDropType(typeof(ActionEffectCard));
             if (ActionCardData != null) SetData();
         }
 
@@ -68,12 +70,23 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
 
         public void HandleDrop(Transform dropTrm)
         {
-            if (!dropTrm.TryGetComponent<StatCard>(out StatCard statCard))
+            if (dropTrm.TryGetComponent<StatCard>(out StatCard statCard))
             {
-                OnDropSuccess?.Invoke(false);
+                HandleStatCardDrop(statCard);
                 return;
             }
 
+            if (dropTrm.TryGetComponent<ActionEffectCard>(out ActionEffectCard effectCard))
+            {
+                HandleEffectCardDrop(effectCard);
+                return;
+            }
+
+            OnDropSuccess?.Invoke(false);
+        }
+
+        private void HandleStatCardDrop(StatCard statCard)
+        {
             playerChannel.RaiseEvent(new SpendCostEvent().Init(
                 statCard.NeedCost,
                 success =>
@@ -100,36 +113,46 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             _outline.OutlineParameters.Color = Color.clear;
         }
 
+        private void HandleEffectCardDrop(ActionEffectCard effectCard)
+        {
+            AddRuntimeEffect(effectCard.Effect);
+            UIChanger.AddEffectIcon(effectCard.Effect);
+            effectCard.OnUsed();
+            OnDropSuccess?.Invoke(true);
+            _outline.OutlineParameters.Color = Color.clear;
+        }
+
         protected override void HandleDragStart(Vector3 mouseWorldPos)
         {
             slotChannel?.RaiseEvent(new CardPickUpEvent().Init(this));
-            _outline.enabled = false; 
+            //_outline.enabled = false;
+            _outline.FrontParameters.Color = Color.clear;
             base.HandleDragStart(mouseWorldPos);
         }
 
         protected override void HandleHoverEnter()
         {
             base.HandleHoverEnter();
-            _outline.enabled = true;
-            _outline.OutlineParameters.Color = Color.white;
+            //_outline.enabled = true;
+            _outline.FrontParameters.Color = Color.white;
         }
 
         protected override void HandleHoverExit()
         {
             base.HandleHoverExit();
-            _outline.enabled = false;
-            _outline.OutlineParameters.Color = Color.clear;
+            //_outline.enabled = false;
+            _outline.FrontParameters.Color = Color.clear;
         }
         private void HandleDropHoverEnter()
         {
-            _outline.enabled = true;
-            _outline.OutlineParameters.Color = Color.white; 
+            //_outline.enabled = true;
+            _outline.FrontParameters.Color = Color.white; 
         }
         
         private void HandleDropHoverExit()
         {
-            _outline.enabled = false;
-            _outline.OutlineParameters.Color = Color.clear;
+            //_outline.enabled = false;
+            _outline.FrontParameters.Color = Color.clear;
         }
         
         private void HandleTurnStart(TurnChangeEvent obj)

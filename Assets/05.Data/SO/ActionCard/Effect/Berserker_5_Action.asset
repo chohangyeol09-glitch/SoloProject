@@ -14,4 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.ActionCards.EffectSO.BerserkerActionEffectSO
   <Name>k__BackingField: Berserker
   <Icon>k__BackingField: {fileID: 21300000, guid: dcb5e1cb6d8401142b4c52fd89c1b4e8, type: 3}
-  targetHealth: 5
+  <Description>k__BackingField: "\uD50C\uB808\uC774\uC5B4 \uCCB4\uB825\uC774 \uC77C\uC815\uAC12
+    \uC774\uD558\uB85C \uB0AE\uC544\uC9C0\uBA74 \uACF5\uACA9\uAC12\uC774 5 \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  <Timing>k__BackingField: 0
+  <HasDisplayValue>k__BackingField: 1
+  <DisplayValue>k__BackingField: 15
+  targetHealth: 15

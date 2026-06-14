@@ -10,11 +10,4 @@ namespace _02.Scripts.CardSystem
         GOLD
     }
     
-    [Serializable]
-    public class GradeSprite
-    {
-        public Sprite bronze;
-        public Sprite silver;
-        public Sprite gold;
-    }
 }

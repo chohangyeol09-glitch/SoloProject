@@ -45,6 +45,7 @@ namespace _02.Scripts.CardSystem.Cards
             CardInteraction.OnDragEnd -= HandleDragEnd;
             CardInteraction.OnHoverEnter -= HandleHoverEnter;
             CardInteraction.OnHoverExit -= HandleHoverExit;
+            transform.DOKill();
         }
 
         #region Handles

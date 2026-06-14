@@ -2,7 +2,7 @@
 
 namespace _02.Scripts.Enemys.Boss.BossConditions
 {
-    [CreateAssetMenu(fileName = "PlayUnderHelath", menuName = "Enemy/Boss/Conditions/PlayUnderHealth")]
+    [CreateAssetMenu(fileName = "PlayUnderHealth", menuName = "Enemy/Boss/Conditions/PlayUnderHealth")]
     public class PlayUnderHealth : AbstractBossConditionSO
     {
         [field: SerializeField] public float HealthRatio { get; private set; } = 0.5f;

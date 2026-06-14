@@ -48,7 +48,6 @@ namespace _02.Scripts.SlotSystem
 
         private IEnumerator ExecuteCardsInOrder()
         {
-            Debug.Log(_slotLogic );
             foreach (PlayerSlot slot in _slotLogic.PlayerSlots)
             {
                 if (slot.CurrentCard == null) continue;
@@ -92,15 +91,24 @@ namespace _02.Scripts.SlotSystem
 
             EffectExecuteContext context = new EffectExecuteContext(card, targets);
 
-            foreach (AbstractActionEffectSO effect in card.ActionCardData.BeforeEffects)
+            foreach (AbstractActionEffectSO effect in card.GetBeforeEffects())
                 if (effect.IsActivate(context))
                     effect.Apply(context, targets);
 
-            card.ActionCardData.Action.Execute(card, targets, onComplete, onPlayerDamage);
+            card.ActionCardData.Action.Execute(card, targets, () =>
+            {
+                List<AbstractActionEffectSO> afterEffects = new List<AbstractActionEffectSO>();
+                foreach (AbstractActionEffectSO e in card.GetAfterEffects())
+                    if (e.IsActivate(context)) afterEffects.Add(e);
 
-            foreach (AbstractActionEffectSO effect in card.ActionCardData.AfterEffects)
-                if (effect.IsActivate(context))
-                    effect.Apply(context, targets);
+                ApplyEffectsSequential(afterEffects, context, targets, 0, onComplete);
+            }, onPlayerDamage);
+        }
+
+        private void ApplyEffectsSequential(List<AbstractActionEffectSO> effects, EffectExecuteContext context, List<AbstractSlot> targets, int index, Action onComplete)
+        {
+            if (index >= effects.Count) { onComplete?.Invoke(); return; }
+            effects[index].Apply(context, targets, () => ApplyEffectsSequential(effects, context, targets, index + 1, onComplete));
         }
 
         

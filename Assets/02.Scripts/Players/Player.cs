@@ -26,6 +26,8 @@ namespace _02.Scripts.Players
             Instance = this;
             CurrentHealth = MaxHealth;
             CurrentCost = MaxCost;
+            RuntimeDeck.OnDeckCountChanged += count =>
+                playerChannel.RaiseEvent(new DeckCountChangedEvent().Init(count));
             RuntimeDeck.Initialize(startStatCardListSO);
 
             playerChannel.AddListener<TakeDamageEvent>(HandleTakeDamage);
@@ -53,7 +55,6 @@ namespace _02.Scripts.Players
         private void HandleSpendCost(SpendCostEvent evt)
         {
             if (CurrentCost < evt.Amount) { evt.OnResult?.Invoke(false); return; }
-            Debug.Log($"HandleSpendCost {evt.Amount}");
             CurrentCost -= evt.Amount;
             playerChannel.RaiseEvent(new CostChangedEvent().Init(CurrentCost));
             evt.OnResult?.Invoke(true);
@@ -61,7 +62,6 @@ namespace _02.Scripts.Players
 
         private void HandleGainCost(GainCostEvent evt)
         {
-            Debug.Log($"HandleGainCost {evt.Amount}");
             CurrentCost = Mathf.Min(CurrentCost + evt.Amount, MaxCost);
             playerChannel.RaiseEvent(new CostChangedEvent().Init(CurrentCost));
         }
@@ -69,7 +69,6 @@ namespace _02.Scripts.Players
         private void HandleRecoverCost(RecoverCostEvent evt)
         {
             CurrentCost = evt.OverrideAmount ?? MaxCost;
-            Debug.Log($"HandleRecoverCost {evt.OverrideAmount}");
             playerChannel.RaiseEvent(new CostChangedEvent().Init(CurrentCost));
         }
 

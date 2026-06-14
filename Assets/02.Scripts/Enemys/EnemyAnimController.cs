@@ -23,8 +23,9 @@ namespace _02.Scripts.Enemys
             gameEventChannel.AddListener<StageStartEvent>(HandleStageStart);
             gameEventChannel.AddListener<StageClearEvent>(HandleStageClear);
             enemyEventChannel.AddListener<TakeDamageEvent>(HandleTakeDamage);
-            enemyEventChannel.AddListener<EnemyAttackStartEvent>(HandleAttackStart); 
-            enemyEventChannel.AddListener<EnemyAttackEndEvent>(HandleAttackEnd);    
+            enemyEventChannel.AddListener<EnemyAttackStartEvent>(HandleAttackStart);
+            enemyEventChannel.AddListener<EnemyAttackHitEvent>(HandleAttackHit);
+            enemyEventChannel.AddListener<EnemyAttackEndEvent>(HandleAttackEnd);
             enemyEventChannel.AddListener<EnemyDieEndEvent>(HandleDieEnd);
             enemyEventChannel.AddListener<BossPatternStartEvent>(HandlePatternStart);
             enemyEventChannel.AddListener<BossPatternEffectEvent>(HandlePatternEffect);
@@ -37,6 +38,7 @@ namespace _02.Scripts.Enemys
             gameEventChannel.RemoveListener<StageClearEvent>(HandleStageClear);
             enemyEventChannel.RemoveListener<TakeDamageEvent>(HandleTakeDamage);
             enemyEventChannel.RemoveListener<EnemyAttackStartEvent>(HandleAttackStart);
+            enemyEventChannel.RemoveListener<EnemyAttackHitEvent>(HandleAttackHit);
             enemyEventChannel.RemoveListener<EnemyAttackEndEvent>(HandleAttackEnd);
             enemyEventChannel.RemoveListener<EnemyDieEndEvent>(HandleDieEnd);
             
@@ -80,12 +82,18 @@ namespace _02.Scripts.Enemys
             _animator.Play("ATTACK");
         }
 
-        private void HandleAttackEnd(EnemyAttackEndEvent evt)
+        private void HandleAttackHit(EnemyAttackHitEvent evt)
         {
             if (_pendingAttackEvt == null) return;
 
             playerChannel.RaiseEvent(new TakeDamageEvent().Init(_pendingAttackEvt.TotalDamage));
-            _pendingAttackEvt.OnAttackEnd?.Invoke(); 
+        }
+
+        private void HandleAttackEnd(EnemyAttackEndEvent evt)
+        {
+            if (_pendingAttackEvt == null) return;
+
+            _pendingAttackEvt.OnAttackEnd?.Invoke();
             _pendingAttackEvt = null;
         }
         

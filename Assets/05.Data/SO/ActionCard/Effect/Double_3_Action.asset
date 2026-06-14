@@ -13,5 +13,11 @@ MonoBehaviour:
   m_Name: Double_3_Action
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.ActionCards.SpecialEffectSO.DoubleActionEffectSO
   <Name>k__BackingField: Double Action
-  <Icon>k__BackingField: {fileID: 21300000, guid: ebaa61ff1f35df54482a2b67f7f6afdd, type: 3}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 3273473569f2a514d8dd7a0bb427f1a5, type: 3}
+  <Description>k__BackingField: "\uACF5\uACA9 \uC2DC \uD2B9\uC815 \uAC12\uACFC \uCE74\uB4DC\uC758\uAC12\uC774
+    \uAC19\uB2E4\uBA74 \uB450\uBC88 \uD589\uB3D9\uD569\uB2C8\uB2E4."
+  <Timing>k__BackingField: 0
+  <HasDisplayValue>k__BackingField: 1
+  <DisplayValue>k__BackingField: 3
   <TargetValue>k__BackingField: 3
+  <RepeatCount>k__BackingField: 1

@@ -19,6 +19,7 @@ namespace _02.Scripts.Enemys.Boss
         
         private EnemyDataSO _currentEnemyData;
         private int _currentTurn;
+        private readonly HashSet<AbstractBossConditionSO> _triggeredOnceConditions = new();
 
         private void Awake()
         {
@@ -40,6 +41,7 @@ namespace _02.Scripts.Enemys.Boss
         {
             _currentEnemyData = evt.EnemyData;
             _currentTurn = 0;
+            _triggeredOnceConditions.Clear();
         }
 
         private void HandleTurnChange(TurnChangeEvent evt) => _currentTurn = evt.CurrentTurn;
@@ -52,13 +54,15 @@ namespace _02.Scripts.Enemys.Boss
 
         public bool HasGimmick(BossGimmickTiming timing)
         {
+            Debug.Log($"HasGimmick: {timing}");
             if (_currentEnemyData == null || !_currentEnemyData.IsBoss) return false;
             BossGimmickContext context = CreateContext();
             foreach (BossGimmick gimmick in _currentEnemyData.BossGimmicks)
             {
                 if (gimmick.Timing != timing) continue;
-                if (gimmick.Condition == null || gimmick.Condition.IsActivate(context))
-                    return true;
+                if (gimmick.Condition != null && !gimmick.Condition.IsActivate(context)) continue;
+                if (gimmick.Condition != null && gimmick.Condition.TriggerOnce && _triggeredOnceConditions.Contains(gimmick.Condition)) continue;
+                return true;
             }
             return false;
         }
@@ -79,6 +83,11 @@ namespace _02.Scripts.Enemys.Boss
             {
                 if (gimmick.Timing != timing) continue;
                 if (gimmick.Condition != null && !gimmick.Condition.IsActivate(context)) continue;
+                if (gimmick.Condition != null && gimmick.Condition.TriggerOnce)
+                {
+                    if (_triggeredOnceConditions.Contains(gimmick.Condition)) continue;
+                    _triggeredOnceConditions.Add(gimmick.Condition);
+                }
                 if (gimmick.Pattern != null)
                     patterns.Add(gimmick.Pattern);
             }
@@ -101,6 +110,7 @@ namespace _02.Scripts.Enemys.Boss
 
         private BossGimmickContext CreateContext() => new BossGimmickContext
         {
+            CurrentTurn =  _currentTurn,
             CurrentHealth = Enemy.Instance.CurrentHealth,
             MaxHealth = Enemy.Instance.MaxHealth,
             SlotLogic = slotLogic

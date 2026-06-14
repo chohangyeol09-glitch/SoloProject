@@ -15,9 +15,6 @@ namespace _02.Scripts.UI
         [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private TextMeshProUGUI costText;
         
-        [Header("Sprite")]
-        [SerializeField] public GradeSprite gradeSprite;
-
         private ModuleOwner _owner;
         public void Initialize(ModuleOwner owner)
         {
@@ -30,12 +27,12 @@ namespace _02.Scripts.UI
             descriptionText.text = data.Description;
             mainIcon.sprite = data.Icon;
             costText.text = data.Cost.ToString();
-            gradeOutline.sprite = data.Grade switch
+            gradeOutline.color = data.Grade switch
             {
-                CardGrade.BRONZE => gradeSprite.bronze,
-                CardGrade.SILVER => gradeSprite.silver,
-                CardGrade.GOLD => gradeSprite.gold,
-                _ => null
+                CardGrade.BRONZE => Color.saddleBrown,
+                CardGrade.SILVER => Color.silver,
+                CardGrade.GOLD => Color.gold,
+                _ => Color.white
             };
         }
     }

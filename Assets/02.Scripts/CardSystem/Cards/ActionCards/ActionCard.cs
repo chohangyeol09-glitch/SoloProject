@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.ActionCards.ActionSO;
+using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
@@ -42,6 +44,9 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
 
         private int _attackValue = 0;
         private int _defenseValue = 0;
+
+        private readonly List<AbstractActionEffectSO> _runtimeBeforeEffects = new();
+        private readonly List<AbstractActionEffectSO> _runtimeAfterEffects = new();
 
         protected override void AfterInitializeModules()
         {
@@ -124,6 +129,26 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             enemyChannel.RaiseEvent(new TakeDamageEvent().Init(value));
         }
         
+        public void AddRuntimeEffect(AbstractActionEffectSO effect)
+        {
+            if (effect.Timing == EffectTimingType.Before)
+                _runtimeBeforeEffects.Add(effect);
+            else
+                _runtimeAfterEffects.Add(effect);
+        }
+
+        public IEnumerable<AbstractActionEffectSO> GetBeforeEffects()
+        {
+            foreach (var e in ActionCardData.BeforeEffects) yield return e;
+            foreach (var e in _runtimeBeforeEffects) yield return e;
+        }
+
+        public IEnumerable<AbstractActionEffectSO> GetAfterEffects()
+        {
+            foreach (var e in ActionCardData.AfterEffects) yield return e;
+            foreach (var e in _runtimeAfterEffects) yield return e;
+        }
+
         protected virtual void OnDataSet()
         {
             OnAttackValueChanged?.Invoke(0);

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AC_Front_Berserker_Attack
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.ActionCards.ActionCadeDataSO
   <Name>k__BackingField: "\uC55E\uACF5\uACA9_\uBC84\uC11C\uCEE4"
-  <Icon>k__BackingField: {fileID: 21300000, guid: ab526829f33cd4542a0e22c0eda2ecdb, type: 3}
+  <Icon>k__BackingField: {fileID: 21300000, guid: dcb5e1cb6d8401142b4c52fd89c1b4e8, type: 3}
   <ActionCardType>k__BackingField: 0
   <TargetRangeType>k__BackingField: 0
   <Action>k__BackingField: {fileID: 11400000, guid: c5c5cc40c50a56e408170293cc8c23ae, type: 2}

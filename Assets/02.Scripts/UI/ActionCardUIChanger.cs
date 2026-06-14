@@ -45,18 +45,21 @@ namespace _02.Scripts.UI
             actionTypeIcon.sprite = actionTypeSpriteSO.GetSprite(_actionCard.ActionCardData.ActionCardType);
         
             foreach (AbstractActionEffectSO effectSO in _actionCard.ActionCardData.BeforeEffects)
-            {
-                GameObject img = Instantiate(effectIconPrefab, effectLayout.transform);
-                img.GetComponent<Image>().sprite = effectSO.Icon;
-            }
+                SpawnEffectIcon(effectSO);
 
             foreach (AbstractActionEffectSO effectSO in _actionCard.ActionCardData.AfterEffects)
-            {
-                GameObject img = Instantiate(effectIconPrefab, effectLayout.transform);
-                img.GetComponent<Image>().sprite = effectSO.Icon;
-            }
-        
-        
+                SpawnEffectIcon(effectSO);
+        }
+
+        public void AddEffectIcon(AbstractActionEffectSO effect)
+        {
+            SpawnEffectIcon(effect);
+        }
+
+        private void SpawnEffectIcon(AbstractActionEffectSO effect)
+        {
+            GameObject obj = Instantiate(effectIconPrefab, effectLayout.transform);
+            obj.GetComponent<EffectIconView>().Setup(effect);
         }
 
         private void HandleAttackValueChanged(int value)

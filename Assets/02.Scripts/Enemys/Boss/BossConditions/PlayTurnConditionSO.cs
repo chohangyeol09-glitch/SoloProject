@@ -9,8 +9,7 @@ namespace _02.Scripts.Enemys.Boss.BossConditions
 
         public override bool IsActivate(BossGimmickContext context)
         {
-            Debug.Log("Boss Condition Active?: " + context.CurrentTurn == PlayTurn.ToString());
-            Debug.Log("Currnet Turn: " + context.CurrentTurn + "Play Turn: " + PlayTurn);
+            Debug.Log($"TurnCondition| CurrentTurn: {context.CurrentTurn}, PlayTurn: {PlayTurn}, Ture: {context.CurrentTurn == PlayTurn}");
             return context.CurrentTurn == PlayTurn;
         }
     }

@@ -11,6 +11,7 @@ namespace _02.Scripts.Enemys
 
         public void EndSpawn() => enemyChannel?.RaiseEvent(new EnemySpawnEndEvent().Init(GetComponent<Animator>()));
         
+        public void OnAttackHit() => enemyChannel?.RaiseEvent(new EnemyAttackHitEvent());
         public void EndAttack() => enemyChannel?.RaiseEvent(new EnemyAttackEndEvent());
         public void EndHit() => enemyChannel?.RaiseEvent(new EnemyHitEndEvent());
         public void EndDie() => enemyChannel?.RaiseEvent(new EnemyDieEndEvent());
