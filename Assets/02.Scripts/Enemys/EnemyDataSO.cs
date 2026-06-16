@@ -15,7 +15,7 @@ namespace _02.Scripts.Enemys
         [field: SerializeField] public GameObject ModelPrefab { get; private set; }
         [field: SerializeField] public List<EnemyCardPlacement> CardPlacements { get; private set; } = new();
 
-        [field: SerializeField] public List<BossGimmick> BossGimmicks { get; private set; } = new();
+        [field: SerializeField] public List<Gimmick> Gimmicks { get; private set; } = new();
     }
 
     [Serializable]
@@ -28,10 +28,10 @@ namespace _02.Scripts.Enemys
     }
 
     [Serializable]
-    public class BossGimmick
+    public class Gimmick
     {
-        public BossGimmickTiming Timing;
-        public AbstractBossConditionSO Condition; 
-        public AbstractBossPatternSO Pattern;     
+        public EnemyPatternTiming Timing;
+        public AbstractEnemyConditionSO Condition; 
+        public AbstractEnemyPatternSO Pattern;     
     }
 }

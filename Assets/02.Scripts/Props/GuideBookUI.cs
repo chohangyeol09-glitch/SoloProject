@@ -1,4 +1,5 @@
-﻿using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
+﻿using _02.Scripts.CardSystem;
+using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using _02.Scripts.InteractionSystem.Interactions;
 using EPOOutline;
@@ -11,9 +12,9 @@ namespace _02.Scripts.Props
         public PropInteraction PropInteraction { get; private set; }
 
         [SerializeField] private Transform layout;
-        [SerializeField] private Canvas canvas;
+        [SerializeField] private Transform GuideUI;
         [SerializeField] private GameObject contentPrefab;
-        [SerializeField] private ActionEffectListSO actionEffectList;
+        [SerializeField] private CardGradePoolSO actionEffectList;
 
         private Outlinable _outline;
         protected override void InitializeModules()
@@ -32,22 +33,32 @@ namespace _02.Scripts.Props
 
         private void HandleClick()
         {
-            canvas.gameObject.SetActive(true);
+            GuideUI.gameObject.SetActive(true);
         }
 
         public void CanvasClose()
         {
-            canvas.gameObject.SetActive(false);
+            GuideUI.gameObject.SetActive(false);
         }
 
         private void CreateContent()
         {
-            foreach (AbstractActionEffectSO data in actionEffectList.Effects)
-            {
-                GameObject content = Instantiate(contentPrefab, layout);
-                content.GetComponent<GuideContentUI>().SetUI(data);
-            }
-            canvas.gameObject.SetActive(false);
+            foreach (AbstractActionEffectSO data in actionEffectList.GetEffectsByGrade(CardGrade.BRONZE))
+                CreateContent(data);
+
+            foreach (AbstractActionEffectSO data in actionEffectList.GetEffectsByGrade(CardGrade.SILVER))
+                CreateContent(data);
+            
+            foreach (AbstractActionEffectSO data in actionEffectList.GetEffectsByGrade(CardGrade.GOLD))
+                CreateContent(data);
+            
+            GuideUI.gameObject.SetActive(false);
+        }
+
+        private void CreateContent(AbstractActionEffectSO data)
+        {
+            GameObject content = Instantiate(contentPrefab, layout);
+            content.GetComponent<GuideContentUI>().SetUI(data);
         }
     }
 }

@@ -64,12 +64,10 @@ namespace _02.Scripts.SlotSystem.Slots
             {
                 if (incomingCard.OriginalSlot != null)
                 {
-                    // 슬롯에서 온 카드 → 스왑
                     SwapCards(incomingCard);
                 }
                 else
                 {
-                    // 슬롯 없는 카드 → 둘 다 원래 위치로 복귀
                     incomingCard.ForceReturn();
                 }
                 return;
@@ -82,9 +80,9 @@ namespace _02.Scripts.SlotSystem.Slots
         private void SwapCards(PlayerActionCard incomingCard)
         {
             PlayerActionCard existingCard = CurrentCard as PlayerActionCard;
-            PlayerSlot incomingOriginalSlot = incomingCard.OriginalSlot; // ← 먼저 저장
+            PlayerSlot incomingOriginalSlot = incomingCard.OriginalSlot;
 
-            SetCurrentCard(incomingCard); // ← 이제 덮어씌워져도 상관없음
+            SetCurrentCard(incomingCard); 
             OnDropCard?.Invoke(this, SlotNumber);
 
             if (incomingOriginalSlot != null)

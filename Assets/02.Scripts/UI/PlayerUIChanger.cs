@@ -13,6 +13,7 @@ namespace _02.Scripts.UI
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI deckCountText;
         
+        
 
         private void Awake()
         {

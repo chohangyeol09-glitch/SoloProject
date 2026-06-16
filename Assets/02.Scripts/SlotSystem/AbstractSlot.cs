@@ -1,6 +1,7 @@
 ﻿using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using _02.Scripts.SlotSystem.Slots;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -16,7 +17,8 @@ namespace _02.Scripts.SlotSystem
         protected override void InitializeModules()
         {
             base.InitializeModules();
-            SlotText.text = (SlotNumber+1).ToString();
+            if (SlotText != null)
+                SlotText.text = (SlotNumber+1).ToString();
         }
 
         protected override void AfterInitializeModules()
@@ -34,15 +36,24 @@ namespace _02.Scripts.SlotSystem
             if (card is PlayerActionCard playerCard)
                 playerCard.SetOriginalSlot(this as PlayerSlot);
 
-            Vector3 pos = transform.position;
-            pos.y += 0.1f;
+            Vector3 pos = transform.position + Vector3.up * 3f;
             card.transform.position = pos;
+            card.transform.DOMoveY(transform.position.y + 0.2f, 0.3f);
         }
 
         public void RemoveCurrentCard()
         {
             CurrentCard = null;
         }
-        
+
+        public void RegisterCard(ActionCard card)
+        {
+            if (CurrentCard != null)
+                RemoveCurrentCard();
+            CurrentCard = card;
+            if (card is PlayerActionCard playerCard)
+                playerCard.SetOriginalSlot(this as PlayerSlot);
+        }
+
     }
 }

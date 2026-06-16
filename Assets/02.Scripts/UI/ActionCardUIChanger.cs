@@ -39,15 +39,20 @@ namespace _02.Scripts.UI
 
         public void AfterInitialize()
         {
-            NameText.text = _actionCard.ActionCardData.Name;
-            mainIcon.sprite = _actionCard.ActionCardData.Icon;
-            attackSlotTypeIcon.sprite = slotTargetRangeSpriteSO.GetSprite(_actionCard.ActionCardData.TargetRangeType);
-            actionTypeIcon.sprite = actionTypeSpriteSO.GetSprite(_actionCard.ActionCardData.ActionCardType);
-        
-            foreach (AbstractActionEffectSO effectSO in _actionCard.ActionCardData.BeforeEffects)
-                SpawnEffectIcon(effectSO);
+            if (_actionCard.ActionCardData == null) return;
+            SetUI(_actionCard.ActionCardData);
+        }
 
-            foreach (AbstractActionEffectSO effectSO in _actionCard.ActionCardData.AfterEffects)
+        public void SetUI(ActionCardDataSO data)
+        {
+            NameText.text = data.Name;
+            mainIcon.sprite = data.Icon;
+            attackSlotTypeIcon.sprite = slotTargetRangeSpriteSO.GetSprite(data.TargetRangeType);
+            actionTypeIcon.sprite = actionTypeSpriteSO.GetSprite(data.ActionCardType);
+
+            foreach (AbstractActionEffectSO effectSO in data.BeforeEffects)
+                SpawnEffectIcon(effectSO);
+            foreach (AbstractActionEffectSO effectSO in data.AfterEffects)
                 SpawnEffectIcon(effectSO);
         }
 

@@ -29,10 +29,7 @@ MonoBehaviour:
     CardData: {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
     <AttackValue>k__BackingField: 2
     <DefenseValue>k__BackingField: 4
-  <BossGimmicks>k__BackingField:
-  - Timing: 1
+  <Gimmicks>k__BackingField:
+  - Timing: 2
     Condition: {fileID: 11400000, guid: 1abcad51e9182324e9cc1e86ccc09f3c, type: 2}
     Pattern: {fileID: 11400000, guid: 0a5d176c057c3b04891ae072f7463ddf, type: 2}
-  - Timing: 2
-    Condition: {fileID: 11400000, guid: f232485fbc168b340a2800403d8a2442, type: 2}
-    Pattern: {fileID: 11400000, guid: 49dfaa61f96b35740b874477a891cc9f, type: 2}

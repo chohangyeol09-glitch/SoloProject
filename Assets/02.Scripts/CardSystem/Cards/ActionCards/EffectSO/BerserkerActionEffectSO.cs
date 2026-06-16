@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using _02.Scripts.Players;
 using _02.Scripts.SlotSystem;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.ActionCards.EffectSO
 {
-    [CreateAssetMenu(fileName = "BerserkerAction",menuName = "Card/Action/Effect/BerserkerAction")]
+    [CreateAssetMenu(fileName = "BerserkerEffect",menuName = "Card/Action/Effect/BerserkerEffect")]
     public class BerserkerActionEffectSO : AbstractActionEffectSO
     {
         [SerializeField] private int targetHealth;
         
-        public override bool IsActivate(EffectExecuteContext context) => Players.Player.Instance.CurrentHealth <= targetHealth;
-        public override void Apply(EffectExecuteContext context, List<AbstractSlot> targets, Action onComplete = null)
+        public override bool IsActivate(EffectExecuteContext context)
+            => Player.Instance.CurrentHealth <= Player.Instance.CurrentHealth * 0.3f;
+        public override UniTask Apply(EffectExecuteContext context, List<AbstractSlot> targets)
         {
             context.ActionCard.AddAttackValue(5);
-            onComplete?.Invoke();
+            return UniTask.CompletedTask;
         }
     }
 }

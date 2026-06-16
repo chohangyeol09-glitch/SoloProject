@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fd08ddf2aa5144ea71c3a7d20d131e, type: 3}
+  m_Name: CardGradePool
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.CardGradePoolSO
+  bronzeStatCards:
+  - {fileID: 11400000, guid: cfff979bbdce8f54bb3544f764beec9e, type: 2}
+  bronzeEffects:
+  - {fileID: 11400000, guid: d5f7efd2719fed54d856c3daeb2e6fc4, type: 2}
+  bronzeActionCards:
+  - {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
+  - {fileID: 11400000, guid: d547fb9cf097c7542a91c166a2f088ff, type: 2}
+  silverStatCards:
+  - {fileID: 11400000, guid: c56cb3876a3e3ef498eff48e5f008dd2, type: 2}
+  - {fileID: 11400000, guid: dcb512b7856f3584e9dab3710ce14e98, type: 2}
+  silverEffects: []
+  silverActionCards:
+  - {fileID: 11400000, guid: 6c4e49d6eb4ab2e4e930d71ae822df2b, type: 2}
+  - {fileID: 11400000, guid: 50f25525ff8b4834b91207b82a4da2f3, type: 2}
+  goldStatCards:
+  - {fileID: 11400000, guid: f061f72bfb31a81439cf0ecd6e468039, type: 2}
+  goldEffects:
+  - {fileID: 11400000, guid: d5f7efd2719fed54d856c3daeb2e6fc4, type: 2}
+  goldActionCards:
+  - {fileID: 11400000, guid: 6c4e49d6eb4ab2e4e930d71ae822df2b, type: 2}

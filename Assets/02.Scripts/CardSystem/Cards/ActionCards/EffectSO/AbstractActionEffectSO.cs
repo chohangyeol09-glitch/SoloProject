@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using _02.Scripts.CardSystem;
 using _02.Scripts.SlotSystem;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.ActionCards.EffectSO
@@ -17,6 +17,6 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.EffectSO
         [field: SerializeField] public int DisplayValue { get; private set; }
         public abstract bool IsActivate(EffectExecuteContext context);
 
-        public abstract void Apply(EffectExecuteContext context, List<AbstractSlot> targets, Action onComplete = null);
+        public abstract UniTask Apply(EffectExecuteContext context, List<AbstractSlot> targets);
     }
 }

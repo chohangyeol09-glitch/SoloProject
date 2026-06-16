@@ -3,6 +3,7 @@
     public enum SlotType
     {
         Player,
-        Enemy
+        Enemy,
+        Storge
     }
 }

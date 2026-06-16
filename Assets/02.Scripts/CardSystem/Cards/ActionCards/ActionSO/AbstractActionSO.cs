@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using _02.Scripts.SlotSystem;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
 {
     public abstract class AbstractActionSO : ScriptableObject
     {
-        public abstract void Execute(ActionCard card, List<AbstractSlot> targets, Action onComplete = null, Action<int> onPlayerDamage = null);
+        public abstract UniTask Execute(ActionCard card, List<AbstractSlot> targets);
     }
 }

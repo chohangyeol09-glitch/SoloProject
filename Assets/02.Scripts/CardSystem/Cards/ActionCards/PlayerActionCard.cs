@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using _02.Scripts.CardSystem.Cards.ActionCards.ActionSO;
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CardSystem.Cards.StatCards.EffectSO;
 using _02.Scripts.CoreSystem.EventChannel;
@@ -7,6 +9,7 @@ using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using _02.Scripts.InteractionSystem;
 using _02.Scripts.InteractionSystem.Interactions;
+using _02.Scripts.SlotSystem;
 using _02.Scripts.SlotSystem.Slots;
 using _02.Scripts.UI;
 using EPOOutline;
@@ -24,6 +27,8 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         [SerializeField] private EventChannelSO slotChannel;
         [SerializeField] private EventChannelSO turnEventChannel;
         private Outlinable _outline;
+        private SlotLogic _slotLogic;
+        private SlotLogic SlotLogicCached => _slotLogic != null ? _slotLogic : (_slotLogic = FindFirstObjectByType<SlotLogic>());
 
         protected override void InitializeModules()
         {
@@ -68,6 +73,12 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
 
         public void SetData() { }
 
+        protected override void OnDataSet()
+        {
+            base.OnDataSet();
+            UIChanger?.SetUI(ActionCardData);
+        }
+
         public void HandleDrop(Transform dropTrm)
         {
             if (dropTrm.TryGetComponent<StatCard>(out StatCard statCard))
@@ -99,7 +110,19 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
                     }
 
                     OnDropSuccess?.Invoke(true);
-                    ChangeValue(statCard.StatData.Value);
+                    if (ActionCardData.ActionCardType == ActionCardType.Defense && OriginalSlot != null)
+                    {
+                        List<AbstractSlot> targets = SlotLogicCached.GetTargetSlots(OriginalSlot, ActionCardData.TargetRangeType);
+                        if (ActionCardData.Action is DefenseActionSO defenseAction)
+                            defenseAction.PlayGrant(this, targets, statCard.StatData.Value);
+                        else
+                            foreach (AbstractSlot target in targets)
+                                target.CurrentCard?.AddDefenseValue(statCard.StatData.Value);
+                    }
+                    else
+                    {
+                        ChangeValue(statCard.StatData.Value);
+                    }
 
                     foreach (AbstractStatEffectSO effect in statCard.StatData.Effects)
                     {
@@ -125,9 +148,14 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         protected override void HandleDragStart(Vector3 mouseWorldPos)
         {
             slotChannel?.RaiseEvent(new CardPickUpEvent().Init(this));
-            //_outline.enabled = false;
             _outline.FrontParameters.Color = Color.clear;
             base.HandleDragStart(mouseWorldPos);
+        }
+
+        protected override void HandleDragEnd()
+        {
+            base.HandleDragEnd();
+            OriginalSlot?.RegisterCard(this);
         }
 
         protected override void HandleHoverEnter()

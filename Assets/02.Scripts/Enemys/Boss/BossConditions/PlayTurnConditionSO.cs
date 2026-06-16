@@ -3,14 +3,18 @@
 namespace _02.Scripts.Enemys.Boss.BossConditions
 {
     [CreateAssetMenu(fileName = "PlayTurnCondition", menuName = "Enemy/Boss/Conditions/PlayTurn")]
-    public class PlayTurnConditionSO : AbstractBossConditionSO
+    public class PlayTurnConditionSO : AbstractEnemyConditionSO
     {
         [field: SerializeField] public int PlayTurn { get; private set; } = 3;
 
-        public override bool IsActivate(BossGimmickContext context)
+        public override bool IsActivate(EnemyPatternContext context)
         {
-            Debug.Log($"TurnCondition| CurrentTurn: {context.CurrentTurn}, PlayTurn: {PlayTurn}, Ture: {context.CurrentTurn == PlayTurn}");
             return context.CurrentTurn == PlayTurn;
+        }
+
+        public override string GetDescription()
+        {
+            return string.Format(Description, PlayTurn);
         }
     }
 }

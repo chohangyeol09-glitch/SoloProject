@@ -85,11 +85,8 @@ namespace _02.Scripts.CardSystem
             IsUpDownMoving = true;
             transform.DOKill();
 
-            Vector3 currentPos = transform.position;
-            Vector3 targetPos = new Vector3(currentPos.x, OriginPos.y, currentPos.z);
-
             Sequence seq = DOTween.Sequence();
-            seq.Join(transform.DOMove(targetPos, 0.3f));
+            seq.Join(transform.DOMove(OriginPos, 0.3f));
             seq.Join(transform.DORotateQuaternion(OriginRot, 0.3f));
             seq.OnComplete(() => IsUpDownMoving = false);
         }

@@ -6,14 +6,14 @@ using Object = UnityEngine.Object;
 
 namespace _02.Scripts.Enemys.Boss.BossPatterns
 {
-    [CreateAssetMenu(fileName = "SummonCardPattern", menuName = "Enemy/Boss/Pattern/SummonCard")]
-    public class SummonCardPatternSO : AbstractBossPatternSO
+    [CreateAssetMenu(fileName = "SummonCardPattern", menuName = "Enemy/Pattern/SummonCard")]
+    public class SummonCardPatternSO : AbstractEnemyPatternSO
     {
         [field: SerializeField] public ActionCardDataSO CardData { get; private set; }
         [field: SerializeField] public int AttackValue { get; private set; }
         [field: SerializeField] public int DefenseValue { get; private set; }
 
-        protected override void ExecutePattern(BossGimmickContext context, Action onComplete)
+        protected override void ExecutePattern(EnemyPatternContext context, Action onComplete)
         {
             Debug.Log($"SUMMON| Execute: {context.CurrentTurn}");
             context.SlotLogic.SpawnEnemyCardInFirstEmptySlot(CardData, AttackValue, DefenseValue);

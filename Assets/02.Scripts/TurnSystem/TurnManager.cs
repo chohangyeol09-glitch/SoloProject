@@ -15,7 +15,7 @@ namespace _02.Scripts.TurnSystem
     {
         [SerializeField] private EventChannelSO turnEventChannel;
         [SerializeField] private EventChannelSO gameEventChannel;
-        [SerializeField] private BossGimmickManager bossGimmickManager;
+        [SerializeField] private EnemyPatternManager enemyPatternManager;
 
         public int TurnCount { get; private set; }
 
@@ -68,7 +68,7 @@ namespace _02.Scripts.TurnSystem
             }
 
             bool gimmickDone = false;
-            bossGimmickManager.ExecuteGimmicks(BossGimmickTiming.OnTurnStart, TurnCount, () => gimmickDone = true);
+            enemyPatternManager.ExecuteGimmicks(EnemyPatternTiming.OnTurnStart, TurnCount, () => gimmickDone = true);
             yield return new WaitUntil(() => gimmickDone);
 
             TurnStart();

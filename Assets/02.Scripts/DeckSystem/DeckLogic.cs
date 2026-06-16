@@ -47,6 +47,8 @@ namespace _02.Scripts.DeckSystem
         {
             cardChannel.RemoveListener<DiscardCardEvent>(HandleDiscard);
         }
+        
+        
 
         public List<StatCardDataSO> DrawCards(int count)
         {

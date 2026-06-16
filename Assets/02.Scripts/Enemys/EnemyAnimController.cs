@@ -1,4 +1,4 @@
-﻿using _02.Scripts.CoreSystem.EventChannel;
+using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
 using _02.Scripts.CoreSystem.EventChannel.EnemyEvents.BossEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
@@ -11,25 +11,20 @@ namespace _02.Scripts.Enemys
     {
         [SerializeField] private EventChannelSO gameEventChannel;
         [SerializeField] private EventChannelSO enemyEventChannel;
-        [SerializeField] private EventChannelSO playerChannel; 
         [SerializeField] private Transform spawnPoint;
         private GameObject _currentModel;
         private Animator _animator;
-        private EnemyAttackStartEvent _pendingAttackEvt; 
-        private BossPatternStartEvent _pendingPatternEvt;
-        
+        private EnemyPatternStartEvent _pendingPatternEvt;
+
         private void Awake()
         {
             gameEventChannel.AddListener<StageStartEvent>(HandleStageStart);
             gameEventChannel.AddListener<StageClearEvent>(HandleStageClear);
             enemyEventChannel.AddListener<TakeDamageEvent>(HandleTakeDamage);
-            enemyEventChannel.AddListener<EnemyAttackStartEvent>(HandleAttackStart);
-            enemyEventChannel.AddListener<EnemyAttackHitEvent>(HandleAttackHit);
-            enemyEventChannel.AddListener<EnemyAttackEndEvent>(HandleAttackEnd);
             enemyEventChannel.AddListener<EnemyDieEndEvent>(HandleDieEnd);
-            enemyEventChannel.AddListener<BossPatternStartEvent>(HandlePatternStart);
-            enemyEventChannel.AddListener<BossPatternEffectEvent>(HandlePatternEffect);
-            enemyEventChannel.AddListener<BossPatternEndEvent>(HandlePatternEnd);
+            enemyEventChannel.AddListener<EnemyPatternStartEvent>(HandlePatternStart);
+            enemyEventChannel.AddListener<EnemyPatternEffectEvent>(HandlePatternEffect);
+            enemyEventChannel.AddListener<EnemyPatternEndEvent>(HandlePatternEnd);
         }
 
         private void OnDestroy()
@@ -37,11 +32,10 @@ namespace _02.Scripts.Enemys
             gameEventChannel.RemoveListener<StageStartEvent>(HandleStageStart);
             gameEventChannel.RemoveListener<StageClearEvent>(HandleStageClear);
             enemyEventChannel.RemoveListener<TakeDamageEvent>(HandleTakeDamage);
-            enemyEventChannel.RemoveListener<EnemyAttackStartEvent>(HandleAttackStart);
-            enemyEventChannel.RemoveListener<EnemyAttackHitEvent>(HandleAttackHit);
-            enemyEventChannel.RemoveListener<EnemyAttackEndEvent>(HandleAttackEnd);
             enemyEventChannel.RemoveListener<EnemyDieEndEvent>(HandleDieEnd);
-            
+            enemyEventChannel.RemoveListener<EnemyPatternStartEvent>(HandlePatternStart);
+            enemyEventChannel.RemoveListener<EnemyPatternEffectEvent>(HandlePatternEffect);
+            enemyEventChannel.RemoveListener<EnemyPatternEndEvent>(HandlePatternEnd);
         }
 
         private void HandleStageStart(StageStartEvent evt)
@@ -67,51 +61,22 @@ namespace _02.Scripts.Enemys
             _animator = null;
         }
 
-        private void HandleAttackStart(EnemyAttackStartEvent evt)
-        {
-            _pendingAttackEvt = evt;
-
-            if (_animator == null)
-            {
-                playerChannel.RaiseEvent(new TakeDamageEvent().Init(evt.TotalDamage));
-                evt.OnAttackEnd?.Invoke();
-                _pendingAttackEvt = null;
-                return;
-            }
-
-            _animator.Play("ATTACK");
-        }
-
-        private void HandleAttackHit(EnemyAttackHitEvent evt)
-        {
-            if (_pendingAttackEvt == null) return;
-
-            playerChannel.RaiseEvent(new TakeDamageEvent().Init(_pendingAttackEvt.TotalDamage));
-        }
-
-        private void HandleAttackEnd(EnemyAttackEndEvent evt)
-        {
-            if (_pendingAttackEvt == null) return;
-
-            _pendingAttackEvt.OnAttackEnd?.Invoke();
-            _pendingAttackEvt = null;
-        }
-        
-        private void HandlePatternStart(BossPatternStartEvent evt)
+        private void HandlePatternStart(EnemyPatternStartEvent evt)
         {
             _pendingPatternEvt = evt;
             _animator?.Play(evt.AnimationName);
         }
 
-        private void HandlePatternEffect(BossPatternEffectEvent evt)
+        private void HandlePatternEffect(EnemyPatternEffectEvent evt)
         {
-            _pendingPatternEvt?.OnPatternEffect?.Invoke(); 
+            _pendingPatternEvt?.OnPatternEffect?.Invoke();
         }
 
-        private void HandlePatternEnd(BossPatternEndEvent evt)
+        private void HandlePatternEnd(EnemyPatternEndEvent evt)
         {
-            _pendingPatternEvt?.OnPatternEnd?.Invoke(); 
+            var pending = _pendingPatternEvt;
             _pendingPatternEvt = null;
+            pending?.OnPatternEnd?.Invoke();
         }
     }
 }

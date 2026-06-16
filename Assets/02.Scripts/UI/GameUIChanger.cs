@@ -1,5 +1,4 @@
-﻿using System;
-using _02.Scripts.CoreSystem.EventChannel;
+﻿using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
@@ -15,17 +14,23 @@ namespace _02.Scripts.UI
 
         [SerializeField] private TextMeshProUGUI turnText;
         [SerializeField] private TextMeshProUGUI stageText;
-
+        [SerializeField] private TextMeshProUGUI infoTitleText;
+        [SerializeField] private TextMeshProUGUI infoDescriptionText;
+        
         private void Awake()
         {
             turnChannel.AddListener<TurnChangeEvent>(HandleTurnChange);
             gameChannel.AddListener<StageStartEvent>(HandleStageChange);
+            gameChannel.AddListener<InfoShowEvent>(HandleInfoShow);
+            gameChannel.AddListener<InfoHideEvent>(HandleInfoHide);
         }
 
         private void OnDestroy()
         {
             turnChannel.RemoveListener<TurnChangeEvent>(HandleTurnChange);
             gameChannel.RemoveListener<StageStartEvent>(HandleStageChange);
+            gameChannel.RemoveListener<InfoShowEvent>(HandleInfoShow);
+            gameChannel.RemoveListener<InfoHideEvent>(HandleInfoHide);
         }
 
         private void HandleStageChange(StageStartEvent evt)
@@ -36,6 +41,18 @@ namespace _02.Scripts.UI
         private void HandleTurnChange(TurnChangeEvent evt)
         {
             turnText.text = evt.CurrentTurn.ToString();
+        }
+        
+        private void HandleInfoShow(InfoShowEvent evt)
+        {
+            infoTitleText.text = evt.Title;
+            infoDescriptionText.text = evt.Description;
+        }
+        
+        private void HandleInfoHide(InfoHideEvent evt)
+        {
+            infoTitleText.text = string.Empty;
+            infoDescriptionText.text = string.Empty;
         }
     }
 }

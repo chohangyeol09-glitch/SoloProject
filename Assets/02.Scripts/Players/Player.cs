@@ -28,7 +28,6 @@ namespace _02.Scripts.Players
             CurrentCost = MaxCost;
             RuntimeDeck.OnDeckCountChanged += count =>
                 playerChannel.RaiseEvent(new DeckCountChangedEvent().Init(count));
-            RuntimeDeck.Initialize(startStatCardListSO);
 
             playerChannel.AddListener<TakeDamageEvent>(HandleTakeDamage);
             playerChannel.AddListener<HealEvent>(HandleHeal);
@@ -37,6 +36,11 @@ namespace _02.Scripts.Players
             playerChannel.AddListener<RecoverCostEvent>(HandleRecoverCost);
             turnChannel.AddListener<TurnChangeEvent>(HandleTurnChange);
             
+        }
+
+        private void Start()
+        {
+            RuntimeDeck.Initialize(startStatCardListSO);
         }
 
         private void OnDestroy()

@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b417f498782041c6bf11cfe62d895e2d, type: 3}
   m_Name: PlayTurnCondition
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemys.Boss.BossConditions.PlayTurnConditionSO
-  <N>k__BackingField: 3
+  <TriggerOnce>k__BackingField: 1
+  <Description>k__BackingField: "{0}\uBC88\uC9F8 \uD134\uC5D0"
+  <PlayTurn>k__BackingField: 3

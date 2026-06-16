@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using _02.Scripts.CardSystem.Cards.ActionCards.ActionWeapon;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.ActionCardEvents;
@@ -19,12 +19,11 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
         [SerializeField] private float returnDuration = 0.2f;
         [SerializeField] private GameObject hitParticlePrefab;
 
-        public override void Execute(ActionCard card, List<AbstractSlot> targets, Action onComplete = null, Action<int> onPlayerDamage = null)
+        public override async UniTask Execute(ActionCard card, List<AbstractSlot> targets)
         {
-            if (targets == null || targets.Count == 0) { onComplete?.Invoke(); return; }
-            if (card.AttackValue <= 0) { onComplete?.Invoke(); return; }
+            if (targets == null || targets.Count == 0) return;
+            if (card.AttackValue <= 0) return;
 
-            int totalPlayerOverflow = 0; 
             Vector3 slotPos = card.transform.position;
             Quaternion slotRot = card.transform.rotation;
             Vector3 risePos = slotPos + Vector3.up * riseHeight;
@@ -62,11 +61,10 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
 
                     if (capturedTarget.CurrentCard != null)
                     {
-                        
                         if (card is EnemyActionCard)
                         {
                             int overflow = capturedTarget.CurrentCard.GetOverflowDamage(card.AttackValue);
-                            totalPlayerOverflow += overflow;
+                            if (overflow > 0) card.RaisePlayerDamage(overflow);
                         }
                         else
                         {
@@ -77,7 +75,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
                     else
                     {
                         if (capturedTarget.SlotType == SlotType.Player && card is EnemyActionCard)
-                            totalPlayerOverflow += card.AttackValue; 
+                            card.RaisePlayerDamage(card.AttackValue);
                         else if (capturedTarget.SlotType == SlotType.Enemy)
                             card.RaiseEnemyDamage(card.AttackValue);
                     }
@@ -91,11 +89,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
 
             seq.Append(card.transform.DOMove(slotPos, returnDuration));
             seq.Join(card.transform.DORotateQuaternion(slotRot, returnDuration));
-            seq.OnComplete(() =>
-            {
-                onPlayerDamage?.Invoke(totalPlayerOverflow); 
-                onComplete?.Invoke();
-            });
+            await seq.ToUniTask();
         }
         private void SpawnHitParticle(Vector3 position)
         {

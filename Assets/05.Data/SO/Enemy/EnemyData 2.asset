@@ -15,14 +15,17 @@ MonoBehaviour:
   <EnemyName>k__BackingField: "\uB098\uC05C \uC560 2"
   <MaxHealth>k__BackingField: 30
   <IsBoss>k__BackingField: 0
-  <ModelPrefab>k__BackingField: {fileID: 0}
+  <ModelPrefab>k__BackingField: {fileID: 6161175501061190422, guid: 56f189e87670638438a473f70c5fc686, type: 3}
   <CardPlacements>k__BackingField:
   - SlotIndex: 0
-    CardData: {fileID: 11400000, guid: 6c4e49d6eb4ab2e4e930d71ae822df2b, type: 2}
+    CardData: {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
     <AttackValue>k__BackingField: 2
     <DefenseValue>k__BackingField: 7
   - SlotIndex: 3
-    CardData: {fileID: 11400000, guid: ab82724685498ce43810001e908e43fd, type: 2}
+    CardData: {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
     <AttackValue>k__BackingField: 5
     <DefenseValue>k__BackingField: 4
-  <BossGimmicks>k__BackingField: []
+  <Gimmicks>k__BackingField:
+  - Timing: 0
+    Condition: {fileID: 11400000, guid: f232485fbc168b340a2800403d8a2442, type: 2}
+    Pattern: {fileID: 11400000, guid: 8c7f02bddc7f6d8468c7f6b56090b9fb, type: 2}

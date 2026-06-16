@@ -7,6 +7,7 @@ using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using _02.Scripts.InteractionSystem;
 using _02.Scripts.InteractionSystem.Interactions;
 using _02.Scripts.SlotSystem.Slots;
+using _02.Scripts.UI;
 using UnityEngine;
 
 namespace _02.Scripts.Players
@@ -28,9 +29,11 @@ namespace _02.Scripts.Players
         private IDraggable _draggable;
         private IHoverable _hoveredProp;
         private IClickable _clickedProp;
-
+        private IInfoShowable _hoveredInfo;   
+        
         private int _dragObjOriginLayer;
         private Vector2 _mousePos;
+        private Transform _lastPropHit;
         private Transform _lastDropHit;
         private Ray _ray;
         private bool _interactionEnabled = true;
@@ -45,8 +48,9 @@ namespace _02.Scripts.Players
             playerInputSO.OnClickDown += ClickDown;
             playerInputSO.OnClickUp += ClickUp;
             
-            turnEventChannel.AddListener<InteractionDisableEvent>(HandleDisableInteraction);
+            turnEventChannel.AddListener<InteractionEnableEvent>(HandleEnableInteractionDirect);
             turnEventChannel.AddListener<TurnChangeEvent>(HandleEnableInteraction);
+            turnEventChannel.AddListener<InteractionDisableEvent>(HandleDisableInteraction);
         }
 
         private void OnDestroy()
@@ -55,6 +59,9 @@ namespace _02.Scripts.Players
             playerInputSO.OnPointerDelta -= MoveDraggable;
             playerInputSO.OnClickDown -= ClickDown;
             playerInputSO.OnClickUp -= ClickUp;
+            turnEventChannel.RemoveListener<InteractionEnableEvent>(HandleEnableInteractionDirect);
+            turnEventChannel.RemoveListener<TurnChangeEvent>(HandleEnableInteraction);
+            turnEventChannel.RemoveListener<InteractionDisableEvent>(HandleDisableInteraction);
         }
 
         private void Update()
@@ -92,18 +99,26 @@ namespace _02.Scripts.Players
                 // Prop 호버 감지
                 if (Physics.Raycast(_ray, out RaycastHit propHit, Mathf.Infinity, propLayer))
                 {
-                    var propInteraction = propHit.transform.GetComponentInChildren<PropInteraction>();
-                    if (_hoveredProp != propInteraction)
+                    if (_lastPropHit != propHit.transform)
                     {
+                        _lastPropHit = propHit.transform;
+
                         _hoveredProp?.HandleHoverExit();
-                        _hoveredProp = propInteraction;
+                        _hoveredProp = propHit.transform.GetComponentInChildren<PropInteraction>();
                         _hoveredProp?.HandleHoverEnter();
+
+                        _hoveredInfo?.HideInfo();
+                        _hoveredInfo = propHit.transform.GetComponentInChildren<IInfoShowable>();
+                        _hoveredInfo?.ShowInfo();
                     }
                 }
                 else
                 {
-                    _hoveredProp?.HandleHoverExit();
+                    _hoveredProp?.HandleHoverExit(); 
                     _hoveredProp = null;
+                    _hoveredInfo?.HideInfo();        
+                    _hoveredInfo = null;
+                    _lastPropHit = null;
                 }
             }
             else
@@ -258,6 +273,9 @@ namespace _02.Scripts.Players
             => _interactionEnabled = false;
 
         private void HandleEnableInteraction(TurnChangeEvent evt)
+            => _interactionEnabled = true;
+
+        private void HandleEnableInteractionDirect(InteractionEnableEvent evt)
             => _interactionEnabled = true;
     }
 }

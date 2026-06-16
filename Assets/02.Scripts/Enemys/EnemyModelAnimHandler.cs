@@ -11,12 +11,10 @@ namespace _02.Scripts.Enemys
 
         public void EndSpawn() => enemyChannel?.RaiseEvent(new EnemySpawnEndEvent().Init(GetComponent<Animator>()));
         
-        public void OnAttackHit() => enemyChannel?.RaiseEvent(new EnemyAttackHitEvent());
-        public void EndAttack() => enemyChannel?.RaiseEvent(new EnemyAttackEndEvent());
         public void EndHit() => enemyChannel?.RaiseEvent(new EnemyHitEndEvent());
         public void EndDie() => enemyChannel?.RaiseEvent(new EnemyDieEndEvent());
-        public void OnPatternEffect() => enemyChannel?.RaiseEvent(new BossPatternEffectEvent());
+        public void OnPatternEffect() => enemyChannel?.RaiseEvent(new EnemyPatternEffectEvent());
 
-        public void OnPatternEnd() => enemyChannel?.RaiseEvent(new BossPatternEndEvent());
+        public void OnPatternEnd() => enemyChannel?.RaiseEvent(new EnemyPatternEndEvent());
     }
 }
