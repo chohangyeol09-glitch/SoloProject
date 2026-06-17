@@ -1,6 +1,6 @@
-﻿using System;
-using _02.Scripts.CardSystem.Cards.ActionCards;
+﻿using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.SlotSystem.Slots;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -13,11 +13,11 @@ namespace _02.Scripts.Enemys.Boss.BossPatterns
         [field: SerializeField] public int AttackValue { get; private set; }
         [field: SerializeField] public int DefenseValue { get; private set; }
 
-        protected override void ExecutePattern(EnemyPatternContext context, Action onComplete)
+        protected override UniTask ExecutePattern(EnemyPatternContext context)
         {
             Debug.Log($"SUMMON| Execute: {context.CurrentTurn}");
             context.SlotLogic.SpawnEnemyCardInFirstEmptySlot(CardData, AttackValue, DefenseValue);
-            onComplete?.Invoke();
+            return UniTask.CompletedTask;
         }
     }
 }

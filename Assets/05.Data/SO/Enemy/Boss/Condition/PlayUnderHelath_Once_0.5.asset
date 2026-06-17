@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: PlayUnderHelath_Once_0.5
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemys.Boss.BossConditions.PlayUnderHealth
   <TriggerOnce>k__BackingField: 1
-  <Description>k__BackingField: "\uCCB4\uB825\uC774 {0}%\uBCF4\uB2E4 \uB0AE\uC544\uC9C0\uBA74 "
+  <Description>k__BackingField: "\uCCB4\uB825\uC774 {0}%\uBCF4\uB2E4 \uB0AE\uC544\uC9C0\uBA74
+    \uBC1C\uB3D9\uD55C\uB2E4."
   <HealthRatio>k__BackingField: 0.5

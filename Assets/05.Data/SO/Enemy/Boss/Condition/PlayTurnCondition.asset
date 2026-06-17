@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PlayTurnCondition
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemys.Boss.BossConditions.PlayTurnConditionSO
   <TriggerOnce>k__BackingField: 1
-  <Description>k__BackingField: "{0}\uBC88\uC9F8 \uD134\uC5D0"
+  <Description>k__BackingField: "{0}\uBC88\uC9F8 \uD134\uC5D0 \uBC1C\uB3D9\uD55C\uB2E4."
   <PlayTurn>k__BackingField: 3

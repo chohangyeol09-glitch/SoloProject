@@ -1,3 +1,4 @@
+using _02.Scripts.CoreSystem;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
 using _02.Scripts.CoreSystem.EventChannel.EnemyEvents.BossEvents;
@@ -64,6 +65,7 @@ namespace _02.Scripts.Enemys
         private void HandlePatternStart(EnemyPatternStartEvent evt)
         {
             _pendingPatternEvt = evt;
+            if (_animator != null) _animator.speed = PresentationControl.Speed;
             _animator?.Play(evt.AnimationName);
         }
 

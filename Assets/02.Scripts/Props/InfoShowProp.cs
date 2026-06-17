@@ -1,11 +1,12 @@
 ﻿using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
+using _02.Scripts.CoreSystem.ModuleSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace _02.Scripts.UI
 {
-    public class InfoShowProp : MonoBehaviour, IInfoShowable, IPointerEnterHandler, IPointerExitHandler
+    public class InfoShowProp : MonoBehaviour, IInfoShowable, IPointerEnterHandler, IPointerExitHandler, IModule
     {
         [SerializeField] private EventChannelSO gameChannel;
 
@@ -30,5 +31,9 @@ namespace _02.Scripts.UI
 
         public void OnPointerEnter(PointerEventData eventData) => ShowInfo();
         public void OnPointerExit(PointerEventData eventData) => HideInfo();
+        public void Initialize(ModuleOwner owner)
+        {
+            
+        }
     }
 }

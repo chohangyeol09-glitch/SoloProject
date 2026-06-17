@@ -22,7 +22,7 @@ namespace _02.Scripts.UI
             gameChannel.AddListener<InfoHideEvent>(HandleInfoHide);
             _rect = GetComponent<RectTransform>();
             canvasGroup.alpha = 0;
-            canvasGroup.blocksRaycasts = false;   // 패널이 커서 밑에 떠도 호버를 가로채지 않게
+            canvasGroup.blocksRaycasts = false;   
         }
 
         private void HandleInfoShow(InfoShowEvent evt)

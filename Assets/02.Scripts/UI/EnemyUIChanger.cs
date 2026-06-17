@@ -45,7 +45,7 @@ namespace _02.Scripts.UI
                 GameObject obj = Instantiate(iconPrefab, patternLayout);
                 obj.GetComponent<Image>().sprite = pattern.Pattern.Icon;
                 InfoShowProp infoShow = obj.GetComponent<InfoShowProp>();
-                infoShow.SetInfo(pattern.Pattern.Title, pattern.Condition.GetDescription() + ",\n" + pattern.Pattern.GetDescription());
+                infoShow.SetInfo(pattern.Pattern.Title, pattern.Condition.GetDescription() + "\n" + pattern.Pattern.GetDescription());
             }
         }
 

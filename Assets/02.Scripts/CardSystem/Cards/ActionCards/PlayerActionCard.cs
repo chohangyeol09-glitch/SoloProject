@@ -161,25 +161,21 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         protected override void HandleHoverEnter()
         {
             base.HandleHoverEnter();
-            //_outline.enabled = true;
             _outline.FrontParameters.Color = Color.white;
         }
 
         protected override void HandleHoverExit()
         {
             base.HandleHoverExit();
-            //_outline.enabled = false;
             _outline.FrontParameters.Color = Color.clear;
         }
         private void HandleDropHoverEnter()
         {
-            //_outline.enabled = true;
             _outline.FrontParameters.Color = Color.white; 
         }
         
         private void HandleDropHoverExit()
         {
-            //_outline.enabled = false;
             _outline.FrontParameters.Color = Color.clear;
         }
         

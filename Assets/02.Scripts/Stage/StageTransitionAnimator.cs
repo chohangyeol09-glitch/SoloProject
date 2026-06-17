@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using _02.Scripts.CoreSystem;
 using DG.Tweening;
 using UnityEngine;
 
@@ -43,15 +44,21 @@ namespace _02.Scripts.Stage
 
         private IEnumerator StageStartRoutine(Action onComplete)
         {
-            yield return StartCoroutine(SequentialMoveOut(stageEndObjects, _stageEndOriginalPos));
-            yield return StartCoroutine(SequentialMoveIn(inProgressObjects, _inProgressOriginalPos));
+            using (PresentationControl.Busy())
+            {
+                yield return StartCoroutine(SequentialMoveOut(stageEndObjects, _stageEndOriginalPos));
+                yield return StartCoroutine(SequentialMoveIn(inProgressObjects, _inProgressOriginalPos));
+            }
             onComplete?.Invoke();
         }
 
         private IEnumerator StageEndRoutine()
         {
-            yield return StartCoroutine(SequentialMoveOut(inProgressObjects, _inProgressOriginalPos));
-            yield return StartCoroutine(SequentialMoveIn(stageEndObjects, _stageEndOriginalPos));
+            using (PresentationControl.Busy())
+            {
+                yield return StartCoroutine(SequentialMoveOut(inProgressObjects, _inProgressOriginalPos));
+                yield return StartCoroutine(SequentialMoveIn(stageEndObjects, _stageEndOriginalPos));
+            }
         }
 
         private IEnumerator SequentialMoveOut(GameObject[] objects, Vector3[] originalPositions)

@@ -1,6 +1,7 @@
 ﻿using _02.Scripts.CardSystem;
 using _02.Scripts.CardSystem.Cards;
 using _02.Scripts.CardSystem.Cards.ActionCards;
+using _02.Scripts.CoreSystem;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
@@ -14,7 +15,6 @@ namespace _02.Scripts.Players
 {
     public class ObjectDragging : MonoBehaviour
     {
-        [SerializeField] private EventChannelSO turnEventChannel;
         [SerializeField] private PlayerInputSO playerInputSO;
         [SerializeField] private LayerMask cardLayer;
         [SerializeField] private LayerMask tableLayer;
@@ -36,7 +36,6 @@ namespace _02.Scripts.Players
         private Transform _lastPropHit;
         private Transform _lastDropHit;
         private Ray _ray;
-        private bool _interactionEnabled = true;
         
         
         private bool _isDragging => _draggable != null;
@@ -47,10 +46,6 @@ namespace _02.Scripts.Players
             playerInputSO.OnPointerDelta += MoveDraggable;
             playerInputSO.OnClickDown += ClickDown;
             playerInputSO.OnClickUp += ClickUp;
-            
-            turnEventChannel.AddListener<InteractionEnableEvent>(HandleEnableInteractionDirect);
-            turnEventChannel.AddListener<TurnChangeEvent>(HandleEnableInteraction);
-            turnEventChannel.AddListener<InteractionDisableEvent>(HandleDisableInteraction);
         }
 
         private void OnDestroy()
@@ -59,20 +54,16 @@ namespace _02.Scripts.Players
             playerInputSO.OnPointerDelta -= MoveDraggable;
             playerInputSO.OnClickDown -= ClickDown;
             playerInputSO.OnClickUp -= ClickUp;
-            turnEventChannel.RemoveListener<InteractionEnableEvent>(HandleEnableInteractionDirect);
-            turnEventChannel.RemoveListener<TurnChangeEvent>(HandleEnableInteraction);
-            turnEventChannel.RemoveListener<InteractionDisableEvent>(HandleDisableInteraction);
         }
 
         private void Update()
         {
-            if (!_interactionEnabled) return;
+            if (PresentationControl.IsBusy) return;
             
             _ray = Camera.main.ScreenPointToRay(_mousePos);
 
             if (!_isDragging)
             {
-                // 카드 호버 감지
                 if (Physics.Raycast(_ray, out RaycastHit cardHit, Mathf.Infinity, cardLayer))
                 {
                     CardInteraction cardInteraction = null;
@@ -96,7 +87,6 @@ namespace _02.Scripts.Players
                     _hoveredObject = null;
                 }
 
-                // Prop 호버 감지
                 if (Physics.Raycast(_ray, out RaycastHit propHit, Mathf.Infinity, propLayer))
                 {
                     if (_lastPropHit != propHit.transform)
@@ -123,12 +113,10 @@ namespace _02.Scripts.Players
             }
             else
             {
-                // 드래그 중
                 bool isStatCard = _draggable.Transform.TryGetComponent<StatCard>(out _);
 
                 if (isStatCard)
                 {
-                    // StatCard 드래그 중 → ActionCard 호버 감지
                     if (Physics.Raycast(_ray, out RaycastHit cardHit, Mathf.Infinity, _draggable.DropLayer))
                     {
                         var interaction = GetDropInteraction(cardHit.transform);
@@ -151,7 +139,6 @@ namespace _02.Scripts.Players
                 }
                 else
                 {
-                    // ActionCard 드래그 중 → Slot만 호버 감지
                     if (Physics.Raycast(_ray, out RaycastHit dropHit, Mathf.Infinity, _draggable.DropLayer))
                     {
                         var interaction = GetDropInteraction(dropHit.transform);
@@ -177,8 +164,7 @@ namespace _02.Scripts.Players
 
         private void ClickDown()
         {
-            if (_isDragging) return;
-            if (!_interactionEnabled) return;
+            if (_isDragging || PresentationControl.IsBusy) return;
             Ray clickRay = Camera.main.ScreenPointToRay(_mousePos);
 
             if (Physics.Raycast(clickRay, out RaycastHit cardHit, Mathf.Infinity, cardLayer))
@@ -209,8 +195,7 @@ namespace _02.Scripts.Players
 
         private void ClickUp()
         {
-            if (!_isDragging) return;
-            if (!_interactionEnabled) return;
+            if (!_isDragging || PresentationControl.IsBusy) return;
 
             Ray clickRay = Camera.main.ScreenPointToRay(_mousePos);
             if (Physics.Raycast(clickRay, out RaycastHit dropHit, Mathf.Infinity, _draggable.DropLayer))
@@ -246,6 +231,7 @@ namespace _02.Scripts.Players
         private void MoveDraggable(Vector2 delta)
         {
             if (!_isDragging) return;
+            
             float cardY = _draggable.Transform.position.y;
             Vector3 targetPos = GetCardTargetPos(cardY);
             _draggable.HandleDragging(targetPos);
@@ -269,13 +255,5 @@ namespace _02.Scripts.Players
             return null;
         }
         
-        private void HandleDisableInteraction(InteractionDisableEvent evt)
-            => _interactionEnabled = false;
-
-        private void HandleEnableInteraction(TurnChangeEvent evt)
-            => _interactionEnabled = true;
-
-        private void HandleEnableInteractionDirect(InteractionEnableEvent evt)
-            => _interactionEnabled = true;
     }
 }

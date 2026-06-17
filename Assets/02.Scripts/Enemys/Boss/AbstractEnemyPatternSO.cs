@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.EnemyEvents.BossEvents;
 using UnityEngine;
@@ -14,27 +14,34 @@ namespace _02.Scripts.Enemys.Boss
         [field: SerializeField] public string Title {get; private set;}
         [field: SerializeField] public string Description { get; private set; }
         
-        public virtual void Execute(EnemyPatternContext context, Action onComplete = null)
+        public virtual UniTask Execute(EnemyPatternContext context)
         {
+            UniTaskCompletionSource tcs = new UniTaskCompletionSource();
             bool patternDone = false;
             bool animDone = false;
 
             void TryComplete()
             {
-                if (patternDone && animDone) onComplete?.Invoke();
+                if (patternDone && animDone) tcs.TrySetResult();
             }
-            
-            Debug.Log(PatternTrigger);
+
+            async UniTaskVoid RunEffect()
+            {
+                await ExecutePattern(context);
+                patternDone = true;
+                TryComplete();
+            }
+
             _enemyChannel.RaiseEvent(new EnemyPatternStartEvent().Init(
-                PatternTrigger, 
-            () => ExecutePattern(context, 
-             () => { patternDone = true; TryComplete(); }),
-             () => { animDone = true; TryComplete(); }
+                PatternTrigger,
+                () => RunEffect().Forget(),
+                () => { animDone = true; TryComplete(); }
             ));
-            Debug.Log($"patternDone: {patternDone}, animDone: {animDone}");
+
+            return tcs.Task;
         }
 
-        protected abstract void ExecutePattern(EnemyPatternContext context, Action onComplete);
+        protected abstract UniTask ExecutePattern(EnemyPatternContext context);
         
         public virtual string GetDescription() => Description;        
     }

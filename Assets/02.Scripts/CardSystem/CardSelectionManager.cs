@@ -5,6 +5,7 @@ using _02.Scripts.CardSystem.Cards;
 using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
 using _02.Scripts.CardSystem.Cards.StatCards;
+using _02.Scripts.CoreSystem;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
@@ -52,6 +53,7 @@ namespace _02.Scripts.CardSystem
         private bool _roundComplete;
         private bool _isGameStartMode;
         private Vector2 _mousePos;
+        private IDisposable _selectionBusy;   
 
         private static readonly CardGrade[] GameStartSequence =
         {
@@ -77,13 +79,14 @@ namespace _02.Scripts.CardSystem
         private void ShowStageClearSelection()
         {
             _isGameStartMode = false;
-            turnEventChannel.RaiseEvent(new InteractionDisableEvent());
+            _selectionBusy = PresentationControl.Busy();
 
             List<(PoolType type, ScriptableObject data)> picks = PickCards(stageClearRewardType, stageClearRewardGrade, stageClearRewardCount);
             SpawnCards(picks);
             _isSelecting = true;
         }
 
+#region StartSeq
         private void StartGameCardSelection()
         {
             _isGameStartMode = true;
@@ -92,17 +95,16 @@ namespace _02.Scripts.CardSystem
 
         private IEnumerator GameStartSequenceCoroutine()
         {
-            foreach (CardGrade grade in GameStartSequence)
+            using (PresentationControl.Busy())
             {
-                turnEventChannel.RaiseEvent(new InteractionDisableEvent());
-                _roundComplete = false;
-
-                ShowActionCardSelection(grade);
-
-                yield return new WaitUntil(() => _roundComplete);
+                foreach (CardGrade grade in GameStartSequence)
+                {
+                    _roundComplete = false;
+                    ShowActionCardSelection(grade);
+                    yield return new WaitUntil(() => _roundComplete);
+                }
             }
 
-            turnEventChannel.RaiseEvent(new InteractionEnableEvent());
             OnGameStartSelectionComplete?.Invoke();
         }
 
@@ -119,6 +121,7 @@ namespace _02.Scripts.CardSystem
             SpawnCards(picks);
             _isSelecting = true;
         }
+#endregion
 
         private void OnMouseMove(Vector2 pos) => _mousePos = pos;
 
@@ -171,7 +174,8 @@ namespace _02.Scripts.CardSystem
             }
             else
             {
-                turnEventChannel.RaiseEvent(new InteractionEnableEvent());
+                _selectionBusy?.Dispose();
+                _selectionBusy = null;
                 OnStageClearSelectionComplete?.Invoke();
             }
         }

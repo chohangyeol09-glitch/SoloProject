@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _02.Scripts.CoreSystem;
 using _02.Scripts.SlotSystem;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -16,13 +17,8 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
         [SerializeField] private float returnDuration = 0.2f;
         [SerializeField] private GameObject shieldParticlePrefab;
 
-        // During the card-action(turn) phase the defense card does not act.
-        // The defense is already granted when the card receives its value
-        // (player: when a stat card is placed via PlayGrant; enemy: at spawn).
         public override UniTask Execute(ActionCard card, List<AbstractSlot> targets) => UniTask.CompletedTask;
 
-        // Called when a stat card is placed on this defense card.
-        // Plays the same kind of motion as the attack action and grants defense to each target.
         public void PlayGrant(ActionCard card, List<AbstractSlot> targets, int defenseValue, Action onComplete = null)
         {
             if (targets == null || targets.Count == 0 || defenseValue <= 0) { onComplete?.Invoke(); return; }
@@ -71,6 +67,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
 
             seq.Append(card.transform.DOMove(slotPos, returnDuration));
             seq.Join(card.transform.DORotateQuaternion(slotRot, returnDuration));
+            seq.timeScale = PresentationControl.Speed;
             seq.OnComplete(() => onComplete?.Invoke());
         }
 

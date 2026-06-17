@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
@@ -94,17 +94,14 @@ namespace _02.Scripts.Enemys.Boss
 
             if (patterns.Count == 0) { onComplete?.Invoke(); return; }
 
-            StartCoroutine(ExecutePatternsInOrder(patterns, context, onComplete));
+            RunPatterns(patterns, context, onComplete).Forget();
         }
 
-        private IEnumerator ExecutePatternsInOrder(List<AbstractEnemyPatternSO> patterns, EnemyPatternContext context, Action onComplete)
+        private async UniTaskVoid RunPatterns(List<AbstractEnemyPatternSO> patterns, EnemyPatternContext context, Action onComplete)
         {
             foreach (AbstractEnemyPatternSO pattern in patterns)
-            {
-                bool done = false;
-                pattern.Execute(context, () => done = true);
-                yield return new WaitUntil(() => done);
-            }
+                await pattern.Execute(context);
+
             onComplete?.Invoke();
         }
 

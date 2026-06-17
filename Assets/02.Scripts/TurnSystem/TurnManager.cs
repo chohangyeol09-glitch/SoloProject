@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Cysharp.Threading.Tasks;
+using _02.Scripts.CoreSystem;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.ActionCardEvents;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
@@ -39,39 +40,49 @@ namespace _02.Scripts.TurnSystem
         public void TurnStart()
         {
             TurnCount++;
-            Debug.Log($"TurnStart| CurrentTurn: {TurnCount}");
             turnEventChannel.RaiseEvent(new TurnChangeEvent().Init(TurnCount));
         }
 
-        private void HandleTurnEnd(TurnEndEvent evt)
+        private void HandleTurnEnd(TurnEndEvent evt) => TurnEndSequence().Forget();
+
+        private async UniTaskVoid TurnEndSequence()
         {
-            StartCoroutine(TurnEndSequence());
-        }
-
-        private IEnumerator TurnEndSequence()
-        {
-            turnEventChannel.RaiseEvent(new InteractionDisableEvent());
-
-            bool handCleared = false;
-            turnEventChannel.RaiseEvent(new ClearHandEvent().Init(() => handCleared = true));
-            yield return new WaitUntil(() => handCleared);
-
-            bool cardsExecuted = false;
-            turnEventChannel.RaiseEvent(new ExecuteCardsEvent().Init(() => cardsExecuted = true));
-            yield return new WaitUntil(() => cardsExecuted);
-            
-            if (Enemy.Instance.IsDead)
+            using (PresentationControl.Busy())
             {
-                gameEventChannel.RaiseEvent(new StageClearEvent());
-                Debug.Log("Stage Clear");
-                yield break;
+                await RaiseClearHand();
+                await RaiseExecuteCards();
+
+                if (Enemy.Instance.IsDead)
+                {
+                    gameEventChannel.RaiseEvent(new StageClearEvent());
+                    return;
+                }
+                
+                await RaiseGimmicks();
             }
 
-            bool gimmickDone = false;
-            enemyPatternManager.ExecuteGimmicks(EnemyPatternTiming.OnTurnStart, TurnCount, () => gimmickDone = true);
-            yield return new WaitUntil(() => gimmickDone);
-
             TurnStart();
+        }
+
+        private UniTask RaiseClearHand()
+        {
+            UniTaskCompletionSource tcs = new UniTaskCompletionSource();
+            turnEventChannel.RaiseEvent(new ClearHandEvent().Init(() => tcs.TrySetResult()));
+            return tcs.Task;
+        }
+
+        private UniTask RaiseExecuteCards()
+        {
+            UniTaskCompletionSource tcs = new UniTaskCompletionSource();
+            turnEventChannel.RaiseEvent(new ExecuteCardsEvent().Init(() => tcs.TrySetResult()));
+            return tcs.Task;
+        }
+
+        private UniTask RaiseGimmicks()
+        {
+            UniTaskCompletionSource tcs = new UniTaskCompletionSource();
+            enemyPatternManager.ExecuteGimmicks(EnemyPatternTiming.OnTurnStart, TurnCount, () => tcs.TrySetResult());
+            return tcs.Task;
         }
         
         #if UNITY_EDITOR

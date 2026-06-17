@@ -21,3 +21,4 @@ MonoBehaviour:
   attackParticle: {fileID: 1887159375177322, guid: 3bc5000d25fb154448f96dd3c713e545, type: 3}
   yOffset: 0.3
   damageValue: 3
+  playerChannel: {fileID: 11400000, guid: ed887ac60d5a392478f736897c6cc121, type: 2}

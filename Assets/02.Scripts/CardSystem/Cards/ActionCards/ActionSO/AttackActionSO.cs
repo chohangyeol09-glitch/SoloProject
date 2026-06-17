@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using _02.Scripts.CardSystem.Cards.ActionCards.ActionWeapon;
-using _02.Scripts.CoreSystem.EventChannel;
-using _02.Scripts.CoreSystem.EventChannel.CardEvent.ActionCardEvents;
-using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
+using _02.Scripts.CoreSystem;
 using _02.Scripts.SlotSystem;
 using DG.Tweening;
 using UnityEngine;
@@ -21,7 +18,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
 
         public override async UniTask Execute(ActionCard card, List<AbstractSlot> targets)
         {
-            if (targets == null || targets.Count == 0) return;
+            if (targets.Count == 0) return;
             if (card.AttackValue <= 0) return;
 
             Vector3 slotPos = card.transform.position;
@@ -89,6 +86,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
 
             seq.Append(card.transform.DOMove(slotPos, returnDuration));
             seq.Join(card.transform.DORotateQuaternion(slotRot, returnDuration));
+            seq.timeScale = PresentationControl.Speed;
             await seq.ToUniTask();
         }
         private void SpawnHitParticle(Vector3 position)

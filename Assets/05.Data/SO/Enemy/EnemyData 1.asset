@@ -30,6 +30,6 @@ MonoBehaviour:
     <AttackValue>k__BackingField: 2
     <DefenseValue>k__BackingField: 4
   <Gimmicks>k__BackingField:
-  - Timing: 2
+  - Timing: 1
     Condition: {fileID: 11400000, guid: 1abcad51e9182324e9cc1e86ccc09f3c, type: 2}
     Pattern: {fileID: 11400000, guid: 0a5d176c057c3b04891ae072f7463ddf, type: 2}

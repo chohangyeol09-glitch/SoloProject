@@ -7,6 +7,7 @@ using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.ActionCardEvents;
 using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
+using _02.Scripts.Enemys;
 using _02.Scripts.SlotSystem.Slots;
 using UnityEngine;
 
@@ -54,6 +55,8 @@ namespace _02.Scripts.SlotSystem
                 await ExecuteCard(slot);
             }
 
+            if (Enemy.Instance.IsDead) return;   
+
             await RaiseEnemyActionStart();
 
             foreach (EnemySlot slot in _slotLogic.EnemySlots)
@@ -62,10 +65,9 @@ namespace _02.Scripts.SlotSystem
                 await ExecuteCard(slot);
             }
 
-            await RaiseEnemyActionEnd();
+            await RaiseEnemyActionEnd(); //end삭제하기? 
         }
 
-        // 적 행동 시작/끝 이벤트(onComplete 기반)를 await 가능한 UniTask로 감싸는 이음새.
         private UniTask RaiseEnemyActionStart()
         {
             UniTaskCompletionSource tcs = new UniTaskCompletionSource();

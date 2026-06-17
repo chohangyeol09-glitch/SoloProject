@@ -84,7 +84,11 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             int overflow = value - DefenseValue;
             DefenseValue = Mathf.Max(DefenseValue - value, 0);
 
-            if (shake) PlayHitShake(value);
+            if (shake)
+            {
+                Debug.Log("Shake");
+                PlayHitShake(value);
+            }
 
             if (overflow > 0)
             {
@@ -128,8 +132,8 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         {
             enemyChannel.RaiseEvent(new TakeDamageEvent().Init(value));
         }
-        
-        public void AddRuntimeEffect(AbstractActionEffectSO effect)
+
+        protected void AddRuntimeEffect(AbstractActionEffectSO effect)
         {
             if (effect.Timing == EffectTimingType.Before)
                 _runtimeBeforeEffects.Add(effect);

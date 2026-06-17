@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _02.Scripts.Enemys.Boss.BossPatterns
@@ -8,9 +8,10 @@ namespace _02.Scripts.Enemys.Boss.BossPatterns
     {
         [SerializeField] private int amount;
 
-        protected override void ExecutePattern(EnemyPatternContext context, Action onComplete)
+        protected override UniTask ExecutePattern(EnemyPatternContext context)
         {
             Enemy.Instance.Heal(amount);
+            return UniTask.CompletedTask;
         }
         public override string GetDescription() => string.Format(Description, amount);
         
