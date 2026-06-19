@@ -262,6 +262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7375214361768393088}
   - component: {fileID: 4459103659175059534}
+  - component: {fileID: 6770706808123774267}
   m_Layer: 0
   m_Name: SlimeModel
   m_TagString: Untagged
@@ -308,6 +309,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6770706808123774267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6161175501061190422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 889c24c9d2294b69a97890fc4dc70777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemys.EnemyModelAnimHandler
+  enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
 --- !u!1 &6462602174558136620
 GameObject:
   m_ObjectHideFlags: 0

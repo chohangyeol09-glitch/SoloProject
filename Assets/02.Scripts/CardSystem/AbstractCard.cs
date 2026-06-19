@@ -91,6 +91,15 @@ namespace _02.Scripts.CardSystem
             seq.OnComplete(() => IsUpDownMoving = false);
         }
 
+        // 슬롯/보관소로 내려놓는 모션. 이동 중엔 IsUpDownMoving=true라 드래그로 못 잡아챈다.
+        public Tween PlayDropToSlot(Vector3 from, float targetY, float duration = 0.3f)
+        {
+            IsUpDownMoving = true;
+            transform.DOKill();
+            transform.position = from;
+            return transform.DOMoveY(targetY, duration).OnComplete(() => IsUpDownMoving = false);
+        }
+
         protected virtual void HandleHoverEnter() { }
         protected virtual void HandleHoverExit() { }
     }

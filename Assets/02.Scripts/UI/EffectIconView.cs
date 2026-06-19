@@ -9,7 +9,8 @@ namespace _02.Scripts.UI
     {
         [SerializeField] private Image icon;
         [SerializeField] private TextMeshProUGUI valueText;
-
+        [SerializeField] private InfoShowProp infoShow;
+        
         public void Setup(AbstractActionEffectSO effect)
         {
             icon.sprite = effect.Icon;
@@ -19,6 +20,8 @@ namespace _02.Scripts.UI
                 valueText.text = effect.DisplayValue.ToString();
             else 
                 valueText.text = "";
+            
+            infoShow.SetInfo(effect.Name, effect.Description);
         }
     }
 }

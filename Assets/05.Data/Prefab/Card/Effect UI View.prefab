@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2483116427395638524}
   - component: {fileID: 717614579326199174}
+  - component: {fileID: 7984633793144301422}
   m_Layer: 0
   m_Name: Effect UI View
   m_TagString: Untagged
@@ -52,6 +53,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.UI.EffectIconView
   icon: {fileID: 3239121719970009970}
   valueText: {fileID: 8317249104497535468}
+  infoShow: {fileID: 7984633793144301422}
+--- !u!114 &7984633793144301422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2203165635001060789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df54f929430474f84619218742ad14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.UI.InfoShowProp
+  eventChannel: {fileID: 11400000, guid: 2843ddd15e36f6a4daee9239d105351e, type: 2}
 --- !u!1 &4984166640912996485
 GameObject:
   m_ObjectHideFlags: 0

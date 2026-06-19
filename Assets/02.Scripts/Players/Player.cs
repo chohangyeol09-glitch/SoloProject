@@ -35,7 +35,6 @@ namespace _02.Scripts.Players
             playerChannel.AddListener<GainCostEvent>(HandleGainCost);
             playerChannel.AddListener<RecoverCostEvent>(HandleRecoverCost);
             turnChannel.AddListener<TurnChangeEvent>(HandleTurnChange);
-            
         }
 
         private void Start()

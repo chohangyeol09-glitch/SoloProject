@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using _02.Scripts.CoreSystem;
 using DG.Tweening;
 using UnityEngine;
@@ -59,6 +60,20 @@ namespace _02.Scripts.Stage
                 yield return StartCoroutine(SequentialMoveOut(inProgressObjects, _inProgressOriginalPos));
                 yield return StartCoroutine(SequentialMoveIn(stageEndObjects, _stageEndOriginalPos));
             }
+        }
+
+        public UniTask PlayStageEndAsync()
+        {
+            UniTaskCompletionSource tcs = new UniTaskCompletionSource();
+            StartCoroutine(StageEndAsyncRoutine(tcs));
+            return tcs.Task;
+        }
+
+        private IEnumerator StageEndAsyncRoutine(UniTaskCompletionSource tcs)
+        {
+            yield return StartCoroutine(SequentialMoveOut(inProgressObjects, _inProgressOriginalPos));
+            yield return StartCoroutine(SequentialMoveIn(stageEndObjects, _stageEndOriginalPos));
+            tcs.TrySetResult();
         }
 
         private IEnumerator SequentialMoveOut(GameObject[] objects, Vector3[] originalPositions)

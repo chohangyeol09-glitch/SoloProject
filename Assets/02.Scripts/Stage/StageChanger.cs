@@ -14,32 +14,23 @@ namespace _02.Scripts.Stage
         
         public PropInteraction PropInteraction { get; private set; }
 
-        private Outlinable _outlinable;
         protected override void InitializeModules()
         {
             base.InitializeModules();
             PropInteraction = GetModule<PropInteraction>();
-            _outlinable = GetComponent<Outlinable>();
             
             PropInteraction.OnClick += HandleClick;
-            PropInteraction.OnHoverEnter += HandleHoverEnter;
-            PropInteraction.OnHoverExit += HandleHoverExit;
+        }
+
+        public void Show()
+        {
+            Debug.Log("Active");
+            gameObject.SetActive(true);
         }
 
         private void HandleClick()
         {
-            _outlinable.FrontParameters.Color = Color.clear;
             stageManager.StartNextStage();
-        }
-        
-        private void HandleHoverEnter()
-        {
-            _outlinable.FrontParameters.Color = Color.white;
-        }
-        
-        private void HandleHoverExit()
-        {
-            _outlinable.FrontParameters.Color = Color.clear;
         }
         
     }

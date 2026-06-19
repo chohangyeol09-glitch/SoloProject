@@ -29,6 +29,13 @@ MonoBehaviour:
     CardData: {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
     <AttackValue>k__BackingField: 2
     <DefenseValue>k__BackingField: 4
+  <Rewards>k__BackingField:
+  - Type: 1
+    Grade: 1
+  - Type: 2
+    Grade: 1
+  - Type: 2
+    Grade: 2
   <Gimmicks>k__BackingField:
   - Timing: 1
     Condition: {fileID: 11400000, guid: 1abcad51e9182324e9cc1e86ccc09f3c, type: 2}

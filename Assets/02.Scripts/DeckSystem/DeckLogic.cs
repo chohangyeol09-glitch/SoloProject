@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
+using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using _02.Scripts.Players;
@@ -37,10 +38,11 @@ namespace _02.Scripts.DeckSystem
         {
             _deckPile.Clear();
             _discardPile.Clear();
-            foreach (StatCardDataSO data in Player.Instance.RuntimeDeck.Cards)
-                _deckPile.Add(data);
+            foreach (StatCardDataSO card in Player.Instance.RuntimeDeck.Cards)
+                _deckPile.Add(card);
 
             Shuffle(_deckPile);
+            RaiseDeckCountChanged();
         }
 
         private void OnDestroy()
@@ -63,17 +65,28 @@ namespace _02.Scripts.DeckSystem
                 drawn.Add(_deckPile[0]);
                 _deckPile.RemoveAt(0);
             }
+
+            RaiseDeckCountChanged();
             return drawn;
         }
 
         private void HandleDiscard(DiscardCardEvent evt)
-            => _discardPile.Add(evt.cardData);
+        {
+            _discardPile.Add(evt.cardData);
+            RaiseDeckCountChanged();
+        }
 
         private void Refill()
         {
             _deckPile.AddRange(_discardPile);
             _discardPile.Clear();
             Shuffle(_deckPile);
+        }
+
+        private void RaiseDeckCountChanged()
+        {
+            cardChannel.RaiseEvent(new PileCountChangedEvent().Init(_deckPile.Count, _discardPile.Count));
+            
         }
 
         private void Shuffle(List<StatCardDataSO> list)

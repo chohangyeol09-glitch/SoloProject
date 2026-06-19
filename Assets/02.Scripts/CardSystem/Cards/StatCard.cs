@@ -49,15 +49,14 @@ namespace _02.Scripts.CardSystem.Cards
         }
 
         #region Handles
-
-        // StatCard.cs
+        
         protected override void HandleHoverEnter()
         {
             if (_handLogic == null) return;
             int index = _handLogic.GetCardIndex(this);
             int count = _handLogic.GetHandCount();
             Vector3 basePos = _handLogic.GetCardPosition(index, count);
-            float targetY = (index + 2) * _handLogic.GetYPerIndex();
+            float targetY = (index + 2) * _handLogic.GetYHoverAddValue();
             basePos.y = targetY;
 
             transform.DOKill();
@@ -106,8 +105,8 @@ namespace _02.Scripts.CardSystem.Cards
             _handLogic?.RemoveCard(this);
             cardEventChannel.RaiseEvent(new DiscardCardEvent().Init(StatData)); 
 
-            transform.DOKill();
             onComplete?.Invoke();
+            transform.DOKill();
             Destroy(gameObject);
         }
     }

@@ -23,6 +23,7 @@ namespace _02.Scripts.DeckSystem
         [SerializeField] private int maxHandSize = 10;
         [SerializeField] private float cardSpacing = 1.5f; // 카드 간격
         [SerializeField] private float yPerIndex = 0.05f; // 인덱스마다 Y 증가
+        [SerializeField] private float yHoverAddValue = 0.3f;
         [SerializeField] private float dragYOffset = 1.5f; // 드래그 시 Y
         [SerializeField] private float fanAngle = 30f; // 부채꼴 각도
         [SerializeField] private float centerZOffset = 0.1f;
@@ -181,7 +182,7 @@ namespace _02.Scripts.DeckSystem
             return Quaternion.Euler(0, angle, 0) * Quaternion.Euler(cardDefaultRotation);
         }
         
-        public float GetYPerIndex() => yPerIndex;
+        public float GetYHoverAddValue() => yHoverAddValue;
         public int GetCardIndex(StatCard card) => _handCards.IndexOf(card);
         public int GetHandCount() => _handCards.Count;
 

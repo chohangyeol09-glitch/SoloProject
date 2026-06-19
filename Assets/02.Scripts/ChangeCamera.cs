@@ -1,9 +1,10 @@
 using System;
+using _02.Scripts.CoreSystem;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ChangeCamera : MonoBehaviour
+public class ChangeCamera : MonoSingleton<ChangeCamera>
 {
     [SerializeField] private CinemachineCamera topViewCamera;
     [SerializeField] private CinemachineCamera bottomViewCamera;
@@ -31,5 +32,19 @@ public class ChangeCamera : MonoBehaviour
             topViewCamera.Priority = 0;
             settingViewCamera.Priority = 10;
         }
+    }
+
+    public void SetTopView()
+    {
+        bottomViewCamera.Priority = 0;
+        topViewCamera.Priority = 10;
+        settingViewCamera.Priority = 0;
+    }
+
+    public void RestoreView()
+    {
+        bottomViewCamera.Priority = 10;
+        topViewCamera.Priority = 0;
+        settingViewCamera.Priority = 0;
     }
 }

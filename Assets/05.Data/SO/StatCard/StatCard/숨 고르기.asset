@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25fe8b1f46f7864a8bff1fb2008908e, type: 3}
+  m_Name: "\uC228 \uACE0\uB974\uAE30"
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.StatCards.StatCardDataSO
+  <Name>k__BackingField: "\uC228 \uACE0\uB974\uAE30"
+  <Description>k__BackingField: "\uCE74\uB4DC\uB97C 2\uC7A5 \uBF51\uC2B5\uB2C8\uB2E4.
+    ."
+  <Icon>k__BackingField: {fileID: 21300000, guid: 829b79827652c3841b1dc0881fb1c5a9, type: 3}
+  <Grade>k__BackingField: 0
+  <Cost>k__BackingField: 1
+  <Value>k__BackingField: 4
+  Effects:
+  - {fileID: 11400000, guid: 7059d88315eb27c4594bedafe4f01334, type: 2}

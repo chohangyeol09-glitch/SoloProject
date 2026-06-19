@@ -6,6 +6,14 @@
         FRONT_LR,
         SELF,
         LEFT,
-        RIGHT
+        RIGHT,
+        LR,
+        RENDOM,
+        ONE,
+        TWO,
+        THREE,
+        FOUR,
+        ALL
+        
     }
 }

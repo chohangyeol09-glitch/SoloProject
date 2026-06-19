@@ -54,7 +54,7 @@ namespace _02.Scripts.TurnSystem
 
                 if (Enemy.Instance.IsDead)
                 {
-                    gameEventChannel.RaiseEvent(new StageClearEvent());
+                    gameEventChannel.RaiseEvent(new StageClearEvent().Init(Enemy.Instance.Rewards));
                     return;
                 }
                 

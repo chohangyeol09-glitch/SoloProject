@@ -1,64 +1,42 @@
 ﻿using _02.Scripts.CardSystem;
 using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
+using _02.Scripts.CoreSystem.EventChannel;
+using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using _02.Scripts.InteractionSystem.Interactions;
 using EPOOutline;
+using TMPro;
 using UnityEngine;
 
 namespace _02.Scripts.Props
 {
     public class GuideBookUI : ModuleOwner
     {
-        public PropInteraction PropInteraction { get; private set; }
 
-        [SerializeField] private Transform layout;
-        [SerializeField] private Transform GuideUI;
-        [SerializeField] private GameObject contentPrefab;
-        [SerializeField] private CardGradePoolSO actionEffectList;
-
+        [SerializeField] private EventChannelSO cardEvent;
+        [SerializeField] private TextMeshProUGUI titleText;
+        [SerializeField] private TextMeshProUGUI descriptionText;
+        
         private Outlinable _outline;
         protected override void InitializeModules()
         {
             base.InitializeModules();
-            PropInteraction = GetModule<PropInteraction>();
             _outline = GetComponent<Outlinable>();
-            CreateContent();
-        }
-
-        protected override void AfterInitializeModules()
-        {
-            base.AfterInitializeModules();
-            PropInteraction.OnClick += HandleClick;
-        }
-
-        private void HandleClick()
-        {
-            GuideUI.gameObject.SetActive(true);
-        }
-
-        public void CanvasClose()
-        {
-            GuideUI.gameObject.SetActive(false);
-        }
-
-        private void CreateContent()
-        {
-            foreach (AbstractActionEffectSO data in actionEffectList.GetEffectsByGrade(CardGrade.BRONZE))
-                CreateContent(data);
-
-            foreach (AbstractActionEffectSO data in actionEffectList.GetEffectsByGrade(CardGrade.SILVER))
-                CreateContent(data);
+            cardEvent.AddListener<InfoShowEvent>(HandleInfoShow);
+            cardEvent.AddListener<InfoHideEvent>(HandleInfoHide);
             
-            foreach (AbstractActionEffectSO data in actionEffectList.GetEffectsByGrade(CardGrade.GOLD))
-                CreateContent(data);
-            
-            GuideUI.gameObject.SetActive(false);
         }
 
-        private void CreateContent(AbstractActionEffectSO data)
+        private void HandleInfoShow(InfoShowEvent obj)
         {
-            GameObject content = Instantiate(contentPrefab, layout);
-            content.GetComponent<GuideContentUI>().SetUI(data);
+            titleText.text = obj.Title;
+            descriptionText.text = obj.Description;
+        }
+
+        private void HandleInfoHide(InfoHideEvent obj)
+        {
+            titleText.text = "";
+            descriptionText.text = "";
         }
     }
 }

@@ -8,7 +8,7 @@ namespace _02.Scripts.UI
 {
     public class InfoShowProp : MonoBehaviour, IInfoShowable, IPointerEnterHandler, IPointerExitHandler, IModule
     {
-        [SerializeField] private EventChannelSO gameChannel;
+        [SerializeField] private EventChannelSO eventChannel;
 
         private string _title;
         private string _description;
@@ -21,12 +21,12 @@ namespace _02.Scripts.UI
 
         public void ShowInfo()
         {
-            gameChannel.RaiseEvent(new InfoShowEvent().Init(_title, _description));
+            eventChannel.RaiseEvent(new InfoShowEvent().Init(_title, _description));
         }
 
         public void HideInfo()
         {
-            gameChannel.RaiseEvent(new InfoHideEvent());
+            eventChannel.RaiseEvent(new InfoHideEvent());
         }
 
         public void OnPointerEnter(PointerEventData eventData) => ShowInfo();

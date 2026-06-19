@@ -16,6 +16,5 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         [field: SerializeField] public AbstractActionSO Action {get; private set;}  
         [field: SerializeField] public List<AbstractActionEffectSO> BeforeEffects { get; private set; } = new();
         [field: SerializeField] public List<AbstractActionEffectSO> AfterEffects { get; private set; } = new();
-        [field: SerializeField] public AbstractWeaponSO AbstractWeapon { get; private set; }
     }
 }

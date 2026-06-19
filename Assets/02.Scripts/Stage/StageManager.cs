@@ -1,9 +1,13 @@
+using System.Collections.Generic;
+using _02.Scripts.CardSystem;
+using _02.Scripts.CoreSystem;
 using _02.Scripts.CoreSystem.EventChannel;
-using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using _02.Scripts.Enemys;
+using _02.Scripts.SlotSystem;
 using _02.Scripts.Players;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _02.Scripts.Stage
@@ -12,26 +16,52 @@ namespace _02.Scripts.Stage
     {
         [SerializeField] private StageListSO stageList;
         [SerializeField] private EventChannelSO gameEventChannel;
-        [SerializeField] private EventChannelSO enemyEventChannel;
         [SerializeField] private EventChannelSO turnEventChannel;
         [SerializeField] private StageTransitionAnimator transitionAnimator;
 
+        [Header("Stage Clear Sequence")]
+        [SerializeField] private EnemyAnimController enemyAnim;
+        [SerializeField] private CardSelectionManager cardSelection;
+        [SerializeField] private StageChanger stageChanger;
+
+        private SlotLogic _slotLogic;
         private int _currentStageIndex = -1;
 
         private void Awake()
         {
-            enemyEventChannel.AddListener<EnemyDeadEvent>(HandleEnemyDead);
-            enemyEventChannel.AddListener<EnemyDieEndEvent>(HandleEnemyDieEnd);
+            _slotLogic = FindObjectOfType<SlotLogic>();
+            gameEventChannel.AddListener<StageClearEvent>(HandleStageClear);
+            if (cardSelection != null)
+                cardSelection.OnGameStartSelectionComplete += stageChanger.Show;
         }
 
         private void OnDestroy()
         {
-            enemyEventChannel.RemoveListener<EnemyDeadEvent>(HandleEnemyDead);
-            enemyEventChannel.RemoveListener<EnemyDieEndEvent>(HandleEnemyDieEnd);
+            gameEventChannel.RemoveListener<StageClearEvent>(HandleStageClear);
+            if (cardSelection != null)
+                cardSelection.OnGameStartSelectionComplete -= stageChanger.Show;
+        }
+
+        private void HandleStageClear(StageClearEvent evt) => StageClearSequence(evt.Rewards).Forget();
+
+        private async UniTaskVoid StageClearSequence(List<RewardEntry> rewards)
+        {
+            using (PresentationControl.Busy())
+            {
+                await enemyAnim.PlayDeath();
+                if (_slotLogic != null)
+                    await cardSelection.CollectCardsFromPlayerSlots(_slotLogic.PlayerSlots);
+                await transitionAnimator.PlayStageEndAsync();
+                await cardSelection.ShowRewards(rewards);
+            }
+
+            if (stageChanger != null) stageChanger.Show();
         }
 
         public void StartNextStage()
         {
+            if (stageChanger != null) stageChanger.gameObject.SetActive(false);
+
             if (transitionAnimator != null)
                 transitionAnimator.PlayStageStartTransition(ExecuteStageStart);
             else
@@ -51,26 +81,11 @@ namespace _02.Scripts.Stage
             EnemyDataSO stageData = stageList.Stages[_currentStageIndex];
 
             gameEventChannel.RaiseEvent(new StageStartEvent().Init(_currentStageIndex, stageData));
-
             turnEventChannel.RaiseEvent(new TurnChangeEvent().Init(1));
             Player.Instance.Heal(Player.Instance.MaxHealth / 10);
         }
 
-        public void ClearStage()
-        {
-
-        }
-
-        private void HandleEnemyDead(EnemyDeadEvent evt)
-        {
-            gameEventChannel.RaiseEvent(new StageClearEvent());
-        }
-
-        private void HandleEnemyDieEnd(EnemyDieEndEvent evt)
-        {
-            ClearStage();
-            transitionAnimator?.PlayStageEndTransition();
-        }
+        public void ClearStage() { }
 
 #if UNITY_EDITOR
         [ContextMenu("StartNextStage")]

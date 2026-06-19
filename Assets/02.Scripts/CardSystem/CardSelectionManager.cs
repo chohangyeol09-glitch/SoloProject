@@ -6,21 +6,17 @@ using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
 using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CoreSystem;
-using _02.Scripts.CoreSystem.EventChannel;
-using _02.Scripts.CoreSystem.EventChannel.GameEvents;
-using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.Players;
 using _02.Scripts.SlotSystem;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem
 {
-    public class CardSelectionManager : MonoBehaviour
+    public class CardSelectionManager : MonoSingleton<CardSelectionManager>
     {
-        [Header("Channels")]
-        [SerializeField] private EventChannelSO stageEventChannel;
-        [SerializeField] private EventChannelSO turnEventChannel;
+        [Header("Input")]
         [SerializeField] private PlayerInputSO playerInput;
 
         [Header("Pool")]
@@ -31,29 +27,22 @@ namespace _02.Scripts.CardSystem
         [SerializeField] private GameObject actionEffectCardPrefab;
         [SerializeField] private GameObject statCardPrefab;
 
-        [Header("Stage Clear Selection")]
-        [SerializeField] private PoolType stageClearRewardType = PoolType.Action;
-        [SerializeField] private CardGrade stageClearRewardGrade = CardGrade.BRONZE;
-        [SerializeField] private int stageClearRewardCount = 3;
-
-        [Header("Game Start Selection")]
-        [SerializeField] private int gameStartPoolSize = 3;
+        [Header("Selection")]
+        [SerializeField] private int selectionCount = 3;
         [SerializeField] private List<AbstractSlot> actionCardStorage = new();
 
-        [Header("Common")] 
+        [Header("Common")]
         [SerializeField] private LayerMask cardLayer;
-        [SerializeField] private Transform spawnCenter;
+        [SerializeField] private Transform createPoint;
+        [SerializeField] private Transform sortCenter;
         [SerializeField] private float cardSpacing = 2f;
 
-        public event Action OnStageClearSelectionComplete;
         public event Action OnGameStartSelectionComplete;
 
         private readonly List<AbstractCard> _selectionCards = new();
         private bool _isSelecting;
         private bool _roundComplete;
-        private bool _isGameStartMode;
         private Vector2 _mousePos;
-        private IDisposable _selectionBusy;   
 
         private static readonly CardGrade[] GameStartSequence =
         {
@@ -62,36 +51,30 @@ namespace _02.Scripts.CardSystem
 
         private void Awake()
         {
-            stageEventChannel.AddListener<StageClearEvent>(HandleStageClear);
             playerInput.OnMovePointer += OnMouseMove;
             playerInput.OnClickDown += OnClickDown;
         }
 
         private void OnDestroy()
         {
-            stageEventChannel.RemoveListener<StageClearEvent>(HandleStageClear);
             playerInput.OnMovePointer -= OnMouseMove;
             playerInput.OnClickDown -= OnClickDown;
         }
 
-        private void HandleStageClear(StageClearEvent evt) => ShowStageClearSelection();
-
-        private void ShowStageClearSelection()
+        public async UniTask ShowRewards(List<RewardEntry> rewards)
         {
-            _isGameStartMode = false;
-            _selectionBusy = PresentationControl.Busy();
+            if (rewards == null) return;
 
-            List<(PoolType type, ScriptableObject data)> picks = PickCards(stageClearRewardType, stageClearRewardGrade, stageClearRewardCount);
-            SpawnCards(picks);
-            _isSelecting = true;
+            foreach (RewardEntry entry in rewards)
+            {
+                _roundComplete = false;
+                ShowSelection(entry.Type, entry.Grade);
+                await UniTask.WaitUntil(() => _roundComplete);
+            }
         }
 
 #region StartSeq
-        private void StartGameCardSelection()
-        {
-            _isGameStartMode = true;
-            StartCoroutine(GameStartSequenceCoroutine());
-        }
+        private void StartGameCardSelection() => StartCoroutine(GameStartSequenceCoroutine());
 
         private IEnumerator GameStartSequenceCoroutine()
         {
@@ -100,28 +83,22 @@ namespace _02.Scripts.CardSystem
                 foreach (CardGrade grade in GameStartSequence)
                 {
                     _roundComplete = false;
-                    ShowActionCardSelection(grade);
+                    ShowSelection(CardPoolType.Action, grade);
                     yield return new WaitUntil(() => _roundComplete);
                 }
             }
 
             OnGameStartSelectionComplete?.Invoke();
         }
+#endregion
 
-        private void ShowActionCardSelection(CardGrade grade)
+        private void ShowSelection(CardPoolType type, CardGrade grade)
         {
-            var pool = new List<ActionCardDataSO>(gradePool.GetActionCardsByGrade(grade));
-            Shuffle(pool);
-
-            int count = Mathf.Min(gameStartPoolSize, pool.Count);
-            var picks = new List<(PoolType type, ScriptableObject data)>();
-            for (int i = 0; i < count; i++)
-                picks.Add((PoolType.Action, pool[i]));
-
+            List<(CardPoolType type, ScriptableObject data)> picks = PickCards(type, grade, selectionCount);
             SpawnCards(picks);
             _isSelecting = true;
+            ChangeCamera.Instance?.SetTopView();
         }
-#endregion
 
         private void OnMouseMove(Vector2 pos) => _mousePos = pos;
 
@@ -168,16 +145,23 @@ namespace _02.Scripts.CardSystem
 
         private void CompleteSelection()
         {
-            if (_isGameStartMode)
+            ChangeCamera.Instance?.RestoreView();
+            _roundComplete = true;
+        }
+
+        public async UniTask CollectCardsFromPlayerSlots(IEnumerable<AbstractSlot> playerSlots)
+        {
+            List<UniTask> drops = new();
+            foreach (AbstractSlot slot in playerSlots)
             {
-                _roundComplete = true;
+                if (slot.CurrentCard == null) continue;
+                ActionCard card = slot.CurrentCard;
+                slot.RemoveCurrentCard();
+                Tween drop = GetNextEmptyStorageSlot()?.SetCurrentCard(card);
+                if (drop != null) drops.Add(drop.ToUniTask());
             }
-            else
-            {
-                _selectionBusy?.Dispose();
-                _selectionBusy = null;
-                OnStageClearSelectionComplete?.Invoke();
-            }
+
+            if (drops.Count > 0) await UniTask.WhenAll(drops);
         }
 
         private AbstractSlot GetNextEmptyStorageSlot()
@@ -188,24 +172,23 @@ namespace _02.Scripts.CardSystem
             return null;
         }
 
-
-        private List<(PoolType type, ScriptableObject data)> PickCards(PoolType type, CardGrade grade, int count)
+        private List<(CardPoolType type, ScriptableObject data)> PickCards(CardPoolType type, CardGrade grade, int count)
         {
-            var all = new List<(PoolType type, ScriptableObject data)>();
+            var all = new List<(CardPoolType type, ScriptableObject data)>();
 
             switch (type)
             {
-                case PoolType.Action:
+                case CardPoolType.Action:
                     foreach (ActionCardDataSO d in gradePool.GetActionCardsByGrade(grade))
-                        all.Add((PoolType.Action, d));
+                        all.Add((CardPoolType.Action, d));
                     break;
-                case PoolType.ActionEffect:
+                case CardPoolType.ActionEffect:
                     foreach (AbstractActionEffectSO d in gradePool.GetEffectsByGrade(grade))
-                        all.Add((PoolType.ActionEffect, d));
+                        all.Add((CardPoolType.ActionEffect, d));
                     break;
-                case PoolType.Stat:
+                case CardPoolType.Stat:
                     foreach (StatCardDataSO d in gradePool.GetStatCardsByGrade(grade))
-                        all.Add((PoolType.Stat, d));
+                        all.Add((CardPoolType.Stat, d));
                     break;
             }
 
@@ -213,45 +196,46 @@ namespace _02.Scripts.CardSystem
             return all.Count <= count ? all : all.GetRange(0, count);
         }
 
-        private void SpawnCards(List<(PoolType type, ScriptableObject data)> picks)
+        private void SpawnCards(List<(CardPoolType type, ScriptableObject data)> picks)
         {
             int total = picks.Count;
             for (int i = 0; i < total; i++)
             {
                 float x = (i - (total - 1) * 0.5f) * cardSpacing;
-                Vector3 pos = spawnCenter.position + new Vector3(x, 0f, 0f);
+                Vector3 pos = createPoint.transform.position;
                 AbstractCard card = SpawnCard(picks[i].type, picks[i].data, pos);
+                card.transform.DOMove(sortCenter.position + new Vector3(x, 0f, 0f), 0.4f).SetEase(Ease.OutQuint);
                 if (card != null)
                     _selectionCards.Add(card);
             }
         }
 
-        private AbstractCard SpawnCard(PoolType type, ScriptableObject data, Vector3 pos)
+        private AbstractCard SpawnCard(CardPoolType type, ScriptableObject data, Vector3 pos)
         {
             GameObject prefab = type switch
             {
-                PoolType.Action       => playerActionCardPrefab,
-                PoolType.ActionEffect => actionEffectCardPrefab,
-                PoolType.Stat         => statCardPrefab,
-                _                    => null
+                CardPoolType.Action       => playerActionCardPrefab,
+                CardPoolType.ActionEffect => actionEffectCardPrefab,
+                CardPoolType.Stat         => statCardPrefab,
+                _                         => null
             };
             if (prefab == null) return null;
 
-            GameObject obj = Instantiate(prefab, pos, spawnCenter.rotation);
+            GameObject obj = Instantiate(prefab, pos, sortCenter.rotation);
 
             switch (type)
             {
-                case PoolType.Action:
+                case CardPoolType.Action:
                     var actionCard = obj.GetComponent<PlayerActionCard>();
                     actionCard.SetActionCardData(data as ActionCardDataSO);
                     return actionCard;
 
-                case PoolType.ActionEffect:
+                case CardPoolType.ActionEffect:
                     var effectCard = obj.GetComponent<ActionEffectCard>();
                     effectCard.SetEffect(data as AbstractActionEffectSO);
                     return effectCard;
 
-                case PoolType.Stat:
+                case CardPoolType.Stat:
                     var statCard = obj.GetComponent<StatCard>();
                     statCard.SetStatData(data as StatCardDataSO);
                     return statCard;
@@ -268,12 +252,7 @@ namespace _02.Scripts.CardSystem
             }
         }
 
-        private enum PoolType { Action, ActionEffect, Stat }
-
 #if UNITY_EDITOR
-        [ContextMenu("Test StageClear Selection")]
-        private void TestStageClear() => ShowStageClearSelection();
-
         [ContextMenu("Test GameStart Selection")]
         private void TestGameStart() => StartGameCardSelection();
 #endif

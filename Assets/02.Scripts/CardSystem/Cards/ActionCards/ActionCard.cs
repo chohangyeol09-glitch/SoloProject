@@ -27,8 +27,11 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             get => _defenseValue;
             private set
             {
-                _defenseValue = value; 
+                int prev = _defenseValue;
+                _defenseValue = value;
                 OnDefenseValueChanged?.Invoke(_defenseValue);
+                if (prev > 0 && _defenseValue <= 0)
+                    OnDefenseZero();
             }
         }
 

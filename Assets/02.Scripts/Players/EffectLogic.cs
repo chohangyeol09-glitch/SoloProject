@@ -49,6 +49,7 @@ namespace _02.Scripts.Players
         {
             impulseSource.ImpulseDefinition.ImpulseShape = CinemachineImpulseDefinition.ImpulseShapes.Explosion;
             PlayCameraShake(evt.Value, playerShakeDuration, playerShakeForce, playerShakeDirection);
+            if (evt.Value > 7)
             PlayRedFlash();
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _02.Scripts.CardSystem.Cards.StatCards.EffectSO;
 using UnityEngine;
@@ -15,5 +16,9 @@ namespace _02.Scripts.CardSystem.Cards.StatCards
         [field: SerializeField] public int Value {get; private set;}
         public List<AbstractStatEffectSO> Effects = new();
 
+        private void OnValidate()
+        {
+            Name = name;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _02.Scripts.CardSystem;
 using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.Enemys.Boss;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace _02.Scripts.Enemys
         [field: SerializeField] public bool IsBoss { get; private set; }
         [field: SerializeField] public GameObject ModelPrefab { get; private set; }
         [field: SerializeField] public List<EnemyCardPlacement> CardPlacements { get; private set; } = new();
+
+        [field: SerializeField] public List<RewardEntry> Rewards { get; private set; } = new();
 
         [field: SerializeField] public List<Gimmick> Gimmicks { get; private set; } = new();
     }

@@ -10,6 +10,7 @@ using _02.Scripts.CoreSystem.ModuleSystem;
 using _02.Scripts.Enemys;
 using _02.Scripts.SlotSystem.Slots;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace _02.Scripts.SlotSystem
 {
@@ -138,6 +139,18 @@ namespace _02.Scripts.SlotSystem
                     return GetSlot(originSlots, index - 1);
                 case SlotTargetRangeType.RIGHT:
                     return GetSlot(originSlots, index + 1);
+                case SlotTargetRangeType.RENDOM:
+                    return GetSlot(targetSlots, Random.Range(0,4));
+                case SlotTargetRangeType.ONE:
+                    return GetSlot(targetSlots, 1);
+                case SlotTargetRangeType.TWO:
+                    return GetSlot(targetSlots, 2);
+                case SlotTargetRangeType.THREE:
+                    return GetSlot(targetSlots, 3);
+                case SlotTargetRangeType.FOUR:
+                    return GetSlot(targetSlots, 4);
+                case SlotTargetRangeType.ALL:
+                    return GetSlot(targetSlots,0,1,2,3);
             }
             return null;
         }

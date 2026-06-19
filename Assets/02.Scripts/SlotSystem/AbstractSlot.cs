@@ -26,7 +26,7 @@ namespace _02.Scripts.SlotSystem
             base.AfterInitializeModules();
         }
 
-        public void SetCurrentCard(ActionCard card)
+        public Tween SetCurrentCard(ActionCard card)
         {
             if (CurrentCard != null)
                 RemoveCurrentCard();
@@ -36,9 +36,8 @@ namespace _02.Scripts.SlotSystem
             if (card is PlayerActionCard playerCard)
                 playerCard.SetOriginalSlot(this as PlayerSlot);
 
-            Vector3 pos = transform.position + Vector3.up * 3f;
-            card.transform.position = pos;
-            card.transform.DOMoveY(transform.position.y + 0.2f, 0.3f);
+            Vector3 from = transform.position + Vector3.up * 3f;
+            return card.PlayDropToSlot(from, transform.position.y + 0.2f);
         }
 
         public void RemoveCurrentCard()

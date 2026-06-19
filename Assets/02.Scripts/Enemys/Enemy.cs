@@ -1,4 +1,6 @@
-﻿using _02.Scripts.Agent;
+﻿using System.Collections.Generic;
+using _02.Scripts.Agent;
+using _02.Scripts.CardSystem;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
@@ -15,6 +17,9 @@ namespace _02.Scripts.Enemys
         [SerializeField] private EventChannelSO gameEventChannel;
 
         public bool IsDead { get; private set; }
+
+        private EnemyDataSO _data;
+        public List<RewardEntry> Rewards => _data != null ? _data.Rewards : null;
 
         private void Awake()
         {
@@ -33,6 +38,7 @@ namespace _02.Scripts.Enemys
 
         private void HandleStageStart(StageStartEvent evt)
         {
+            _data = evt.EnemyData;
             IsDead = false;
             MaxHealth = evt.EnemyData.MaxHealth;
             CurrentHealth = MaxHealth;

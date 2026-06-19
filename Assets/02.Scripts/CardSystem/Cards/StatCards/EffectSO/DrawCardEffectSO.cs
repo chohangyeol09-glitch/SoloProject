@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
 {
-    [CreateAssetMenu(fileName = "DrawCardEffect", menuName = "Card/Stat/Effect/DrawCard", order = 0)]
+    [CreateAssetMenu(fileName = "DrawCard", menuName = "Card/Stat/Effect/DrawCard", order = 0)]
     public class DrawCardEffectSO : AbstractStatEffectSO
     {
         [SerializeField] private EventChannelSO cardEventChannel;

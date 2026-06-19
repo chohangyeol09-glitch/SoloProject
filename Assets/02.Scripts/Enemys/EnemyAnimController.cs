@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using _02.Scripts.CoreSystem;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
@@ -20,9 +21,7 @@ namespace _02.Scripts.Enemys
         private void Awake()
         {
             gameEventChannel.AddListener<StageStartEvent>(HandleStageStart);
-            gameEventChannel.AddListener<StageClearEvent>(HandleStageClear);
             enemyEventChannel.AddListener<TakeDamageEvent>(HandleTakeDamage);
-            enemyEventChannel.AddListener<EnemyDieEndEvent>(HandleDieEnd);
             enemyEventChannel.AddListener<EnemyPatternStartEvent>(HandlePatternStart);
             enemyEventChannel.AddListener<EnemyPatternEffectEvent>(HandlePatternEffect);
             enemyEventChannel.AddListener<EnemyPatternEndEvent>(HandlePatternEnd);
@@ -31,9 +30,7 @@ namespace _02.Scripts.Enemys
         private void OnDestroy()
         {
             gameEventChannel.RemoveListener<StageStartEvent>(HandleStageStart);
-            gameEventChannel.RemoveListener<StageClearEvent>(HandleStageClear);
             enemyEventChannel.RemoveListener<TakeDamageEvent>(HandleTakeDamage);
-            enemyEventChannel.RemoveListener<EnemyDieEndEvent>(HandleDieEnd);
             enemyEventChannel.RemoveListener<EnemyPatternStartEvent>(HandlePatternStart);
             enemyEventChannel.RemoveListener<EnemyPatternEffectEvent>(HandlePatternEffect);
             enemyEventChannel.RemoveListener<EnemyPatternEndEvent>(HandlePatternEnd);
@@ -52,11 +49,23 @@ namespace _02.Scripts.Enemys
         private void HandleTakeDamage(TakeDamageEvent evt)
             => _animator?.Play("HIT");
 
-        private void HandleStageClear(StageClearEvent evt)
-            => _animator?.Play("DIE");
-
-        private void HandleDieEnd(EnemyDieEndEvent evt)
+        // 죽음 연출: DIE 재생 → 끝까지(Animator 상태로) 대기 → 모델 삭제. StageManager 시퀀스가 await로 호출.
+        public async UniTask PlayDeath()
         {
+            if (_animator == null) return;
+
+            _animator.speed = PresentationControl.Speed;
+            _animator.Play("DIE");
+
+            await UniTask.Yield();   // Play("DIE")가 반영될 때까지 한 프레임 대기
+
+            if (_animator != null)
+            {
+                AnimatorStateInfo st = _animator.GetCurrentAnimatorStateInfo(0);
+                float seconds = st.length / Mathf.Max(0.01f, _animator.speed);
+                await UniTask.Delay((int)(seconds * 1000f));   // DIE 길이만큼(배속 반영) 대기
+            }
+
             if (_currentModel != null) Destroy(_currentModel);
             _currentModel = null;
             _animator = null;
@@ -65,8 +74,23 @@ namespace _02.Scripts.Enemys
         private void HandlePatternStart(EnemyPatternStartEvent evt)
         {
             _pendingPatternEvt = evt;
-            if (_animator != null) _animator.speed = PresentationControl.Speed;
-            _animator?.Play(evt.AnimationName);
+
+            bool canPlay = _animator != null
+                           && !string.IsNullOrEmpty(evt.AnimationName)
+                           && _animator.HasState(0, Animator.StringToHash(evt.AnimationName));
+
+            if (canPlay)
+            {
+                _animator.speed = PresentationControl.Speed;
+                _animator.Play(evt.AnimationName);
+            }
+            else
+            {
+                // 애니가 없거나 이름이 잘못된 경우: 멈추지 않게 효과+종료를 즉시 처리
+                evt.OnPatternEffect?.Invoke();
+                evt.OnPatternEnd?.Invoke();
+                _pendingPatternEvt = null;
+            }
         }
 
         private void HandlePatternEffect(EnemyPatternEffectEvent evt)

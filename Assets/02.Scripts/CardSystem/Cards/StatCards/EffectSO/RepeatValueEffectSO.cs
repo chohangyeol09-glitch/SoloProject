@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
 {
-    [CreateAssetMenu(fileName = "RepeatValueEffect", menuName = "Card/Stat/Effect/RepeatValue", order = 0)]
+    [CreateAssetMenu(fileName = "RepeatValue", menuName = "Card/Stat/Effect/RepeatValue", order = 0)]
     public class RepeatValueEffectSO : AbstractStatEffectSO
     {
         [field: SerializeField] public int RepeatCount {get; private set;}
@@ -14,7 +14,10 @@ namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
         public override void Apply(StatExecuteContext context)
         {
             for (int i =  0; i < RepeatCount; i++)
-                context.TargetActionCard.ChangeValue(Value);
+                if (addValueType == ActionCardType.Attack)
+                    context.TargetActionCard.AddAttackValue(Value);
+                else 
+                    context.TargetActionCard.AddDefenseValue(Value);
         }
     }
 }

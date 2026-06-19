@@ -5,10 +5,10 @@ namespace _02.Scripts.CardSystem.Cards.StatCards
     public class StatExecuteContext
     {
         public StatCard StatCard;
-        public ActionCard TargetActionCard;
+        public PlayerActionCard TargetActionCard;
         
 
-        public StatExecuteContext(StatCard statCard, ActionCard targetActionCard)
+        public StatExecuteContext(StatCard statCard, PlayerActionCard targetActionCard)
         {
             StatCard = statCard;
             TargetActionCard = targetActionCard;
