@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using _02.Scripts.CoreSystem;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem.Interfaces;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem.Services;
 using _02.Scripts.SlotSystem;
 using DG.Tweening;
 using UnityEngine;
@@ -14,7 +17,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
         [SerializeField] private float riseDuration = 0.2f;
         [SerializeField] private float moveDuration = 0.3f;
         [SerializeField] private float returnDuration = 0.2f;
-        [SerializeField] private GameObject hitParticlePrefab;
+        [SerializeField] private string hitParticleName;
 
         public override async UniTask Execute(ActionCard card, List<AbstractSlot> targets)
         {
@@ -54,7 +57,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
                 {
                     if (capturedTarget == null) return;
 
-                    SpawnHitParticle(capturedTarget.transform.position);
+                    
 
                     if (capturedTarget.CurrentCard != null)
                     {
@@ -67,6 +70,8 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
                         {
                             capturedTarget.CurrentCard.TakeDamage(card.AttackValue, false);
                         }
+                        ServiceLocator.Get<IParticleService>().PlayParticle(hitParticleName, capturedTarget.transform.position);
+                        ServiceLocator.Get<IAudioService>().PlaySFX("CARDATTACK");
                         capturedTarget.CurrentCard.PlayHitShake(card.AttackValue);
                     }
                     else
@@ -88,14 +93,6 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
             seq.Join(card.transform.DORotateQuaternion(slotRot, returnDuration));
             seq.timeScale = PresentationControl.Speed;
             await seq.ToUniTask();
-        }
-        private void SpawnHitParticle(Vector3 position)
-        {
-            if (hitParticlePrefab == null) return;
-            GameObject ps = Instantiate(hitParticlePrefab, position, Quaternion.identity);
-            ParticleSystem particle = ps.GetComponent<ParticleSystem>();
-            float lifetime = particle.main.duration + particle.main.startLifetime.constantMax; 
-            Destroy(ps, lifetime);
         }
     }
 }

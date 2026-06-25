@@ -1193,6 +1193,8 @@ MonoBehaviour:
   dragUpOffset: 1.5
   dragUpDuration: 0.15
   <ActionCardData>k__BackingField: {fileID: 0}
+  targetTypeInfoProp: {fileID: 8540868706671939906}
+  cardTypeInfoProp: {fileID: 8414778926395685929}
   playerChannel: {fileID: 11400000, guid: ed887ac60d5a392478f736897c6cc121, type: 2}
   enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
   shakeStrength: 0.5
@@ -1210,7 +1212,8 @@ GameObject:
   - component: {fileID: 7936969800427864425}
   - component: {fileID: 935665797428899453}
   - component: {fileID: 2045038983639736370}
-  m_Layer: 7
+  - component: {fileID: 8414778926395685929}
+  m_Layer: 10
   m_Name: ActionType Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1274,6 +1277,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8414778926395685929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5859989165158829880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df54f929430474f84619218742ad14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Props.InfoShowProp
+  eventChannel: {fileID: 11400000, guid: 775ccbd246e45e647bac3e2d30aad937, type: 2}
+  defaultTitle: 
+  defaultDescription: 
 --- !u!1 &6270907537469859477
 GameObject:
   m_ObjectHideFlags: 0
@@ -1572,7 +1590,8 @@ GameObject:
   - component: {fileID: 8976910980701522592}
   - component: {fileID: 2341771352834696478}
   - component: {fileID: 74856502033459868}
-  m_Layer: 7
+  - component: {fileID: 8540868706671939906}
+  m_Layer: 10
   m_Name: AttackSlotType Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1636,6 +1655,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8540868706671939906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7295156202234460435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df54f929430474f84619218742ad14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Props.InfoShowProp
+  eventChannel: {fileID: 11400000, guid: 775ccbd246e45e647bac3e2d30aad937, type: 2}
+  defaultTitle: 
+  defaultDescription: 
 --- !u!1 &8611136857211194296
 GameObject:
   m_ObjectHideFlags: 0

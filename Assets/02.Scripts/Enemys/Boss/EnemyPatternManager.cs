@@ -42,6 +42,10 @@ namespace _02.Scripts.Enemys.Boss
             _currentEnemyData = evt.EnemyData;
             _currentTurn = 0;
             _triggeredOnceConditions.Clear();
+
+            if (_currentEnemyData != null)
+                foreach (Gimmick gimmick in _currentEnemyData.Gimmicks)
+                    gimmick.Condition?.ResetRuntimeState();
         }
 
         private void HandleTurnChange(TurnChangeEvent evt) => _currentTurn = evt.CurrentTurn;
@@ -88,6 +92,7 @@ namespace _02.Scripts.Enemys.Boss
                     if (_triggeredOnceConditions.Contains(gimmick.Condition)) continue;
                     _triggeredOnceConditions.Add(gimmick.Condition);
                 }
+                gimmick.Condition?.NotifyTriggered(context);
                 if (gimmick.Pattern != null)
                     patterns.Add(gimmick.Pattern);
             }

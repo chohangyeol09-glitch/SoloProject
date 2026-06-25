@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using _02.Scripts.CoreSystem;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem.Interfaces;
 using _02.Scripts.SlotSystem;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -15,7 +17,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
         [SerializeField] private float riseDuration = 0.2f;
         [SerializeField] private float moveDuration = 0.3f;
         [SerializeField] private float returnDuration = 0.2f;
-        [SerializeField] private GameObject shieldParticlePrefab;
+        [SerializeField] private string shieldParticleName;
 
         public override UniTask Execute(ActionCard card, List<AbstractSlot> targets) => UniTask.CompletedTask;
 
@@ -55,7 +57,9 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
                 seq.AppendCallback(() =>
                 {
                     if (capturedTarget == null) return;
-                    SpawnShieldParticle(capturedTarget.transform.position);
+                    ServiceLocator.Get<IParticleService>().PlayParticle(shieldParticleName, capturedTarget.transform.position);
+                    ServiceLocator.Get<IAudioService>().PlaySFX("CARDDEFENSE");
+
                     capturedTarget.CurrentCard?.AddDefenseValue(defenseValue);
                 });
 
@@ -69,15 +73,6 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.ActionSO
             seq.Join(card.transform.DORotateQuaternion(slotRot, returnDuration));
             seq.timeScale = PresentationControl.Speed;
             seq.OnComplete(() => onComplete?.Invoke());
-        }
-
-        private void SpawnShieldParticle(Vector3 position)
-        {
-            if (shieldParticlePrefab == null) return;
-            GameObject ps = Instantiate(shieldParticlePrefab, position, Quaternion.identity);
-            ParticleSystem particle = ps.GetComponent<ParticleSystem>();
-            float lifetime = particle.main.duration + particle.main.startLifetime.constantMax;
-            Destroy(ps, lifetime);
         }
     }
 }

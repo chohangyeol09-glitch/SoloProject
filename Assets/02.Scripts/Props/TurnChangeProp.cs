@@ -1,6 +1,8 @@
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem.Interfaces;
 using _02.Scripts.InteractionSystem.Interactions;
 using _02.Scripts.UI;
 using UnityEngine;
@@ -21,7 +23,7 @@ namespace _02.Scripts.Props
         {
             base.InitializeModules();
             PropInteraction = GetModule<PropInteraction>();
-            InfoShowProp = GetModule<InfoShowProp>();
+            InfoShowProp = GetComponentInChildren<InfoShowProp>();
             PropInteraction.OnClick += HandleClick;
             PropInteraction.OnHoverEnter += HandleHoverEnter;
             PropInteraction.OnHoverExit += HandleHoverExit;
@@ -32,6 +34,7 @@ namespace _02.Scripts.Props
         private void HandleClick()
         {
             turnEventChannel.RaiseEvent(new TurnEndEvent());
+            ServiceLocator.Get<IAudioService>().PlaySFX("BUTTON");
         }
         
         private void HandleHoverEnter()

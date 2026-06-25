@@ -1,4 +1,3 @@
-﻿using _02.Scripts.CardSystem.Cards.ActionCards.ActionSO;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
@@ -6,18 +5,20 @@ namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
     [CreateAssetMenu(fileName = "RepeatValue", menuName = "Card/Stat/Effect/RepeatValue", order = 0)]
     public class RepeatValueEffectSO : AbstractStatEffectSO
     {
-        [field: SerializeField] public int RepeatCount {get; private set;}
-        [field: SerializeField] public int Value {get; private set;}
+        [SerializeField] private GradeValue repeatCount;
+        [SerializeField] private GradeValue value;
+
+        public override object[] GetDescriptionArgs(CardGrade grade) => new object[] { repeatCount.Get(grade), value.Get(grade) };
 
         public override bool IsActivate(StatExecuteContext context) => true;
 
         public override void Apply(StatExecuteContext context)
         {
-            for (int i =  0; i < RepeatCount; i++)
-                if (addValueType == ActionCardType.Attack)
-                    context.TargetActionCard.AddAttackValue(Value);
-                else 
-                    context.TargetActionCard.AddDefenseValue(Value);
+            CardGrade grade = GetCardGrade(context);
+            int count = repeatCount.Get(grade);
+            int val = value.Get(grade);
+            for (int i = 0; i < count; i++)
+                context.TargetActionCard.ChangeValue(val);
         }
     }
 }

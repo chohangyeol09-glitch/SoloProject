@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25fe8b1f46f7864a8bff1fb2008908e, type: 3}
+  m_Name: "\uC54C\uB9DE\uC740 \uC704\uCE58"
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.StatCards.StatCardDataSO
+  <Name>k__BackingField: "\uC790\uB9AC\uC7A1\uAE30"
+  <Description>k__BackingField: "\uB193\uC740 \uCE74\uB4DC\uC758 \uC2AC\uB86F\uC774
+    3\uBC88\uC9F8 \uC2AC\uB86F\uC774\uB77C\uBA74 {0}\uB9CC\uD07C \uAC12\uC744 \uB354
+    \uC5BB\uC2B5\uB2C8\uB2E4. "
+  <Icon>k__BackingField: {fileID: 21300000, guid: 43981760a2dd3754398e5009f09d366a, type: 3}
+  <Grade>k__BackingField: 1
+  <Cost>k__BackingField: 2
+  value:
+    bronze: 3
+    silver: 4
+    gold: 5
+  Effects:
+  - {fileID: 11400000, guid: 919b5ed1968a4384ea8821cfbb90c9a8, type: 2}

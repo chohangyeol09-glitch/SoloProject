@@ -15,3 +15,7 @@ MonoBehaviour:
   <Stages>k__BackingField:
   - {fileID: 11400000, guid: da892550d120a3747af8383c68a549a0, type: 2}
   - {fileID: 11400000, guid: c02fd66e351bf484ab693e3439d30f13, type: 2}
+  - {fileID: 11400000, guid: bdb59b12e85d42b46867da33aa3165a7, type: 2}
+  - {fileID: 11400000, guid: 492a0e60587eca34cb62f7d99563ec0e, type: 2}
+  - {fileID: 11400000, guid: 310456ba1b7a28d4db009fadfd64bdd6, type: 2}
+  - {fileID: 11400000, guid: 1370151969aa813468f3769b14c2f3c6, type: 2}

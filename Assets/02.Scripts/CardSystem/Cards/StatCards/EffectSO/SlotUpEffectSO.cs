@@ -1,5 +1,4 @@
-﻿using _02.Scripts.CardSystem.Cards.ActionCards;
-using _02.Scripts.CardSystem.Cards.ActionCards.ActionSO;
+using _02.Scripts.CardSystem.Cards.ActionCards;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
@@ -8,8 +7,11 @@ namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
     public class SlotUpEffectSO : AbstractStatEffectSO
     {
         [SerializeField] private int slotNum;
-        [SerializeField] private int addValue;
-        
+        [SerializeField] private GradeValue addValue;
+
+        // {0}=칸 번호(1-based), {1}=더하는 값
+        public override object[] GetDescriptionArgs(CardGrade grade) => new object[] { slotNum + 1, addValue.Get(grade) };
+
         public override bool IsActivate(StatExecuteContext context)
         {
             return slotNum == context.TargetActionCard.OriginalSlot.SlotNumber;
@@ -17,10 +19,7 @@ namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
 
         public override void Apply(StatExecuteContext context)
         {
-            if (addValueType == ActionCardType.Attack)
-                context.TargetActionCard.AddAttackValue(addValue);
-            else
-                context.TargetActionCard.AddDefenseValue(addValue);
+            context.TargetActionCard.ChangeValue(addValue.Get(GetCardGrade(context)));
         }
     }
 }

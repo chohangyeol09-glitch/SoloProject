@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39aebae1f436486b8be7c5703dc197f4, type: 3}
   m_Name: DrawCard_2
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.StatCards.EffectSO.DrawCardEffectSO
+  addValueType: 0
   cardEventChannel: {fileID: 11400000, guid: 2843ddd15e36f6a4daee9239d105351e, type: 2}
-  count: 2
+  count:
+    bronze: 1
+    silver: 2
+    gold: 3

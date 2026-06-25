@@ -52,10 +52,11 @@ namespace _02.Scripts.SlotSystem
             foreach (PlayerSlot slot in _slotLogic.PlayerSlots)
             {
                 if (slot.CurrentCard == null) continue;
+                if (slot.IsSealed) continue;
                 await ExecuteCard(slot);
             }
 
-            if (Enemy.Instance.IsDead) return;   
+            if (Enemy.Instance.IsDead) return;
 
             await RaiseEnemyActionStart();
 
@@ -87,17 +88,21 @@ namespace _02.Scripts.SlotSystem
             ActionCard card = slot.CurrentCard;
             List<AbstractSlot> targets = _slotLogic.GetTargetSlots(slot, card.ActionCardData.TargetRangeType);
 
-            EffectExecuteContext context = new EffectExecuteContext(card, targets);
-
-            foreach (AbstractActionEffectSO effect in card.GetBeforeEffects())
-                if (effect.IsActivate(context))
-                    await effect.Apply(context, targets);
+            foreach (RuntimeActionEffect re in card.GetBeforeEffects())
+            {
+                EffectExecuteContext context = new EffectExecuteContext(card, targets, slot, re.Grade);
+                if (re.Effect.IsActivate(context))
+                    await re.Effect.Apply(context, targets);
+            }
 
             await card.ActionCardData.Action.Execute(card, targets);
 
-            foreach (AbstractActionEffectSO effect in card.GetAfterEffects())
-                if (effect.IsActivate(context))
-                    await effect.Apply(context, targets);
+            foreach (RuntimeActionEffect re in card.GetAfterEffects())
+            {
+                EffectExecuteContext context = new EffectExecuteContext(card, targets, slot, re.Grade);
+                if (re.Effect.IsActivate(context))
+                    await re.Effect.Apply(context, targets);
+            }
         }
 
         

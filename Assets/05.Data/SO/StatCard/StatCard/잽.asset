@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: "\uC7BD"
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.StatCards.StatCardDataSO
   <Name>k__BackingField: "\uC7BD"
-  <Description>k__BackingField: "\uAC12\uC744 1 \uB354\uD569\uB2C8\uB2E4"
-  <Icon>k__BackingField: {fileID: 21300000, guid: 6e6ba8ae33df7544c8621b43c09aa20a, type: 3}
+  <Description>k__BackingField: 
+  <Icon>k__BackingField: {fileID: 21300000, guid: 2a828bd51f225724ca98db2ab28668b0, type: 3}
   <Grade>k__BackingField: 1
   <Cost>k__BackingField: 0
-  <Value>k__BackingField: 1
+  value:
+    bronze: 2
+    silver: 3
+    gold: 4
   Effects: []

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: DefaultStatCardListTest
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.StatCards.DefaultStatCardListSO
   <StatCards>k__BackingField:
-  - {fileID: 11400000, guid: cfff979bbdce8f54bb3544f764beec9e, type: 2}
-  - {fileID: 11400000, guid: c56cb3876a3e3ef498eff48e5f008dd2, type: 2}
-  - {fileID: 11400000, guid: dcb512b7856f3584e9dab3710ce14e98, type: 2}
+  - {fileID: 11400000, guid: 21a489b647c1ce646880a1e44da0d660, type: 2}
   - {fileID: 11400000, guid: f061f72bfb31a81439cf0ecd6e468039, type: 2}
+  - {fileID: 11400000, guid: dcb512b7856f3584e9dab3710ce14e98, type: 2}
+  - {fileID: 11400000, guid: dcb512b7856f3584e9dab3710ce14e98, type: 2}
+  - {fileID: 11400000, guid: dcb512b7856f3584e9dab3710ce14e98, type: 2}

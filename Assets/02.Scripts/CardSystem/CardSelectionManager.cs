@@ -10,6 +10,7 @@ using _02.Scripts.Players;
 using _02.Scripts.SlotSystem;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem
@@ -36,6 +37,9 @@ namespace _02.Scripts.CardSystem
         [SerializeField] private Transform createPoint;
         [SerializeField] private Transform sortCenter;
         [SerializeField] private float cardSpacing = 2f;
+        
+        [Header("Tutorial")]
+        [SerializeField] private GameStartSeq gameStartSeq;
 
         public event Action OnGameStartSelectionComplete;
 
@@ -74,18 +78,40 @@ namespace _02.Scripts.CardSystem
         }
 
 #region StartSeq
-        private void StartGameCardSelection() => StartCoroutine(GameStartSequenceCoroutine());
+        public void StartGameCardSelection() => StartCoroutine(GameStartSequenceCoroutine());
 
         private IEnumerator GameStartSequenceCoroutine()
         {
             using (PresentationControl.Busy())
             {
+                int count = 0;
                 foreach (CardGrade grade in GameStartSequence)
                 {
                     _roundComplete = false;
                     ShowSelection(CardPoolType.Action, grade);
+                    gameStartSeq.ChangeQuestText($"무기 카드 선택하기: {count+1} / 4");
+                    count += 1;
                     yield return new WaitUntil(() => _roundComplete);
                 }
+                gameStartSeq.NextTutorial();
+                for (int i = 0; i < 3; i++)
+                {
+                    _roundComplete = false;
+                    ShowSelection(CardPoolType.Stat, CardGrade.BRONZE);
+                    gameStartSeq.ChangeQuestText($"스텟카드 선택하여 댁에 추가하기: {i+1} / 3");
+                    yield return new WaitUntil(() => _roundComplete);
+                }
+
+                gameStartSeq.NextTutorial();
+                for (int i = 0; i < 2; i++)
+                {
+                    _roundComplete = false;
+                    ShowSelection(CardPoolType.ActionEffect, CardGrade.BRONZE);
+                    gameStartSeq.ChangeQuestText($"효과카드 선택하고, 효과 추가하기: {i+1} / 2");
+                    yield return new WaitUntil(() => _roundComplete);
+                }
+                
+                gameStartSeq.NextTutorial();
             }
 
             OnGameStartSelectionComplete?.Invoke();
@@ -95,7 +121,7 @@ namespace _02.Scripts.CardSystem
         private void ShowSelection(CardPoolType type, CardGrade grade)
         {
             List<(CardPoolType type, ScriptableObject data)> picks = PickCards(type, grade, selectionCount);
-            SpawnCards(picks);
+            SpawnCards(picks, grade);
             _isSelecting = true;
             ChangeCamera.Instance?.SetTopView();
         }
@@ -130,9 +156,11 @@ namespace _02.Scripts.CardSystem
             {
                 GetNextEmptyStorageSlot()?.SetCurrentCard(actionCard);
             }
-            else if (selected is ActionEffectCard)
+            else if (selected is ActionEffectCard effectCard)
             {
-                
+                // 효과카드는 실제로 사용(액션카드에 적용)될 때까지 라운드를 완료하지 않는다.
+                effectCard.OnCardUsed += CompleteSelection;
+                return;
             }
             else if (selected is StatCard statCard)
             {
@@ -183,7 +211,7 @@ namespace _02.Scripts.CardSystem
                         all.Add((CardPoolType.Action, d));
                     break;
                 case CardPoolType.ActionEffect:
-                    foreach (AbstractActionEffectSO d in gradePool.GetEffectsByGrade(grade))
+                    foreach (AbstractActionEffectSO d in gradePool.GetEffects())
                         all.Add((CardPoolType.ActionEffect, d));
                     break;
                 case CardPoolType.Stat:
@@ -196,21 +224,21 @@ namespace _02.Scripts.CardSystem
             return all.Count <= count ? all : all.GetRange(0, count);
         }
 
-        private void SpawnCards(List<(CardPoolType type, ScriptableObject data)> picks)
+        private void SpawnCards(List<(CardPoolType type, ScriptableObject data)> picks, CardGrade grade)
         {
             int total = picks.Count;
             for (int i = 0; i < total; i++)
             {
                 float x = (i - (total - 1) * 0.5f) * cardSpacing;
                 Vector3 pos = createPoint.transform.position;
-                AbstractCard card = SpawnCard(picks[i].type, picks[i].data, pos);
+                AbstractCard card = SpawnCard(picks[i].type, picks[i].data, pos, grade);
                 card.transform.DOMove(sortCenter.position + new Vector3(x, 0f, 0f), 0.4f).SetEase(Ease.OutQuint);
                 if (card != null)
                     _selectionCards.Add(card);
             }
         }
 
-        private AbstractCard SpawnCard(CardPoolType type, ScriptableObject data, Vector3 pos)
+        private AbstractCard SpawnCard(CardPoolType type, ScriptableObject data, Vector3 pos, CardGrade grade)
         {
             GameObject prefab = type switch
             {
@@ -232,12 +260,15 @@ namespace _02.Scripts.CardSystem
 
                 case CardPoolType.ActionEffect:
                     var effectCard = obj.GetComponent<ActionEffectCard>();
-                    effectCard.SetEffect(data as AbstractActionEffectSO);
+                    effectCard.SetEffect(data as AbstractActionEffectSO, grade);
                     return effectCard;
 
                 case CardPoolType.Stat:
                     var statCard = obj.GetComponent<StatCard>();
-                    statCard.SetStatData(data as StatCardDataSO);
+                    // 같은 SO를 등급별로 쓰기 위해 복제 후 보상 등급을 박는다.
+                    StatCardDataSO statData = Instantiate(data as StatCardDataSO);
+                    statData.SetGrade(grade);
+                    statCard.SetStatData(statData);
                     return statCard;
             }
             return null;

@@ -58,8 +58,12 @@ namespace _02.Scripts.Players
 
         private void Update()
         {
-            if (PresentationControl.IsBusy) return;
-            
+            // Busy 중에는 효과카드 적용 드래그(DraggableWhileBusy)만 허용한다.
+            bool effectDragging = _isDragging
+                && _draggable.Transform.TryGetComponent<AbstractCard>(out var dragCard)
+                && dragCard.DraggableWhileBusy;
+            if (PresentationControl.IsBusy && !effectDragging) return;
+
             _ray = Camera.main.ScreenPointToRay(_mousePos);
 
             if (!_isDragging)
@@ -164,14 +168,17 @@ namespace _02.Scripts.Players
 
         private void ClickDown()
         {
-            if (_isDragging || PresentationControl.IsBusy) return;
+            if (_isDragging) return;
             Ray clickRay = Camera.main.ScreenPointToRay(_mousePos);
 
             if (Physics.Raycast(clickRay, out RaycastHit cardHit, Mathf.Infinity, cardLayer))
             {
                 AbstractCard card = cardHit.transform.GetComponent<AbstractCard>();
                 if (card.CardInteraction == null) return;
+                // Busy 중에는 효과카드 적용 드래그만 허용
+                if (PresentationControl.IsBusy && !card.DraggableWhileBusy) return;
                 if (card.IsUpDownMoving) return;
+                if (card is PlayerActionCard playerCard && playerCard.OriginalSlot != null && playerCard.OriginalSlot.IsSealed) return;
 
                 _hoveredObject?.HandleHoverExit();
                 _hoveredObject = null;
@@ -187,6 +194,8 @@ namespace _02.Scripts.Players
                 return;
             }
 
+            // 프롭 클릭은 Busy 중 차단
+            if (PresentationControl.IsBusy) return;
             if (Physics.Raycast(clickRay, out RaycastHit propHit, Mathf.Infinity, propLayer))
             {
                 propHit.transform.GetComponentInChildren<PropInteraction>()?.HandleClick();
@@ -195,7 +204,11 @@ namespace _02.Scripts.Players
 
         private void ClickUp()
         {
-            if (!_isDragging || PresentationControl.IsBusy) return;
+            if (!_isDragging) return;
+            // Busy 중에는 효과카드 적용 드래그의 드롭만 허용
+            bool effectDragging = _draggable.Transform.TryGetComponent<AbstractCard>(out var dragCard)
+                && dragCard.DraggableWhileBusy;
+            if (PresentationControl.IsBusy && !effectDragging) return;
 
             Ray clickRay = Camera.main.ScreenPointToRay(_mousePos);
             if (Physics.Raycast(clickRay, out RaycastHit dropHit, Mathf.Infinity, _draggable.DropLayer))

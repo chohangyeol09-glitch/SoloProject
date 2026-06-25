@@ -1,4 +1,4 @@
-﻿using _02.Scripts.CoreSystem.EventChannel;
+using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvent;
 using UnityEngine;
 
@@ -8,14 +8,14 @@ namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
     public class DrawCardEffectSO : AbstractStatEffectSO
     {
         [SerializeField] private EventChannelSO cardEventChannel;
-        [SerializeField] private int count;
+        [SerializeField] private GradeValue count;
+
+        public override object[] GetDescriptionArgs(CardGrade grade) => new object[] { count.Get(grade) };
         public override bool IsActivate(StatExecuteContext context) => true;
 
         public override void Apply(StatExecuteContext context)
         {
-            DrawCardEvent drawCardEvent = new DrawCardEvent();
-            drawCardEvent.Init(count);
-            cardEventChannel.RaiseEvent(drawCardEvent);
+            cardEventChannel.RaiseEvent(new DrawCardEvent().Init(count.Get(GetCardGrade(context))));
         }
     }
 }

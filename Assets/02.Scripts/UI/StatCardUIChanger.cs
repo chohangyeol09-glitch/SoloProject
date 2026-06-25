@@ -14,6 +14,7 @@ namespace _02.Scripts.UI
         [SerializeField] private Image gradeOutline;
         [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private TextMeshProUGUI costText;
+        [SerializeField] private TextMeshProUGUI valueText;
         
         private ModuleOwner _owner;
         public void Initialize(ModuleOwner owner)
@@ -24,9 +25,11 @@ namespace _02.Scripts.UI
         public void SetUI(StatCardDataSO data)
         {
             nameText.text = data.Name;
-            descriptionText.text = data.Description;
+            descriptionText.text = data.GetDescription();
             mainIcon.sprite = data.Icon;
             costText.text = data.Cost.ToString();
+            if (valueText != null)
+                valueText.text = data.Value.ToString();
             gradeOutline.color = data.Grade switch
             {
                 CardGrade.BRONZE => Color.saddleBrown,

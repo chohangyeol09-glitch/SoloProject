@@ -9,6 +9,9 @@ namespace _02.Scripts.CardSystem
     {
         public CardInteraction CardInteraction { get; private set; }
         public bool IsUpDownMoving { get; private set; }
+
+        // 프레젠테이션(Busy) 중에도 집어서 드래그할 수 있는 카드인지. 기본은 불가.
+        public virtual bool DraggableWhileBusy => false;
         [SerializeField] protected LayerMask dropLayer;
 
         protected Vector3 OriginPos { get; private set; }

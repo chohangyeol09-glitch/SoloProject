@@ -1,4 +1,3 @@
-﻿using _02.Scripts.CardSystem.Cards.ActionCards.ActionSO;
 using UnityEngine;
 
 namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
@@ -7,7 +6,10 @@ namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
     public class UpperValueEffect : AbstractStatEffectSO
     {
         [SerializeField] private int upperValue;
-        [SerializeField] private int addValue;
+        [SerializeField] private GradeValue addValue;
+
+        public override object[] GetDescriptionArgs(CardGrade grade) => new object[] { upperValue, addValue.Get(grade) };
+
         public override bool IsActivate(StatExecuteContext context)
         {
             return context.TargetActionCard.AttackValue + context.TargetActionCard.DefenseValue > upperValue;
@@ -15,10 +17,7 @@ namespace _02.Scripts.CardSystem.Cards.StatCards.EffectSO
 
         public override void Apply(StatExecuteContext context)
         {
-            if (addValueType == ActionCardType.Attack)
-                context.TargetActionCard.AddAttackValue(addValue);
-            if  (addValueType == ActionCardType.Defense)
-                context.TargetActionCard.AddDefenseValue(addValue);
+            context.TargetActionCard.ChangeValue(addValue.Get(GetCardGrade(context)));
         }
     }
 }

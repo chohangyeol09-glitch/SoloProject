@@ -18,5 +18,9 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards.EffectSO
         public abstract bool IsActivate(EffectExecuteContext context);
 
         public abstract UniTask Apply(EffectExecuteContext context, List<AbstractSlot> targets);
+
+        public virtual int GetDisplayValue(CardGrade grade) => DisplayValue;
+
+        public virtual string GetDescription(CardGrade grade) => string.Format(Description, GetDisplayValue(grade));
     }
 }

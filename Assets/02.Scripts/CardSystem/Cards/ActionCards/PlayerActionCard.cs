@@ -5,7 +5,6 @@ using _02.Scripts.CardSystem.Cards.StatCards;
 using _02.Scripts.CardSystem.Cards.StatCards.EffectSO;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.CardEvent.StatCardEvents;
-using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using _02.Scripts.InteractionSystem;
 using _02.Scripts.InteractionSystem.Interactions;
@@ -138,8 +137,16 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
 
         private void HandleEffectCardDrop(ActionEffectCard effectCard)
         {
-            AddRuntimeEffect(effectCard.Effect);
-            UIChanger.AddEffectIcon(effectCard.Effect);
+            // 이미 effect가 최대치(3개)인 카드에는 추가 불가 → 효과카드를 원래 자리로 되돌린다.
+            if (!AddRuntimeEffect(effectCard.Effect, effectCard.Grade))
+            {
+                effectCard.ReturnToOrigin();
+                OnDropSuccess?.Invoke(false);
+                _outline.OutlineParameters.Color = Color.clear;
+                return;
+            }
+
+            UIChanger.AddEffectIcon(effectCard.Effect, effectCard.Grade);
             effectCard.OnUsed();
             OnDropSuccess?.Invoke(true);
             _outline.OutlineParameters.Color = Color.clear;

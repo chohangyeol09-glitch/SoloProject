@@ -14,7 +14,7 @@ namespace _02.Scripts.Props
         {
             nameText.text = data.Name;
             icon.sprite = data.Icon;
-            descriptionText.text = data.Description;
+            descriptionText.text = data.GetDescription(data.Grade);
         }
     }
 }

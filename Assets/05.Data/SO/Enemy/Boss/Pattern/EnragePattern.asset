@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1657711c056fbfa47a23384ebda02bf0, type: 3}
+  m_Name: EnragePattern
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemys.Boss.BossPatterns.EnragePatternSO
+  <PatternTrigger>k__BackingField: ENRAGE
+  _enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 651523dfee39cdc4098bea2322a6ec01, type: 3}
+  <Title>k__BackingField: "\uC0AC\uAE30 \uC99D\uC9C4"
+  <Description>k__BackingField: "\uCE74\uB4DC\uB4E4\uC5D0 \uACF5\uACA9\uB825\uC744
+    {0} \uCD94\uAC00\uD569\uB2C8\uB2E4."
+  amount: 1
+  particleName: CARDATTACKBUFF
+  yOffset: 0

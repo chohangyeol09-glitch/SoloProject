@@ -12,5 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3d45fbdc7bc45a79e8f9c0fb36e38eb, type: 3}
   m_Name: RepeatValue_2_2
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.StatCards.EffectSO.RepeatValueEffectSO
-  <RepeatCount>k__BackingField: 2
-  <Value>k__BackingField: 2
+  addValueType: 0
+  repeatCount:
+    bronze: 1
+    silver: 2
+    gold: 2
+  value:
+    bronze: 2
+    silver: 3
+    gold: 4

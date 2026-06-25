@@ -18,7 +18,7 @@ MonoBehaviour:
   <Title>k__BackingField: "\uB099\uB8B0"
   <Description>k__BackingField: "\uBAA8\uB4E0 \uCE78\uC5D0 {0} \uD53C\uD574\uB97C
     \uAC00\uD569\uB2C8\uB2E4."
-  attackParticle: {fileID: 1887159375177322, guid: 3bc5000d25fb154448f96dd3c713e545, type: 3}
+  attackParticleName: LIGHTNING
   yOffset: 0.3
   damageValue: 3
   playerChannel: {fileID: 11400000, guid: ed887ac60d5a392478f736897c6cc121, type: 2}

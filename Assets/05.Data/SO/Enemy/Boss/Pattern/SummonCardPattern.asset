@@ -17,6 +17,6 @@ MonoBehaviour:
   <Icon>k__BackingField: {fileID: 21300000, guid: 6c46112b100e8564ebd5b1e4ad8da82c, type: 3}
   <Title>k__BackingField: "\uC18C\uD658\uC220"
   <Description>k__BackingField: "\uAC15\uB825\uD55C \uC801\uC744 \uC18C\uD658\uD569\uB2C8\uB2E4."
-  <CardData>k__BackingField: {fileID: 11400000, guid: 6c4e49d6eb4ab2e4e930d71ae822df2b, type: 2}
+  <CardData>k__BackingField: {fileID: 11400000, guid: ab82724685498ce43810001e908e43fd, type: 2}
   <AttackValue>k__BackingField: 5
   <DefenseValue>k__BackingField: 25

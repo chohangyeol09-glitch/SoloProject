@@ -13,8 +13,21 @@ namespace _02.Scripts.CardSystem.Cards.StatCards
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public CardGrade Grade { get; private set; }
         [field: SerializeField]  public int Cost {get; private set;}
-        [field: SerializeField] public int Value {get; private set;}
+        [SerializeField] private GradeValue value;
         public List<AbstractStatEffectSO> Effects = new();
+
+        public int Value => value.Get(Grade);
+
+        public void SetGrade(CardGrade grade) => Grade = grade;
+
+        public string GetDescription()
+        {
+            List<object> args = new();
+            foreach (AbstractStatEffectSO effect in Effects)
+                if (effect != null)
+                    args.AddRange(effect.GetDescriptionArgs(Grade));
+            return args.Count > 0 ? string.Format(Description, args.ToArray()) : Description;
+        }
 
         private void OnValidate()
         {

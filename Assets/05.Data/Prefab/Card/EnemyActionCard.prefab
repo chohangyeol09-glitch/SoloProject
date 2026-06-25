@@ -925,7 +925,7 @@ MonoBehaviour:
   attackSlotTypeIcon: {fileID: 6838694632833397093}
   actionTypeIcon: {fileID: 2580419540336621770}
   effectLayout: {fileID: 3998131654614128795}
-  effectIconPrefab: {fileID: 545254672060827414, guid: 6ff4330bb5604e94988f45b0e821701d, type: 3}
+  effectIconPrefab: {fileID: 2203165635001060789, guid: acdc1a27dbdbe0d4097a6ebff10b6829, type: 3}
   attackValueText: {fileID: 9112923758732022792}
   defenseValueText: {fileID: 2387064959282559971}
   slotTargetRangeSpriteSO: {fileID: 11400000, guid: 8ecce18af5137504a9281a1320a33b84, type: 2}
@@ -1290,7 +1290,8 @@ GameObject:
   - component: {fileID: 7170959664114220453}
   - component: {fileID: 2772575707783256191}
   - component: {fileID: 6838694632833397093}
-  m_Layer: 7
+  - component: {fileID: 3904825278218299698}
+  m_Layer: 10
   m_Name: AttackSlotType Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1354,6 +1355,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3904825278218299698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002584359580656035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df54f929430474f84619218742ad14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Props.InfoShowProp
+  eventChannel: {fileID: 11400000, guid: 775ccbd246e45e647bac3e2d30aad937, type: 2}
+  defaultTitle: 
+  defaultDescription: 
 --- !u!1 &7396266435479984449
 GameObject:
   m_ObjectHideFlags: 0
@@ -1440,7 +1456,8 @@ GameObject:
   - component: {fileID: 8515728575173855548}
   - component: {fileID: 6013213236267785588}
   - component: {fileID: 2580419540336621770}
-  m_Layer: 7
+  - component: {fileID: 6100689244796538084}
+  m_Layer: 10
   m_Name: ActionType Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1504,6 +1521,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6100689244796538084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7691555909433022417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df54f929430474f84619218742ad14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Props.InfoShowProp
+  eventChannel: {fileID: 11400000, guid: 775ccbd246e45e647bac3e2d30aad937, type: 2}
+  defaultTitle: 
+  defaultDescription: 
 --- !u!1 &7701671092396572539
 GameObject:
   m_ObjectHideFlags: 0
@@ -1650,6 +1682,8 @@ MonoBehaviour:
   dragUpOffset: 1.5
   dragUpDuration: 0.15
   <ActionCardData>k__BackingField: {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
+  targetTypeInfoProp: {fileID: 3904825278218299698}
+  cardTypeInfoProp: {fileID: 6100689244796538084}
   playerChannel: {fileID: 11400000, guid: ed887ac60d5a392478f736897c6cc121, type: 2}
   enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
   shakeStrength: 0.5

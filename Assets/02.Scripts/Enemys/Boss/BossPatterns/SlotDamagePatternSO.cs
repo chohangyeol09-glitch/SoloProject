@@ -1,6 +1,8 @@
 using Cysharp.Threading.Tasks;
 using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem.Interfaces;
 using _02.Scripts.SlotSystem.Slots;
 using UnityEngine;
 
@@ -9,7 +11,7 @@ namespace _02.Scripts.Enemys.Boss.BossPatterns
     [CreateAssetMenu(fileName = "SlotDamagePattern", menuName = "Enemy/Pattern/SlotDamage")]
     public class SlotDamagePatternSO : AbstractEnemyPatternSO
     {
-        [SerializeField] private GameObject attackParticle;
+        [SerializeField] private string attackParticleName;
         [SerializeField] private float yOffset;
         [SerializeField] private int damageValue;
         [SerializeField] private EventChannelSO playerChannel;
@@ -32,13 +34,13 @@ namespace _02.Scripts.Enemys.Boss.BossPatterns
             if (_currentTargetSlot.CurrentCard != null)
             {
                 Vector3 spawnPos = _currentTargetSlot.CurrentCard.transform.position + Vector3.up * yOffset;
-                Instantiate(attackParticle, spawnPos, Quaternion.identity);
+                ServiceLocator.Get<IParticleService>().PlayParticle(attackParticleName, spawnPos);
                 _currentTargetSlot.CurrentCard.TakeDamage(damageValue);
             }
             else
             {
                 Vector3 spawnPos = _currentTargetSlot.transform.position + Vector3.up * yOffset;
-                Instantiate(attackParticle, spawnPos, Quaternion.identity);
+                ServiceLocator.Get<IParticleService>().PlayParticle(attackParticleName, spawnPos);
                 playerChannel.RaiseEvent(new TakeDamageEvent().Init(damageValue));
             }
 

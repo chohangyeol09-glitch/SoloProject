@@ -1,3 +1,4 @@
+using System;
 using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
 using _02.Scripts.UI;
 using DG.Tweening;
@@ -10,7 +11,13 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         [SerializeField] private AbstractActionEffectSO effect;
         public AbstractActionEffectSO Effect => effect;
 
+        public event Action OnCardUsed;
+
+        // 카드 선택 중(Busy 상태) 액션카드에 적용하기 위해 드래그가 허용돼야 한다.
+        public override bool DraggableWhileBusy => true;
+
         public ActionEffectCardUIChanger UIChanger { get; private set; }
+        public CardGrade Grade { get; private set; }
         private Vector3 _originPos;
         private Quaternion _originRot;
 
@@ -20,7 +27,10 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             UIChanger = GetModule<ActionEffectCardUIChanger>();
 
             if (effect != null)
-                UIChanger?.SetUI(effect);
+            {
+                Grade = effect.Grade;
+                UIChanger?.SetUI(effect, Grade);
+            }
         }
 
         protected override void HandleDragStart(Vector3 mouseWorldPos)
@@ -38,10 +48,11 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
             seq.Join(transform.DORotateQuaternion(_originRot, 0.3f));
         }
 
-        public void SetEffect(AbstractActionEffectSO effectSO)
+        public void SetEffect(AbstractActionEffectSO effectSO, CardGrade grade)
         {
             effect = effectSO;
-            UIChanger?.SetUI(effect);
+            Grade = grade;
+            UIChanger?.SetUI(effect, Grade);
         }
 
         public void ReturnToOrigin()
@@ -55,6 +66,7 @@ namespace _02.Scripts.CardSystem.Cards.ActionCards
         public void OnUsed()
         {
             transform.DOKill();
+            OnCardUsed?.Invoke();
             Destroy(gameObject);
         }
     }

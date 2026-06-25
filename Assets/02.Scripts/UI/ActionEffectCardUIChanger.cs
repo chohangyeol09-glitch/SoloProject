@@ -27,16 +27,16 @@ namespace _02.Scripts.UI
             _owner = owner;
         }
 
-        public void SetUI(AbstractActionEffectSO data)
+        public void SetUI(AbstractActionEffectSO data, CardGrade grade)
         {
             nameText.text = data.Name;
-            descriptionText.text = data.Description;
+            descriptionText.text = data.GetDescription(grade);
             mainIcon.sprite = data.Icon;
 
             bool show = data.HasDisplayValue;
             valueText.gameObject.SetActive(show);
             if (show)
-                valueText.text = data.DisplayValue.ToString();
+                valueText.text = data.GetDisplayValue(grade).ToString();
             
             
         }

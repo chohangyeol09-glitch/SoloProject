@@ -17,7 +17,7 @@ namespace _02.Scripts.Props
         {
             base.InitializeModules();
             PropInteraction = GetModule<PropInteraction>();
-            InfoShowProp = GetModule<InfoShowProp>();
+            InfoShowProp = GetComponentInChildren<InfoShowProp>();
             InfoShowProp.SetInfo("전등", "전기를 절약하자");
             PropInteraction.OnClick += HandleClick;
         }

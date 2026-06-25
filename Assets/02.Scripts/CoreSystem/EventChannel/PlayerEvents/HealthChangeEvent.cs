@@ -2,11 +2,14 @@
 {
     public class HealthChangedEvent : GameEvent
     {
+        public int MaxHealth;
         public int CurrentHealth;
 
-        public HealthChangedEvent Init(int health)
+        public HealthChangedEvent Init(int maxHealth,int currentHealth)
         {
-            CurrentHealth = health; return this;
+            MaxHealth = maxHealth;
+            CurrentHealth = currentHealth; 
+            return this;
         }
     }
 }

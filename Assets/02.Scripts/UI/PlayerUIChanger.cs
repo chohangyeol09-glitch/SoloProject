@@ -39,7 +39,7 @@ namespace _02.Scripts.UI
             => costText.text = evt.CurrentCost.ToString();
 
         private void HandleChangeHealth(HealthChangedEvent evt)
-            => healthText.text = evt.CurrentHealth.ToString();
+            => healthText.text = evt.CurrentHealth + "/" + evt.MaxHealth;
 
         private void HandleDeckCountChanged(DeckCountChangedEvent evt)
         {

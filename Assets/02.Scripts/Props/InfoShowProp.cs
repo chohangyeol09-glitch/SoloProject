@@ -1,17 +1,20 @@
 ﻿using _02.Scripts.CoreSystem.EventChannel;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.ModuleSystem;
+using _02.Scripts.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace _02.Scripts.UI
+namespace _02.Scripts.Props
 {
-    public class InfoShowProp : MonoBehaviour, IInfoShowable, IPointerEnterHandler, IPointerExitHandler, IModule
+    public class InfoShowProp : MonoBehaviour, IInfoShowable, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private EventChannelSO eventChannel;
-
-        private string _title;
-        private string _description;
+        [SerializeField] private string defaultTitle;
+        [TextArea]
+        [SerializeField] private string defaultDescription;
+        private string _title = "";
+        private string _description = "";
 
         public void SetInfo(string title, string description)
         {
@@ -21,7 +24,14 @@ namespace _02.Scripts.UI
 
         public void ShowInfo()
         {
-            eventChannel.RaiseEvent(new InfoShowEvent().Init(_title, _description));
+            if (_title == "" || _description == "")
+            {
+                eventChannel.RaiseEvent(new InfoShowEvent().Init(defaultTitle, defaultDescription));
+            }
+            else
+            {
+                eventChannel.RaiseEvent(new InfoShowEvent().Init(_title, _description));
+            }
         }
 
         public void HideInfo()
@@ -29,11 +39,11 @@ namespace _02.Scripts.UI
             eventChannel.RaiseEvent(new InfoHideEvent());
         }
 
-        public void OnPointerEnter(PointerEventData eventData) => ShowInfo();
-        public void OnPointerExit(PointerEventData eventData) => HideInfo();
-        public void Initialize(ModuleOwner owner)
+        public void OnPointerEnter(PointerEventData eventData)
         {
-            
+            ShowInfo();
         }
+
+        public void OnPointerExit(PointerEventData eventData) => HideInfo();
     }
 }

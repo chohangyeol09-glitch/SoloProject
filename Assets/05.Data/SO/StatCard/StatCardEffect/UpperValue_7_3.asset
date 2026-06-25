@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 863adf8807434455b99521f48818f95c, type: 3}
   m_Name: UpperValue_7_3
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.StatCards.EffectSO.UpperValueEffect
-  upperValue: 7
-  addValue: 3
+  upperValue: 6
+  addValue:
+    bronze: 3
+    silver: 5
+    gold: 5

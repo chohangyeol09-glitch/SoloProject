@@ -1,6 +1,7 @@
     using _02.Scripts.CardSystem.Cards.ActionCards;
 using _02.Scripts.CardSystem.Cards.ActionCards.EffectSO;
 using _02.Scripts.CardSystem.Cards.CardEnumSprite;
+using _02.Scripts.CardSystem;
 using _02.Scripts.CoreSystem.ModuleSystem;
 using TMPro;
 using UnityEngine;
@@ -51,20 +52,20 @@ namespace _02.Scripts.UI
             actionTypeIcon.sprite = actionTypeSpriteSO.GetSprite(data.ActionCardType);
 
             foreach (AbstractActionEffectSO effectSO in data.BeforeEffects)
-                SpawnEffectIcon(effectSO);
+                SpawnEffectIcon(effectSO, effectSO.Grade);
             foreach (AbstractActionEffectSO effectSO in data.AfterEffects)
-                SpawnEffectIcon(effectSO);
+                SpawnEffectIcon(effectSO, effectSO.Grade);
         }
 
-        public void AddEffectIcon(AbstractActionEffectSO effect)
+        public void AddEffectIcon(AbstractActionEffectSO effect, CardGrade grade)
         {
-            SpawnEffectIcon(effect);
+            SpawnEffectIcon(effect, grade);
         }
 
-        private void SpawnEffectIcon(AbstractActionEffectSO effect)
+        private void SpawnEffectIcon(AbstractActionEffectSO effect, CardGrade grade)
         {
             GameObject obj = Instantiate(effectIconPrefab, effectLayout.transform);
-            obj.GetComponent<EffectIconView>().Setup(effect);
+            obj.GetComponent<EffectIconView>().Setup(effect, grade);
         }
 
         private void HandleAttackValueChanged(int value)

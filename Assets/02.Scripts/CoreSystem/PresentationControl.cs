@@ -5,8 +5,6 @@ namespace _02.Scripts.CoreSystem
 {
     public static class PresentationControl
     {
-        public const string GameplayId = "gameplay";   
-
         private static int _busyCount;
         public static bool IsBusy => _busyCount > 0;
 
@@ -17,9 +15,9 @@ namespace _02.Scripts.CoreSystem
         public static void SetSpeed(float speed)
         {
             speed = Mathf.Clamp(speed, 0.5f, 3f);
-            if (Mathf.Approximately(speed, Speed)) return;   // 변화 없으면 무시
+            if (Mathf.Approximately(speed, Speed)) return;   
             Speed = speed;
-            OnSpeedChanged?.Invoke(Speed);                    // ← 구독자(UI)에게 알림
+            OnSpeedChanged?.Invoke(Speed);                
         }
         public static void AddSpeed(float speed) => SetSpeed(Speed + speed);
         public static void CycleSpeed() => SetSpeed(Speed >= 2f ? 1f : 2f);  

@@ -1,8 +1,10 @@
 using _02.Scripts.CoreSystem.EventChannel;
+using _02.Scripts.CoreSystem.EventChannel.EnemyEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents;
 using _02.Scripts.CoreSystem.EventChannel.GameEvents.StageEvents;
 using _02.Scripts.CoreSystem.EventChannel.PlayerEvents;
 using _02.Scripts.Enemys;
+using _02.Scripts.Props;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +20,9 @@ namespace _02.Scripts.UI
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private TextMeshProUGUI descriptionText;
-
+        [SerializeField] private TextMeshProUGUI rewardText;
+        [SerializeField] private TextMeshProUGUI respawnCountText;
+    
         [SerializeField] private Transform patternLayout;
         [SerializeField] private GameObject iconPrefab;
 
@@ -28,6 +32,7 @@ namespace _02.Scripts.UI
             enemyChannel.AddListener<HealthChangedEvent>(HandleHealthChange);
             enemyChannel.AddListener<InfoShowEvent>(HandleInfoShow);
             enemyChannel.AddListener<InfoHideEvent>(HandleInfoHide);
+            enemyChannel.AddListener<RespawnCountChangedEvent>(HandleRespawnCountChanged);
             gameChannel.AddListener<StageStartEvent>(HandleEnemyInfoChange);
         }
 
@@ -40,6 +45,7 @@ namespace _02.Scripts.UI
         {
             _maxHealth = evt.EnemyData.MaxHealth;
             healthText.text = evt.EnemyData.MaxHealth + " / " + _maxHealth;
+            respawnCountText.text = evt.EnemyData.MaxRespawnCount + " / " + evt.EnemyData.MaxRespawnCount;
             foreach (Transform child in patternLayout.transform)
             {
                 Destroy(child.gameObject);
@@ -49,7 +55,7 @@ namespace _02.Scripts.UI
             if (evt.EnemyData.IsBoss)
                 nameText.color = Color.softRed;
             else
-                nameText.color = Color.white;
+                nameText.color = Color.gray1;
 
             foreach (Gimmick pattern in evt.EnemyData.Gimmicks)
             {
@@ -60,6 +66,11 @@ namespace _02.Scripts.UI
             }
         }
         
+        private void HandleRespawnCountChanged(RespawnCountChangedEvent evt)
+        {
+            respawnCountText.text = evt.Remaining + " / " + evt.Max;
+        }
+
         private void HandleInfoShow(InfoShowEvent obj)
         {
             titleText.text = obj.Title;

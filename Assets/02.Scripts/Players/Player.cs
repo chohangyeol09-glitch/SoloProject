@@ -15,6 +15,7 @@ namespace _02.Scripts.Players
         
         [field: SerializeField] public int MaxCost { get; private set; } = 3;
         public int CurrentCost { get; private set; }
+        private int _pendingCostPenalty;
 
         [SerializeField] private EventChannelSO playerChannel;
         [SerializeField] private EventChannelSO turnChannel;
@@ -34,6 +35,7 @@ namespace _02.Scripts.Players
             playerChannel.AddListener<SpendCostEvent>(HandleSpendCost);
             playerChannel.AddListener<GainCostEvent>(HandleGainCost);
             playerChannel.AddListener<RecoverCostEvent>(HandleRecoverCost);
+            playerChannel.AddListener<BurnCostEvent>(HandleBurnCost);
             turnChannel.AddListener<TurnChangeEvent>(HandleTurnChange);
         }
 
@@ -49,6 +51,7 @@ namespace _02.Scripts.Players
             playerChannel.RemoveListener<SpendCostEvent>(HandleSpendCost);
             playerChannel.RemoveListener<GainCostEvent>(HandleGainCost);
             playerChannel.RemoveListener<RecoverCostEvent>(HandleRecoverCost);
+            playerChannel.RemoveListener<BurnCostEvent>(HandleBurnCost);
             turnChannel.RemoveListener<TurnChangeEvent>(HandleTurnChange);
         }
 
@@ -75,15 +78,29 @@ namespace _02.Scripts.Players
             playerChannel.RaiseEvent(new CostChangedEvent().Init(CurrentCost));
         }
 
+        private void HandleBurnCost(BurnCostEvent evt)
+        {
+            _pendingCostPenalty += Mathf.Max(0, evt.Amount);
+        }
+
         private void HandleTurnChange(TurnChangeEvent evt)
         {
-            playerChannel.RaiseEvent(new RecoverCostEvent().Init());
+            int recovered = Mathf.Max(0, MaxCost - _pendingCostPenalty);
+            _pendingCostPenalty = 0;
+            playerChannel.RaiseEvent(new RecoverCostEvent().Init(recovered));
         }
 
         protected override void OnHealthChanged()
-            => playerChannel.RaiseEvent(new HealthChangedEvent().Init(CurrentHealth));
+            => playerChannel.RaiseEvent(new HealthChangedEvent().Init(MaxHealth, CurrentHealth));
 
         protected override void OnDead()
-            => playerChannel.RaiseEvent(new PlayerDeadEvent());
+        {
+            playerChannel.RaiseEvent(new PlayerDeadEvent());
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
     }
 }

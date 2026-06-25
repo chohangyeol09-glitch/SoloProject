@@ -11,18 +11,19 @@ namespace _02.Scripts.CardSystem
     {
         [Header("Bronze")]
         [SerializeField] private List<StatCardDataSO> bronzeStatCards = new();
-        [SerializeField] private List<AbstractActionEffectSO> bronzeEffects = new();
         [SerializeField] private List<ActionCardDataSO> bronzeActionCards = new();
 
         [Header("Silver")]
         [SerializeField] private List<StatCardDataSO> silverStatCards = new();
-        [SerializeField] private List<AbstractActionEffectSO> silverEffects = new();
         [SerializeField] private List<ActionCardDataSO> silverActionCards = new();
 
         [Header("Gold")]
         [SerializeField] private List<StatCardDataSO> goldStatCards = new();
-        [SerializeField] private List<AbstractActionEffectSO> goldEffects = new();
         [SerializeField] private List<ActionCardDataSO> goldActionCards = new();
+
+        // 효과는 등급 구분 없이 한 리스트. 등급은 보상 시점에 효과카드로 운반된다.
+        [Header("Effects (전 등급 공통)")]
+        [SerializeField] private List<AbstractActionEffectSO> actionEffects = new();
 
         public IReadOnlyList<StatCardDataSO> GetStatCardsByGrade(CardGrade grade) => grade switch
         {
@@ -32,13 +33,7 @@ namespace _02.Scripts.CardSystem
             _                => new List<StatCardDataSO>()
         };
 
-        public IReadOnlyList<AbstractActionEffectSO> GetEffectsByGrade(CardGrade grade) => grade switch
-        {
-            CardGrade.BRONZE => bronzeEffects,
-            CardGrade.SILVER => silverEffects,
-            CardGrade.GOLD   => goldEffects,
-            _                => new List<AbstractActionEffectSO>()
-        };
+        public IReadOnlyList<AbstractActionEffectSO> GetEffects() => actionEffects;
 
         public IReadOnlyList<ActionCardDataSO> GetActionCardsByGrade(CardGrade grade) => grade switch
         {

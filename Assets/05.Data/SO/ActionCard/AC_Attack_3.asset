@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa103d36116049bbbed386139b7bb0a4, type: 3}
   m_Name: AC_Attack_3
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.ActionCards.ActionCadeDataSO
-  <Name>k__BackingField: "3\uBC88 \uC2AC\uB86F \uACF5\uACA9"
-  <Icon>k__BackingField: {fileID: 21300000, guid: bd4f9eba5196e444b9e21250bc0784a8, type: 3}
+  <Name>k__BackingField: "\uC7A5\uAD81"
+  <Icon>k__BackingField: {fileID: 21300000, guid: b7b21c584a886a24aae12e73cba8b2b7, type: 3}
   <ActionCardType>k__BackingField: 0
-  <TargetRangeType>k__BackingField: 7
+  <TargetRangeType>k__BackingField: 4
   <Action>k__BackingField: {fileID: 11400000, guid: c5c5cc40c50a56e408170293cc8c23ae, type: 2}
   <BeforeEffects>k__BackingField: []
   <AfterEffects>k__BackingField: []

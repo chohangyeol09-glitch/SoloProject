@@ -11,6 +11,8 @@ namespace _02.Scripts.Stage
     {
         [SerializeField] private EventChannelSO gameChannel;
         [SerializeField] private StageManager stageManager;
+        [SerializeField] private GameStartSeq gameStartSeq;
+        [SerializeField] private GameObject[] tutorialObj;
         
         public PropInteraction PropInteraction { get; private set; }
 
@@ -30,6 +32,13 @@ namespace _02.Scripts.Stage
 
         private void HandleClick()
         {
+            foreach (var obj in tutorialObj)
+            {
+                Destroy(obj);
+            }
+            
+            gameStartSeq.ChangeQuestText("");
+            gameStartSeq.NextTutorial();
             stageManager.StartNextStage();
         }
         

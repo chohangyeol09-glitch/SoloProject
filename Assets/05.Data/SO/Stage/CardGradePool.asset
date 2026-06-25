@@ -13,23 +13,18 @@ MonoBehaviour:
   m_Name: CardGradePool
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.CardGradePoolSO
   bronzeStatCards:
-  - {fileID: 11400000, guid: cfff979bbdce8f54bb3544f764beec9e, type: 2}
   - {fileID: 11400000, guid: f061f72bfb31a81439cf0ecd6e468039, type: 2}
   - {fileID: 11400000, guid: 21a489b647c1ce646880a1e44da0d660, type: 2}
   - {fileID: 11400000, guid: dcb512b7856f3584e9dab3710ce14e98, type: 2}
-  bronzeEffects:
-  - {fileID: 11400000, guid: d5f7efd2719fed54d856c3daeb2e6fc4, type: 2}
-  - {fileID: 11400000, guid: 0d5b48c928d9cb34994e55d928ac9601, type: 2}
-  - {fileID: 11400000, guid: f53f038d8854ed2469bd102f8cc95f2c, type: 2}
+  - {fileID: 11400000, guid: 3a8b2a93104c1fa4e95137b46648e581, type: 2}
+  - {fileID: 11400000, guid: c56cb3876a3e3ef498eff48e5f008dd2, type: 2}
+  - {fileID: 11400000, guid: 9f4498913d4cdb44c8981eab1ed52ef5, type: 2}
   bronzeActionCards:
   - {fileID: 11400000, guid: 86d5ea50d64e87c419b4f509a393eea6, type: 2}
   - {fileID: 11400000, guid: b7244535e83f29a45bf81551734452b9, type: 2}
   - {fileID: 11400000, guid: 5b485818073da8049b2fb8f904412a27, type: 2}
   - {fileID: 11400000, guid: 725b50f847bde974ea408368be788393, type: 2}
-  - {fileID: 11400000, guid: a71eacc37a8b0f14f86d0970b1c83719, type: 2}
   - {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
-  - {fileID: 11400000, guid: ab82724685498ce43810001e908e43fd, type: 2}
-  - {fileID: 11400000, guid: a39b562a8fd11f940b37aba68647b969, type: 2}
   - {fileID: 11400000, guid: 2a851cb171de399438e8f4a14ef0b987, type: 2}
   - {fileID: 11400000, guid: 2539637639b70a841b2d3ee7660d86f1, type: 2}
   - {fileID: 11400000, guid: d547fb9cf097c7542a91c166a2f088ff, type: 2}
@@ -38,42 +33,39 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dcb512b7856f3584e9dab3710ce14e98, type: 2}
   - {fileID: 11400000, guid: 21a489b647c1ce646880a1e44da0d660, type: 2}
   - {fileID: 11400000, guid: f061f72bfb31a81439cf0ecd6e468039, type: 2}
-  - {fileID: 11400000, guid: cfff979bbdce8f54bb3544f764beec9e, type: 2}
-  silverEffects:
-  - {fileID: 11400000, guid: 0d5b48c928d9cb34994e55d928ac9601, type: 2}
-  - {fileID: 11400000, guid: d5f7efd2719fed54d856c3daeb2e6fc4, type: 2}
-  - {fileID: 11400000, guid: f53f038d8854ed2469bd102f8cc95f2c, type: 2}
+  - {fileID: 11400000, guid: 3a8b2a93104c1fa4e95137b46648e581, type: 2}
+  - {fileID: 11400000, guid: f0ba3552374b845469a72f7f7e498721, type: 2}
+  - {fileID: 11400000, guid: 7eb01fa38a193194896ff783ec7e90d5, type: 2}
+  - {fileID: 11400000, guid: 9f4498913d4cdb44c8981eab1ed52ef5, type: 2}
   silverActionCards:
-  - {fileID: 11400000, guid: 86d5ea50d64e87c419b4f509a393eea6, type: 2}
-  - {fileID: 11400000, guid: b7244535e83f29a45bf81551734452b9, type: 2}
-  - {fileID: 11400000, guid: 5b485818073da8049b2fb8f904412a27, type: 2}
-  - {fileID: 11400000, guid: 725b50f847bde974ea408368be788393, type: 2}
-  - {fileID: 11400000, guid: a71eacc37a8b0f14f86d0970b1c83719, type: 2}
   - {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
   - {fileID: 11400000, guid: ab82724685498ce43810001e908e43fd, type: 2}
   - {fileID: 11400000, guid: a39b562a8fd11f940b37aba68647b969, type: 2}
   - {fileID: 11400000, guid: 2a851cb171de399438e8f4a14ef0b987, type: 2}
   - {fileID: 11400000, guid: 2539637639b70a841b2d3ee7660d86f1, type: 2}
   - {fileID: 11400000, guid: d547fb9cf097c7542a91c166a2f088ff, type: 2}
+  - {fileID: 11400000, guid: ccaa6084c7909ca4ca3bdd3fc087b007, type: 2}
   goldStatCards:
   - {fileID: 11400000, guid: f061f72bfb31a81439cf0ecd6e468039, type: 2}
-  - {fileID: 11400000, guid: cfff979bbdce8f54bb3544f764beec9e, type: 2}
   - {fileID: 11400000, guid: c56cb3876a3e3ef498eff48e5f008dd2, type: 2}
   - {fileID: 11400000, guid: dcb512b7856f3584e9dab3710ce14e98, type: 2}
   - {fileID: 11400000, guid: 21a489b647c1ce646880a1e44da0d660, type: 2}
-  goldEffects:
-  - {fileID: 11400000, guid: d5f7efd2719fed54d856c3daeb2e6fc4, type: 2}
-  - {fileID: 11400000, guid: f53f038d8854ed2469bd102f8cc95f2c, type: 2}
-  - {fileID: 11400000, guid: 0d5b48c928d9cb34994e55d928ac9601, type: 2}
+  - {fileID: 11400000, guid: b952502578a0c1d4abcaea8719917b46, type: 2}
+  - {fileID: 11400000, guid: f0ba3552374b845469a72f7f7e498721, type: 2}
+  - {fileID: 11400000, guid: 9f4498913d4cdb44c8981eab1ed52ef5, type: 2}
+  - {fileID: 0}
   goldActionCards:
-  - {fileID: 11400000, guid: 86d5ea50d64e87c419b4f509a393eea6, type: 2}
-  - {fileID: 11400000, guid: b7244535e83f29a45bf81551734452b9, type: 2}
-  - {fileID: 11400000, guid: 5b485818073da8049b2fb8f904412a27, type: 2}
-  - {fileID: 11400000, guid: 725b50f847bde974ea408368be788393, type: 2}
   - {fileID: 11400000, guid: a71eacc37a8b0f14f86d0970b1c83719, type: 2}
-  - {fileID: 11400000, guid: 1e03f8a80cc97f842b04042470bd5522, type: 2}
   - {fileID: 11400000, guid: ab82724685498ce43810001e908e43fd, type: 2}
   - {fileID: 11400000, guid: a39b562a8fd11f940b37aba68647b969, type: 2}
-  - {fileID: 11400000, guid: 2a851cb171de399438e8f4a14ef0b987, type: 2}
   - {fileID: 11400000, guid: 2539637639b70a841b2d3ee7660d86f1, type: 2}
   - {fileID: 11400000, guid: d547fb9cf097c7542a91c166a2f088ff, type: 2}
+  actionEffects:
+  - {fileID: 11400000, guid: 0d5b48c928d9cb34994e55d928ac9601, type: 2}
+  - {fileID: 11400000, guid: 777c12853129d7645b650de935934315, type: 2}
+  - {fileID: 11400000, guid: d5f7efd2719fed54d856c3daeb2e6fc4, type: 2}
+  - {fileID: 11400000, guid: 7cc469a32911d78428984b9d53f57392, type: 2}
+  - {fileID: 11400000, guid: 20dbdf7cc2a74884ab3948a46c2aaced, type: 2}
+  - {fileID: 11400000, guid: f53f038d8854ed2469bd102f8cc95f2c, type: 2}
+  - {fileID: 11400000, guid: fd9dfb5dd94c0bf46affb081e82efe0f, type: 2}
+  - {fileID: 11400000, guid: 2dcfbfbac40cd1c4583dd0ebec02f0c5, type: 2}

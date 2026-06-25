@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b149d7b1aa8ff147aafabacc20f1a1d, type: 3}
+  m_Name: EmpowerEnemyPattern
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemys.Boss.BossPatterns.EmpowerEnemyPatternSO
+  <PatternTrigger>k__BackingField: EMPOWER
+  _enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 0e9bcb20985b39441984cea31477ff47, type: 3}
+  <Title>k__BackingField: "\uCE74\uB4DC \uAC15\uD654"
+  <Description>k__BackingField: "\uCE74\uB4DC\uC5D0 \uB79C\uB364 \uACF5\uACA9 \uD6A8\uACFC\uB97C
+    \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+  effect: {fileID: 11400000, guid: 20dbdf7cc2a74884ab3948a46c2aaced, type: 2}
+  particleName: CARDEFFECTBUFF
+  yOffset: 0

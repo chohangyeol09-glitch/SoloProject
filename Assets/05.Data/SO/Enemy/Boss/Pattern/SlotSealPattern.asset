@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 632e319d2b9929741bb51e2b5fdaff7e, type: 3}
+  m_Name: SlotSealPattern
+  m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.Enemys.Boss.BossPatterns.SlotSealPatternSO
+  <PatternTrigger>k__BackingField: SLOTSEAL
+  _enemyChannel: {fileID: 11400000, guid: 39b0485ceb83e5542a0fed995d956774, type: 2}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 3dc88b2a641cb4048b4d90de0ed2f584, type: 3}
+  <Title>k__BackingField: "\uC2AC\uB86F \uBD09\uC778"
+  <Description>k__BackingField: "\uCE78 \uD558\uB098\uB97C {0}\uD134\uB3D9\uC548
+    \uBD09\uC778\uD569\uB2C8\uB2E4. \uAD50\uCCB4, \uACF5\uACA9 \uB4F1\uC774 \uBD88\uAC00\uB2A5\uD574\uC9D1\uB2C8\uB2E4. "
+  sealDuration: 2

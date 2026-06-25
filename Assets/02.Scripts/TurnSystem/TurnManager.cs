@@ -28,8 +28,8 @@ namespace _02.Scripts.TurnSystem
 
         private void HandleStageChange(StageStartEvent evt)
         {
-            TurnCount = 0; 
-            TurnStart();
+            TurnCount = 0;
+            // 턴 시작은 StageManager가 덱 생성(StageStartEvent) 완료 후 TurnStart()로 한 번만 호출한다.
         }
 
         private void OnDestroy()

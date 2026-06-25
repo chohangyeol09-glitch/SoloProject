@@ -1,4 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem;
+using _02.Scripts.CoreSystem.ServiceLocatorSystem.Interfaces;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,7 +10,7 @@ namespace _02.Scripts.Enemys.Boss.BossPatterns
     public class CardHealPattern : AbstractEnemyPatternSO
     {
         [SerializeField] private int amount;
-        [SerializeField] private GameObject particle;
+        [SerializeField] private string particleName;
         [SerializeField] private float yOffset;
         
         protected override UniTask ExecutePattern(EnemyPatternContext context)
@@ -21,7 +23,7 @@ namespace _02.Scripts.Enemys.Boss.BossPatterns
             } while (context.SlotLogic.EnemySlots[r] == null);
 
             context.SlotLogic.EnemySlots[r].CurrentCard.AddDefenseValue(amount);
-            Instantiate(particle, context.SlotLogic.EnemySlots[r].transform.position + Vector3.up * yOffset, Quaternion.identity);
+            ServiceLocator.Get<IParticleService>().PlayParticle(particleName, context.SlotLogic.EnemySlots[r].transform.position + Vector3.up * yOffset);
 
             return UniTask.CompletedTask;
         }

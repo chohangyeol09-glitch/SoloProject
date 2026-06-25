@@ -49,7 +49,7 @@ namespace _02.Scripts.Enemys
         private void HandleHeal(HealEvent evt) => Heal(evt.Amount);
 
         protected override void OnHealthChanged()
-            => enemyChannel.RaiseEvent(new HealthChangedEvent().Init(CurrentHealth));
+            => enemyChannel.RaiseEvent(new HealthChangedEvent().Init(MaxHealth, CurrentHealth));
 
         protected override void OnDead()
             => IsDead = true;

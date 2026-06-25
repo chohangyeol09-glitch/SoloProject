@@ -4,6 +4,10 @@
     {
         FRONT_F,
         FRONT_LR,
+        FRONT_ONE,
+        FRONT_TWO,
+        FRONT_THREE,
+        FRONT_FOUR,
         SELF,
         LEFT,
         RIGHT,

@@ -17,6 +17,8 @@ namespace _02.Scripts.Enemys
         private GameObject _currentModel;
         private Animator _animator;
         private EnemyPatternStartEvent _pendingPatternEvt;
+        private bool _patternEffectFired;
+        private bool _patternEndFired;
 
         private void Awake()
         {
@@ -57,14 +59,17 @@ namespace _02.Scripts.Enemys
             _animator.speed = PresentationControl.Speed;
             _animator.Play("DIE");
 
-            await UniTask.Yield();   // Play("DIE")가 반영될 때까지 한 프레임 대기
+            // DIE 상태로 진입할 때까지
+            await UniTask.WaitUntil(() => _animator == null || _animator.GetCurrentAnimatorStateInfo(0).IsName("DIE"));
 
-            if (_animator != null)
+            // DIE가 끝날 때까지. normalizedTime은 animator.speed를 자동 반영하므로 배속에도 정확.
+            // (DIE가 끝나거나 다른 상태로 빠지면 빠져나옴 → hang 없음)
+            await UniTask.WaitWhile(() =>
             {
+                if (_animator == null) return false;
                 AnimatorStateInfo st = _animator.GetCurrentAnimatorStateInfo(0);
-                float seconds = st.length / Mathf.Max(0.01f, _animator.speed);
-                await UniTask.Delay((int)(seconds * 1000f));   // DIE 길이만큼(배속 반영) 대기
-            }
+                return st.IsName("DIE") && st.normalizedTime < 1f;
+            });
 
             if (_currentModel != null) Destroy(_currentModel);
             _currentModel = null;
@@ -74,6 +79,8 @@ namespace _02.Scripts.Enemys
         private void HandlePatternStart(EnemyPatternStartEvent evt)
         {
             _pendingPatternEvt = evt;
+            _patternEffectFired = false;
+            _patternEndFired = false;
 
             bool canPlay = _animator != null
                            && !string.IsNullOrEmpty(evt.AnimationName)
@@ -83,26 +90,67 @@ namespace _02.Scripts.Enemys
             {
                 _animator.speed = PresentationControl.Speed;
                 _animator.Play(evt.AnimationName);
+                // 애니메이션 이벤트(OnPatternEffect/OnPatternEnd)가 들어오기를 기다리되,
+                // 누락된 경우에도 멈추지 않도록 클립 종료를 직접 감시해 폴백 처리한다.
+                WatchPattern(evt, evt.AnimationName).Forget();
             }
             else
             {
                 // 애니가 없거나 이름이 잘못된 경우: 멈추지 않게 효과+종료를 즉시 처리
-                evt.OnPatternEffect?.Invoke();
-                evt.OnPatternEnd?.Invoke();
-                _pendingPatternEvt = null;
+                InvokePatternEffect(evt);
+                InvokePatternEnd(evt);
             }
         }
 
-        private void HandlePatternEffect(EnemyPatternEffectEvent evt)
+        // 클립이 끝났는데도 애니메이션 이벤트가 안 들어오면 효과/종료를 폴백으로 호출한다.
+        private async UniTaskVoid WatchPattern(EnemyPatternStartEvent evt, string animName)
         {
-            _pendingPatternEvt?.OnPatternEffect?.Invoke();
+            // 상태 진입 대기 (전환 지연 대비, 안전 타임아웃 포함)
+            float enterTimeout = 1f;
+            float elapsed = 0f;
+            while (_animator != null && _pendingPatternEvt == evt
+                   && !_animator.GetCurrentAnimatorStateInfo(0).IsName(animName))
+            {
+                if (elapsed >= enterTimeout) break;
+                elapsed += Time.deltaTime;
+                await UniTask.Yield();
+            }
+
+            // 클립 종료까지 대기 (상태를 벗어나거나 normalizedTime이 1에 도달하면 종료)
+            await UniTask.WaitWhile(() =>
+            {
+                if (_animator == null || _pendingPatternEvt != evt) return false;
+                AnimatorStateInfo st = _animator.GetCurrentAnimatorStateInfo(0);
+                return st.IsName(animName) && st.normalizedTime < 1f;
+            });
+
+            // 이미 다음 패턴으로 교체됐거나 종료가 처리됐으면 무시
+            if (_pendingPatternEvt != evt) return;
+
+            InvokePatternEffect(evt);
+            InvokePatternEnd(evt);
         }
 
+        private void HandlePatternEffect(EnemyPatternEffectEvent evt)
+            => InvokePatternEffect(_pendingPatternEvt);
+
         private void HandlePatternEnd(EnemyPatternEndEvent evt)
+            => InvokePatternEnd(_pendingPatternEvt);
+
+        // 효과/종료는 애니메이션 이벤트와 폴백 양쪽에서 호출될 수 있으므로 1회만 실행되도록 보장한다.
+        private void InvokePatternEffect(EnemyPatternStartEvent evt)
         {
-            var pending = _pendingPatternEvt;
+            if (evt == null || evt != _pendingPatternEvt || _patternEffectFired) return;
+            _patternEffectFired = true;
+            evt.OnPatternEffect?.Invoke();
+        }
+
+        private void InvokePatternEnd(EnemyPatternStartEvent evt)
+        {
+            if (evt == null || evt != _pendingPatternEvt || _patternEndFired) return;
+            _patternEndFired = true;
             _pendingPatternEvt = null;
-            pending?.OnPatternEnd?.Invoke();
+            evt.OnPatternEnd?.Invoke();
         }
     }
 }

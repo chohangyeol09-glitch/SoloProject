@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4de4844e103549fda00f25fec41cb4e5, type: 3}
   m_Name: DefenseAction
   m_EditorClassIdentifier: Assembly-CSharp::_02.Scripts.CardSystem.Cards.ActionCards.ActionSO.DefenseActionSO
+  riseHeight: 1
+  riseDuration: 0.2
+  moveDuration: 0.3
+  returnDuration: 0.2
+  shieldParticleName: CARDDEFENSE
